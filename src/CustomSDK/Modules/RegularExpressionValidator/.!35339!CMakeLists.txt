@@ -1,0 +1,9 @@
+set(QT_MODULE_LIST Core Gui Widgets)
+set(THIRD_LIBRARY_LIST boost)
+
+generatePluginLibrary()
+
+target_link_libraries(${CURRENT_TARGET} PRIVATE "BasicSupport")
+target_link_libraries(${CURRENT_TARGET} PRIVATE "BasicUIFramework")
+
+if(MSVC_IDE)

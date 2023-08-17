@@ -1,0 +1,3 @@
+add_subdirectory(MagicToolBox)
+#add_subdirectory(VisualDefinationTool)
+#add_subdirectory(StyleSheetVisualEditor)

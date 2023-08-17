@@ -1,0 +1,6 @@
+set(QT_MODULE_LIST Core Gui Widgets Core5Compat)
+set(THIRD_LIBRARY_LIST boost)
+
+generateDynamicLibrary()
+
+target_link_libraries(${CURRENT_TARGET} PUBLIC BasicSupport)

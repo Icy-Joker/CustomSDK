@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/icons/window-close_hover.png</file>
+        <file>resource/icons/window-close_normal.png</file>
+        <file>resource/icons/window-close_pressed.png</file>
+        <file>resource/icons/window-maximize_hover.png</file>
+        <file>resource/icons/window-maximize_normal.png</file>
+        <file>resource/icons/window-maximize_pressed.png</file>
+        <file>resource/icons/window-minimize_hover.png</file>
+        <file>resource/icons/window-minimize_normal.png</file>
+        <file>resource/icons/window-minimize_pressed.png</file>
+        <file>resource/icons/window-resume_hover.png</file>
+        <file>resource/icons/window-resume_normal.png</file>
+        <file>resource/icons/window-resume_pressed.png</file>
+        <file>resource/stylesheet/default_style.qss</file>
+    </qresource>
+</RCC>
