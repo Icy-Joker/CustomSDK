@@ -23,10 +23,10 @@ then
 fi
 cd "$build_directory"
 # 清理CMakeCache.txt
-if test -f "CMakeCache.txt"
-then
-  rm "CMakeCache.txt"
-fi
+#if test -f "CMakeCache.txt"
+#then
+#  rm "CMakeCache.txt"
+#fi
 # 构建项目工程
 cmake  -G "Unix Makefiles" -DCMAKE_BUILD_TYPE="Release" "../$project_name"
 if [ $? -eq 0 ]; 

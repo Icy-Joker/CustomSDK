@@ -27,22 +27,19 @@ MagicToolBox::MagicToolBox(QWidget* parent,Qt::WindowFlags flags) :
 	ui(new Ui::MagicToolBox())
 {
   ui->setupUi(this);
-
+  //标题栏
   if(QLayout* default_layout = this->layout())
   {
     default_layout->setMenuBar(new CustomWindowTitleBar(this));
   }
-
+  //系统托盘图标
 	if (QSystemTrayIcon::isSystemTrayAvailable())
 	{
-    trayIcon = new QSystemTrayIcon(QIcon(":/resource/images/heart.png"), this);
-		if (trayIcon)
+		if (QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/resource/images/heart.png"), this))
 		{
       connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(slot_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
       //托盘图标描述
 			trayIcon->setToolTip(QString::fromLocal8Bit("工具箱"));
-			//托盘图标菜单
-			trayIcon->setContextMenu(new QMenu(this));
 			//显示托盘图标
 			trayIcon->show();
 		}
@@ -51,7 +48,7 @@ MagicToolBox::MagicToolBox(QWidget* parent,Qt::WindowFlags flags) :
 	{//不支持系统托盘
 		
 	}
-
+  //默认自动加载工具插件
   QDir plugins_directory(QString("%1/../plugins/MagicTools").arg(QDir::currentPath()));
 	QFileInfoList file_info_list= plugins_directory.entryInfoList(QDir::Filter::Files);
 	for (auto it_file_info_list= file_info_list.begin();it_file_info_list!= file_info_list.end();++it_file_info_list)
@@ -60,29 +57,15 @@ MagicToolBox::MagicToolBox(QWidget* parent,Qt::WindowFlags flags) :
 		QString file_path = file_info.absoluteFilePath();
 		loadPlugin(file_path);
 	}
-
 }
 
 MagicToolBox::~MagicToolBox()
 {
-	if (trayIcon)
-	{
-		trayIcon->hide();
-	}
-
   if(ui)
   {
     delete ui;
     ui = nullptr;
   }
-}
-
-void MagicToolBox::toggleStatus()
-{
-	if (QWidget* widget_top_level = this->topLevelWidget())
-	{
-		widget_top_level->isVisible() ? widget_top_level->hide() : widget_top_level->show();
-	}
 }
 
 void MagicToolBox::loadPlugin(const QString & plugin_path)
@@ -149,11 +132,7 @@ void MagicToolBox::slot_action_triggered()
 {
 	if (QAction* action=(QAction*)sender())
 	{
-		if (action->objectName() == "action_toggleStatus")
-		{
-			toggleStatus();
-		}
-		else if (action->objectName() == "action_Quit")
+		if (action->objectName() == "action_Quit")
 		{
 			qApp->exit(0);
 		}
@@ -175,7 +154,7 @@ void MagicToolBox::slot_magicTool_requested(MagicTool* magic_tool)
 
 void MagicToolBox::slot_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 {
-	if (trayIcon)
+	if (QSystemTrayIcon* trayIcon = qobject_cast<QSystemTrayIcon*>(sender()))
 	{
 		switch (reason)
 		{
@@ -183,66 +162,57 @@ void MagicToolBox::slot_trayIcon_activated(QSystemTrayIcon::ActivationReason rea
 				break;
 			case QSystemTrayIcon::Context:
 			{
-				if (QMenu* menu = trayIcon->contextMenu())
-				{
-					menu->clear();
+        QMenu menu;
 
-					if (QAction* action_toggleStatus = new QAction(menu))
-					{
-						action_toggleStatus->setObjectName("action_toggleStatus");
-						action_toggleStatus->setText(this->isVisible() ? QString::fromLocal8Bit("隐藏主界面") : QString::fromLocal8Bit("显示主界面"));
-						connect(action_toggleStatus, SIGNAL(triggered()), this, SLOT(slot_action_triggered()));
-						menu->addAction(action_toggleStatus);
-					}
+        for (auto it_vector_magic_boxes= vector_magic_boxes.begin();it_vector_magic_boxes!= vector_magic_boxes.end();++it_vector_magic_boxes)
+        {
+          if (MagicBox* magic_box = *it_vector_magic_boxes)
+          {
+            if (QMenu* menu_box = new QMenu(&menu))
+            {
+              QList<QAction*> list_action_magic_tools;
 
-					menu->addSeparator();
+              const QString& magic_box_name = magic_box->getName();
+              const std::vector<MagicTool*>& vector_magic_tools = magic_box->getAllMagicTools();
+              for (auto it_vector_magic_tools = vector_magic_tools.begin(); it_vector_magic_tools != vector_magic_tools.end(); ++it_vector_magic_tools)
+              {
+                if (MagicTool* magic_tool = *it_vector_magic_tools)
+                {
+                  QAction* action_magic_tool = new QAction(menu_box);
+                  action_magic_tool->setText(QString::fromLocal8Bit(magic_tool->getName()));
+                  action_magic_tool->setIcon(magic_tool->getIcon());
+                  action_magic_tool->setToolTip(QString::fromLocal8Bit(magic_tool->getDescription()));
+                  connect(action_magic_tool, SIGNAL(triggered()), magic_box, SLOT(slot_plugin_clicked()));
 
-					for (auto it_vector_magic_boxes= vector_magic_boxes.begin();it_vector_magic_boxes!= vector_magic_boxes.end();++it_vector_magic_boxes)
-					{
-						if (MagicBox* magic_box = *it_vector_magic_boxes)
-						{
-							if (QMenu* menu_box = new QMenu(menu))
-							{
-								QList<QAction*> list_action_magic_tools;
+                  list_action_magic_tools << action_magic_tool;
+                }
+              }
 
-								const QString& magic_box_name = magic_box->getName();
-								const std::vector<MagicTool*>& vector_magic_tools = magic_box->getAllMagicTools();
-								for (auto it_vector_magic_tools = vector_magic_tools.begin(); it_vector_magic_tools != vector_magic_tools.end(); ++it_vector_magic_tools)
-								{
-									if (MagicTool* magic_tool = *it_vector_magic_tools)
-									{
-										QAction* action_magic_tool = new QAction(menu_box);
-										action_magic_tool->setText(QString::fromLocal8Bit(magic_tool->getName()));
-										action_magic_tool->setIcon(magic_tool->getIcon());
-										action_magic_tool->setToolTip(QString::fromLocal8Bit(magic_tool->getDescription()));
-										connect(action_magic_tool, SIGNAL(triggered()), magic_box, SLOT(slot_plugin_clicked()));
+              menu_box->setTitle(magic_box_name);
+              menu_box->addActions(list_action_magic_tools);
 
-										list_action_magic_tools << action_magic_tool;
-									}
-								}
+              menu.addMenu(menu_box);
+            }
+          }
+        }
 
-								menu_box->setTitle(magic_box_name);
-								menu_box->addActions(list_action_magic_tools);
+        menu.addSeparator();
 
-								menu->addMenu(menu_box);
-							}
-						}
-					}
+        if(QAction* action_Quit = new QAction(QString::fromLocal8Bit("退出"), &menu))
+        {
+          action_Quit->setObjectName("action_Quit");
+          connect(action_Quit, SIGNAL(triggered()), this, SLOT(slot_action_triggered()));
+          menu.addAction(action_Quit);
+        }
 
-					menu->addSeparator();
+        menu.exec();
+        qDebug("aaa");
 
-					QAction* action_Quit = new QAction(QString::fromLocal8Bit("退出"), menu);
-					action_Quit->setObjectName("action_Quit");
-					connect(action_Quit, SIGNAL(triggered()), this, SLOT(slot_action_triggered()));
-					menu->addAction(action_Quit);
-
-					menu->exec();
-				}
 				break;
 			}
 			case QSystemTrayIcon::DoubleClick:
 			{
-				toggleStatus();
+        this->setVisible(this->isHidden());
 				break;
 			}
 			case QSystemTrayIcon::Trigger:

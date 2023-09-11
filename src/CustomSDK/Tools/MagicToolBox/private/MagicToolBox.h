@@ -20,8 +20,6 @@ public:
 	explicit MagicToolBox(QWidget* parent=nullptr,Qt::WindowFlags flags = Qt::WindowFlags());
 	~MagicToolBox();
 private:
-	void toggleStatus();
-private:
 	void loadPlugin(const QString&);
 private:
 	MagicBox * findBoxByName(const QString&);
@@ -32,8 +30,6 @@ private slots:
 	void slot_trayIcon_activated(QSystemTrayIcon::ActivationReason);
 private:
 	Ui::MagicToolBox* ui;
-
-	QSystemTrayIcon* trayIcon;
 
 	std::vector<MagicBox*> vector_magic_boxes;
 };

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "BasicUIFramework.h"
 
 #include <QApplication>
 #include <QTextCodec>
@@ -7,7 +8,7 @@
 
 namespace BasicUIFramework
 {
-  bool initialize(int argc,char* argv[])
+  bool initialize(int& argc,char* argv[])
   {
     bool result = false;
 
@@ -27,11 +28,11 @@ namespace BasicUIFramework
       //QTextCodec::setCodecForLocale(QTextCodec::codecForName("GB18030"));
       QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 #endif
-
-      static QApplication app(argc,argv);
+      if(new QApplication(argc,argv))
+      {
+        result = true;
+      }
     }
-
-    result = qApp != nullptr;
 
     return result;
   }
@@ -50,15 +51,18 @@ namespace BasicUIFramework
         QString qss = QString::fromUtf8(file.readAll());
         qApp->setStyleSheet(qss);
         file.close();
-      
       }
+
       //翻译
       QTranslator translator;
       if (translator.load(":/resource/translations/qt_zh_CN.qm"))
       {
         qApp->installTranslator(&translator);
       }
+
       ret = qApp->exec();
+
+      delete qApp;
     }
 
     return ret;

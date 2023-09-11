@@ -1,4 +1,4 @@
-
+#include "stdafx.h"
 #include "CustomControls/CustomWindowTitleBar.h"
 #include "ui_CustomWindowTitleBar.h"
 

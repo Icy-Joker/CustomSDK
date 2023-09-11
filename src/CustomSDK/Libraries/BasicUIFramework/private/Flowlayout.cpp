@@ -1,3 +1,4 @@
+#include "stdafx.h"
 /****************************************************************************
 **
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).

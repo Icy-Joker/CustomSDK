@@ -1,3 +1,4 @@
 add_subdirectory(RegularExpressionValidator)
 add_subdirectory(PortScanner)
+add_subdirectory(QRCodeGenerator)
 #add_subdirectory(SocketTool)

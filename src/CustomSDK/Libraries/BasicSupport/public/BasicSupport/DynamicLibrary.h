@@ -9,7 +9,7 @@ typedef void* HMODULE;
 typedef void* FARPROC;
 #endif
 
-typedef  int*(*FUNCTION_EXPORT)();
+typedef int*(*FUNCTION_EXPORT)();
 
 class BasicSupport_API DynamicLibrary
 {

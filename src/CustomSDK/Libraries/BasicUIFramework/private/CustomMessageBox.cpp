@@ -5,7 +5,7 @@
 #include <QLayout>
 
 CustomMessageBox::CustomMessageBox(QWidget* parent /* = nullptr */) :
-	CustomMessageBox(CustomMessageBox::Icon::NoIcon, QString(), QString(), CustomMessageBox::StandardButtons(), parent, Qt::WindowFlags())
+  QMessageBox(CustomMessageBox::Icon::NoIcon, QString(), QString(), CustomMessageBox::StandardButtons(), parent, Qt::WindowFlags())
 {
 }
 
@@ -24,7 +24,6 @@ CustomMessageBox::CustomMessageBox(Icon icon, const QString & title, const QStri
 
 CustomMessageBox::~CustomMessageBox()
 {
-  qDebug("CustomMessageBox Destroyed....");
 }
 
 CustomMessageBox::StandardButton CustomMessageBox::information(QWidget * parent, const QString & title, const QString & text, StandardButtons buttons, StandardButton defaultButton)

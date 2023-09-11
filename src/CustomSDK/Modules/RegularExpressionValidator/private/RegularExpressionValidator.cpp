@@ -78,6 +78,6 @@ void RegularExpressionValidator::on_pushButton_Validate_clicked()
 	}
 	else
 	{//正则表达式和匹配内容不能为空
-		
+    CustomMessageBox::information(this, "Information", "empty input");
 	}
 }

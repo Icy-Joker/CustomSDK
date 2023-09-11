@@ -5,6 +5,8 @@
 #include <boost/filesystem.hpp>
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main(int argc,char* argv[])
 {
@@ -22,16 +24,23 @@ int main(int argc,char* argv[])
   
   if(true)
   {
-    boost::thread thread_work([]
+    boost::thread thread_work([&]
     {
       while(true)
       {
-        std::cout<<"a\n";
-        boost::this_thread::sleep_for(boost::chrono::seconds(2));
+        try
+        {
+          boost::this_thread::sleep_for(boost::chrono::seconds(2));
+          std::cout<<"a\n";
+          //std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        catch(...)
+        {
+          std::cout << "1324142142";
+        }
       }
     });
     thread_work.join();
-    //thread_work.detach();
   }
 
   return result;
