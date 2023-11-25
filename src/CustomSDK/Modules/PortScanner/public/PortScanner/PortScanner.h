@@ -7,7 +7,7 @@ namespace Ui
 	class PortScanner;
 }
 
-class PortScanner : public QWidget
+class PortScanner_API PortScanner : public QWidget
 {
 	Q_OBJECT
 public:

@@ -9,8 +9,8 @@ namespace Ui
 {
   class CustomWindowTitleBar;
 }
-
-class BasicUIFramework_API CustomWindowTitleBar : public QWidget
+//BasicUIFramework_API
+class  CustomWindowTitleBar : public QWidget
 {
   Q_OBJECT
 private:

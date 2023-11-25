@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "MagicToolBox.h"
 #include "ui_MagicToolBox.h"
 

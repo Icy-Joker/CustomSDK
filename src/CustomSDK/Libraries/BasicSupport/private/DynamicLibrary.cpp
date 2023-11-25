@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "DynamicLibrary.h"
 
 #include <algorithm>

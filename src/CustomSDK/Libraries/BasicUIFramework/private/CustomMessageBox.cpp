@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "CustomControls/CustomMessageBox.h"
 #include "CustomControls/CustomWindowTitleBar.h"
 

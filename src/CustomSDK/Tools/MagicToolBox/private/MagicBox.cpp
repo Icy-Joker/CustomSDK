@@ -1,8 +1,9 @@
+#include "stdafx.h"
 
 #include "MagicBox.h"
 #include "MagicTool.h"
 
-#include <BasicUIFramework/flowlayout.h>
+#include <BasicUIFramework/Flowlayout.h>
 
 #include <QVBoxLayout>
 #include <QToolButton>

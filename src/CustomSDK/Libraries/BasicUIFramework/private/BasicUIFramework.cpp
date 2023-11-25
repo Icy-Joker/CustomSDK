@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "BasicUIFramework.h"
 
 #include <QApplication>

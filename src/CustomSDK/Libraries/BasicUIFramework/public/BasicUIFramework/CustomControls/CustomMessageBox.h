@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QMessageBox>
-
-class BasicUIFramework_API CustomMessageBox : public QMessageBox
+//BasicUIFramework_API
+class  CustomMessageBox : public QMessageBox
 {
 	Q_OBJECT
 public:

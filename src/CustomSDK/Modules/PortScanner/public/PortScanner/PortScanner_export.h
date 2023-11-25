@@ -5,11 +5,11 @@
 
 #	ifdef _MSC_VER
 #  ifdef PortScanner_EXPORTS
-#   define PortScanner_API __spec(dllexport)
+#   define PortScanner_API _declspec(dllexport)
 #  elif defined USE_PortScanner_STATIC
 #   define PortScanner_API
 #  else
-#   define PortScanner_API __spec(dllimport)
+#   define PortScanner_API _declspec(dllimport)
 #	 endif // PortScanner_EXPORTS
 #	else
 #  define PortScanner_API

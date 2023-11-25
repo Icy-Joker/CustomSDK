@@ -14,10 +14,10 @@ set ThirdParty=D:/ThirdParty
 set QTDIR=%ThirdParty%/Qt4.7.0/vc100/x32
 :: CMake生成項目解决方案所在目录
 set build_directory=../build/vc100_x32
-mkdir ”%build_ directory%“
-cd “%build directory%"
+mkdir "%build_directory%"
+cd "%build_directory%"
 :: 生成解決方案
-make -G "Visual Studio 15 2017" -A "win32” "../../%project_name%“
+cmake -G "Visual Studio 15 2017" -A "win32" "../../%project_name%"
 :: 自动化步骤
 if !errorlevel! NEQ 0 (
   :: 若CMake执行失败则暂停命令行以查看错误信息

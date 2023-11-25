@@ -7,7 +7,7 @@ namespace Ui
 	class RegularExpressionValidator;
 }
 
-class RegularExpressionValidator : public QWidget
+class RegularExpressionValidator_API RegularExpressionValidator : public QWidget
 {
 	Q_OBJECT
 public:

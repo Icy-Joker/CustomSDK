@@ -2,13 +2,13 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
   cmake_policy(SET CMP0068 NEW)
   if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})#编译环境与目标配置初始化
     set(CMAKE_WARN_VS10 OFF CACHE BOOL "CMAKE_WARN_VS10")#忽略将不支持VS2010的警告
-    
+
     set(CMAKE_C_STANDARD 11)#设置语言标准要求"C11"
     set(CMAKE_CXX_STANDARD 11)#设置语言标准要求"C++11"
-    
+
     set(CMAKE_C_STANDARD_REQUIRED ON)#设置语言标准要求必须满足
     set(CMAKE_CXX_STANDARD_REQUIRED ON)#设置语言标准要求必须满足
-    
+
     set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)#生成位置无关代码
 
     #设置编译配置(VS支持多配置)
@@ -18,14 +18,14 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
       endif()
       set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}" CACHE INTERNAL "CMAKE_CONFIGURATION_TYPES" FORCE)
     endif()
-    
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")#MSVS编译器
+
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")#MSVC编译器
       #设置编译选项
       #${CMAKE_CXX_FLAGS_INIT}=/DWIN32 /D_WINDOWS /W3 /GR /EHsc
       #${CMAKE_CXX_FLAGS_DEBUG_INIT}=/MDd /Zi /Ob0 /Od /RTC1
       #${CMAKE_CXX_FLAGS_RELEASE_INIT}=/MD /O2 /Ob2 /DNDEBUG
       #${CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT}=/MD /Zi /O2 /Ob1 /DNDEBUG
-      
+
       #多处理器编译
       add_compile_options(/MP)
       #忽略特定警告
@@ -66,24 +66,19 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
         set(MSVC_TOOLSET_VERSION "140" CACHE STRING "MSVC_TOOLSET_VERSION")
       endif()
       set(CRT_VERSION_NAME "vc${MSVC_TOOLSET_VERSION}" CACHE STRING "CRT_VERSION_NAME")
-      
+
       #确定处理器架构
       if(CMAKE_CL_64)
         set(PLATFORM "x64" CACHE STRING "PLATFORM")
       else()
         set(PLATFORM "x32" CACHE STRING "PLATFORM")
       endif()
-      
+
       #库文件后缀
-      foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
-        string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER_CASE)
-        if(${CONFIG_TYPE_UPPER_CASE} STREQUAL "DEBUG")
-          set(CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX "-${CRT_VERSION_NAME}-${PLATFORM}_d" CACHE STRING "CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX" FORCE)
-        else()
-          set(CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX "-${CRT_VERSION_NAME}-${PLATFORM}" CACHE STRING "CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX" FORCE)
-        endif()
-      endforeach()
-      
+      set(CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "CMAKE_DEBUG_POSTFIX" FORCE)
+      #库文件编译信息
+      set(DEFAULT_VERSION_INFORMATION "-${CRT_VERSION_NAME}-${PLATFORM}" CACHE STRING "DEFAULT_VERSION_INFORMATION" FORCE)
+
       set(SYMBOL_SEARCH_LIBRARY " /LIBPATH:")
     else()#类Unix平台
       #确定C/C++运行时库版本
@@ -105,10 +100,10 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
         endif()
       elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
       endif()
-      
+
       set(SYMBOL_SEARCH_LIBRARY " -L")
     endif()
-    
+
     #可执行程序输出目录
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" CACHE PATH "CMAKE_RUNTIME_OUTPUT_DIRECTORY")
     #动态库输出目录
@@ -119,19 +114,19 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
     set(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/pdb" CACHE PATH "CMAKE_PDB_OUTPUT_DIRECTORY")
     #Java
     set(CMAKE_JAVA_TARGET_OUTPUT_DIR "${CMAKE_BINARY_DIR}/bin" CACHE PATH "CMAKE_JAVA_TARGET_OUTPUT_DIR")
-       
+
     #允许使用自定义目录
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
+
     #设置CMake预定义文件夹名称
     set(PREDEFINED_TARGETS_FOLDER "_CMakePredefinedTargets")
     set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER ${PREDEFINED_TARGETS_FOLDER})
-    
+
     #
     if(${CMAKE_VERSION} VERSION_GREATER 3.9 OR ${CMAKE_VERSION} VERSION_EQUAL 3.9)
       set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Moc Files")#
     endif()
-    
+
     #若未设置安装目录,则自定义安装路径
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       #获取工程根目录
@@ -139,7 +134,7 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
       get_filename_component(CMAKE_INSTALL_PREFIX_DEFAULT ${ROOT_DIRECTORY} DIRECTORY CACHE)
       set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX_DEFAULT} CACHE INTERNAL "CMAKE_INSTALL_PREFIX" FORCE)
     endif()
-    
+
     #Qt环境初始化
     if(DEFINED ENV{QTDIR})
       #设置Qt模块搜索路径
@@ -163,12 +158,12 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
     if(Java_FOUND)
       include(UseJava)
     endif()
-    
+
     #CSharp环境初始化
     if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)
       include(CSharpUtilities)
 
-      set(CMAKE_CSharp_FLAGS "/langversion:default")
+      set(CMAKE_CSharp_FLAGS "/langversion:default /errorreport:promt")
       set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION "v4.0" CACHE STRING "CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION")
     endif()
 
@@ -225,9 +220,10 @@ macro(configureQtModules)
         set(QT_MODULE_PREFIX "Qt6::")
       elseif(Qt5_FOUND)#使用Qt5
         find_package(Qt5 QUIET REQUIRED COMPONENTS ${QT_MODULE_LIST})
+        list(REMOVE_ITEM QT_MODULE_LIST "Core5Compat")#这些模块在Qt5中没有
         set(QT_MODULE_PREFIX "Qt5::")
       elseif(Qt4_FOUND OR QT4_FOUND)#使用Qt4
-        list(REMOVE_ITEM QT_MODULE_LIST "Widgets" "PrintSupport" "Concurrent")#这些模块在Qt4中没有独立存在
+        list(REMOVE_ITEM QT_MODULE_LIST "Widgets" "PrintSupport" "Concurrent" "Core5Compat")#这些模块在Qt4中没有独立存在
         set(QT_MODULE_PREFIX "Qt4::Qt")
       endif()
       if(DEFINED QT_MODULE_PREFIX)#成功找到版本合适的Qt库
@@ -266,7 +262,7 @@ macro(configureThirdPartyList)
             set(CURRENT_LIBRARY_ROOT "$ENV{ThirdParty}/soci-3.2.3")
           else()
             set(CURRENT_LIBRARY_ROOT "$ENV{ThirdParty}/${CURRENT_LIBRARY_NAME}")
-          endif()    
+          endif()
           #添加头文件和静态库搜索路径
           target_include_directories(${CURRENT_TARGET} SYSTEM PRIVATE "${CURRENT_LIBRARY_ROOT}/include")
           set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib")
@@ -376,20 +372,20 @@ macro(importTarget IMPORTED_TARGET_NAME)
         add_library(${IMPORTED_TARGET_NAME} SHARED IMPORTED)
         set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY IMPORTED_CONFIGURATIONS "${CMAKE_CONFIGURATION_TYPES}")
         set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$ENV{HuaruSDK}/include")
-        foreach(CONFIG_TYPE_UPPER_CASE ${CMAKE_CONFIGURATION_TYPES})
-          string(TOUPPER ${CONFIG_TYPE_UPPER_CASE} CONFIG_TYPE_UPPER_CASE)
-          set(IMPORTED_TARGET_BASE_NAME "${IMPORTED_TARGET_NAME}${CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX}")
+        foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
+          string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER_CASE)
+          set(IMPORTED_TARGET_BASE_NAME "${IMPORTED_TARGET_NAME}${DEFAULT_VERSION_INFORMATION}${CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX}")
           #查找静态库
           if(MSVC)
             set(IMPORTED_TARGET_IMPLIB "${IMPORTED_TARGET_NAME}_IMPLIB_${CONFIG_TYPE_UPPER_CASE}")#静态库路径
             set(${IMPORTED_TARGET_IMPLIB} "${IMPORTED_TARGET_BASE_NAME}-NOTFOUND" CACHE STRING "${IMPORTED_TARGET_IMPLIB}" FORCE)#清除之前找到的二方库路径缓存
-            find_library(${IMPORTED_TARGET_IMPLIB} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_FIND_LIBRARY_SUFFIX}" 
-              HINTS "$ENV{HuaruSDK}/lib" 
+            find_library(${IMPORTED_TARGET_IMPLIB} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_FIND_LIBRARY_SUFFIX}"
+              HINTS "$ENV{HuaruSDK}/lib"
               PATH_SUFFIXES "${CRT_VERSION_NAME}_${PLATFORM}" "${PLATFORM}" "${CRT_VERSION_NAME}/${PLATFORM}" "${CRT_VERSION_NAME}_${PLATFORM}/static" "${PLATFORM}/static" "${CRT_VERSION_NAME}/${PLATFORM}/static"
               NO_DEFAULT_PATH)
             if(NOT ${${IMPORTED_TARGET_IMPLIB}} STREQUAL "${IMPORTED_TARGET_IMPLIB}-NOTFOUND")
               set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY IMPORTED_IMPLIB_${CONFIG_TYPE_UPPER_CASE} "${${IMPORTED_TARGET_IMPLIB}}")
-              install(FILES "$<TARGET_LINKER_FILE:${IMPORTED_TARGET_NAME}>" CONFIGURATIONS "${CONFIG_TYPE_UPPER_CASE}" DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}")#            
+              install(FILES "$<TARGET_LINKER_FILE:${IMPORTED_TARGET_NAME}>" DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}" CONFIGURATIONS "${CONFIG_TYPE}")#
               message("\tLINK_FOR_${CONFIG_TYPE_UPPER_CASE}:${${IMPORTED_TARGET_IMPLIB}}")
             else()
               message("\tLINK_FOR_${CONFIG_TYPE_UPPER_CASE}:NOTFOUND")
@@ -398,8 +394,8 @@ macro(importTarget IMPORTED_TARGET_NAME)
             #查找动态库
             set(IMPORTED_TARGET_LOCATION "${IMPORTED_TARGET_NAME}_LOCATION_${CONFIG_TYPE_UPPER_CASE}")#动态库路径
             set(${IMPORTED_TARGET_LOCATION} "${IMPORTED_TARGET_BASE_NAME}-NOTFOUND" CACHE STRING "${IMPORTED_TARGET_LOCATION}" FORCE)#清除之前找到的二方库路径缓存
-            find_file(${IMPORTED_TARGET_LOCATION} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" 
-              HINTS "$ENV{HuaruSDK}" 
+            find_file(${IMPORTED_TARGET_LOCATION} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}"
+              HINTS "$ENV{HuaruSDK}"
               PATH_SUFFIXES "bin" "lib" "lib/${CRT_VERSION_NAME}_${PLATFORM}" "lib/${PLATFORM}"
               NO_DEFAULT_PATH)
             if(NOT ${${IMPORTED_TARGET_LOCATION}} STREQUAL "${IMPORTED_TARGET_LOCATION}-NOTFOUND")
@@ -446,7 +442,7 @@ macro(prepareTarget)
   get_filename_component(CURRENT_TARGET ${CMAKE_CURRENT_LIST_DIR} NAME_WE)#获取当前目标名称
   get_filename_component(CURRENT_SOURCE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)#获取当前源码文件夹名称
   get_property(PARENT_DIRECTORY DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY PARENT_DIRECTORY)#获取父目录
-########################################################################################################################## 
+#############################################################################################################################
   #C/C++
   file(GLOB_RECURSE SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.c" "${CMAKE_CURRENT_SOURCE_DIR}/*.cxx")#归集源文件
   file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.inc")#归集头文件
@@ -458,27 +454,27 @@ macro(prepareTarget)
     configure_file("${PROJECT_SOURCE_DIR}/VersionInfo.rc.in" "${CURRENT_TARGET_VERSIONINFO_RC}")#将版本&版权等信息写入生成的二进制文件
     list(APPEND RESOURCE_FILES "${CURRENT_TARGET_VERSIONINFO_RC}")
   endif()
-########################################################################################################################## 
+#############################################################################################################################
   #Java
   file(GLOB_RECURSE JAVA_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.java")#归集Java源文件
-########################################################################################################################## 
+#############################################################################################################################
   #CSharp
   file(GLOB_RECURSE CSHARP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cs")#归集CSharp源文件
 endmacro()
 
 #配置目标项目
 macro(configureTarget)
-#######################################################################################################################
+#############################################################################################################################
   get_property(CURRENT_TARGET_TYPE TARGET ${CURRENT_TARGET} PROPERTY TYPE)#获取目标类型
   message(STATUS "TARGET:${CURRENT_TARGET}\tTYPE:${CURRENT_TARGET_TYPE}")#输出当前目标名称
   string(REPLACE "${PROJECT_SOURCE_DIR}" "${CMAKE_PROJECT_NAME}" FOLDER_PATH ${PARENT_DIRECTORY})#获取相对路径
   set_property(TARGET ${CURRENT_TARGET} PROPERTY FOLDER "${FOLDER_PATH}")#保持项目目录结构
-#######################################################################################################################
+#############################################################################################################################
   if(NOT JAVA_SOURCE_FILES)
     if(NOT CSHARP_SOURCE_FILES)#C/C++
-#######################################################################################################################
+#############################################################################################################################
       target_sources(${CURRENT_TARGET} PRIVATE ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${RESOURCE_FILES})
-#######################################################################################################################
+#############################################################################################################################
       #公共部分代码目录
       if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/public/include/${CURRENT_SOURCE_FOLDER}")
         set(PUBLIC_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public/include")
@@ -501,8 +497,8 @@ macro(configureTarget)
 #######################################################################################################################
       if(NOT "${PRIVATE_HEADER_DIR}" STREQUAL "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}")#经过设计的源码目录(public|private),具有较复杂的目录结构
         foreach(CURRENT_SOURCE_CODE_FILE_PATH ${HEADER_FILES} ${SOURCE_FILES} ${FORM_FILES} ${TS_FILES})
-          get_filename_component(CURRENT_SOURCE_CODE_DIRECTORY ${CURRENT_SOURCE_CODE_FILE_PATH} DIRECTORY)    
-          string(REPLACE "${PRIVATE_HEADER_DIR}" "_Src" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_DIRECTORY}")#获取当前文件目录
+          get_filename_component(CURRENT_SOURCE_CODE_DIRECTORY ${CURRENT_SOURCE_CODE_FILE_PATH} DIRECTORY)#获取当前文件目录
+          string(REPLACE "${PRIVATE_HEADER_DIR}" "_Src" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_DIRECTORY}")
           string(REPLACE "${PUBLIC_HEADER_DIR}" "_Include" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_FILE_GROUP}")
           string(REPLACE "/" "\\\\" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_FILE_GROUP}")
           source_group("${CURRENT_SOURCE_CODE_FILE_GROUP}" FILES "${CURRENT_SOURCE_CODE_FILE_PATH}")
@@ -517,8 +513,8 @@ macro(configureTarget)
 #######################################################################################################################
       set(PCH_NAME "stdafx.h")
       if(EXISTS "${PRIVATE_HEADER_DIR}/${PCH_NAME}")
-        set(PCH_HEADER_FILE "${PRIVATE_HEADER_DIR}/stdafx.h") 
-        set(PCH_SOURCE_FILE "${PRIVATE_HEADER_DIR}/stdafx.cpp") 
+        set(PCH_HEADER_FILE "${PRIVATE_HEADER_DIR}/stdafx.h")
+        set(PCH_SOURCE_FILE "${PRIVATE_HEADER_DIR}/stdafx.cpp")
       endif()
       if(MSVC_IDE)
         #在VS中重定相关变量
@@ -557,7 +553,7 @@ macro(configureTarget)
       if(EXISTS "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}")
         target_include_directories(${CURRENT_TARGET} PRIVATE "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}")
       endif()
-      target_include_directories(${CURRENT_TARGET} SYSTEM PUBLIC "${PUBLIC_HEADER_DIR}")
+      target_include_directories(${CURRENT_TARGET} PUBLIC "${PUBLIC_HEADER_DIR}")
       if(NOT ${PRIVATE_HEADER_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
         target_include_directories(${CURRENT_TARGET} PRIVATE "${PRIVATE_HEADER_DIR}")
       endif()
@@ -582,7 +578,7 @@ macro(configureTarget)
       if(${CURRENT_TARGET_TYPE} STREQUAL "MODULE_LIBRARY")#插件库
         if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Plugins")
           string(REGEX REPLACE "${PROJECT_SOURCE_DIR}/Plugins" "plugins" PLUGIN_INSTALL_PATH ${PARENT_DIRECTORY})
-          install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}" LIBRARY DESTINATION "${PLUGIN_INSTALL_PATH}")#插件库安装目录
+          install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "${PLUGIN_INSTALL_PATH}" LIBRARY DESTINATION "${PLUGIN_INSTALL_PATH}")#插件库安装目录
         endif()
       else()
         if(${CURRENT_TARGET_TYPE} STREQUAL "EXECUTABLE")#可执行程序
@@ -593,32 +589,31 @@ macro(configureTarget)
           if(MSVC_IDE AND DEFINED USE_GUI)
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /level='requireAdministrator'")#GUI程序配置
           endif()
-          if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")
-            set_property(TARGET ${CURRENT_TARGET} PROPERTY ENABLE_EXPORTS "TRUE")
-            target_include_directories(${CURRENT_TARGET} SYSTEM INTERFACE "${PUBLIC_HEADER_DIR}")
-          endif()
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Applications")
+            if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#插件化的工具,直接暴露接口定义
+              set_property(TARGET ${CURRENT_TARGET} PROPERTY ENABLE_EXPORTS "TRUE")
+              target_include_directories(${CURRENT_TARGET} SYSTEM INTERFACE "${PUBLIC_HEADER_DIR}")
+            endif()
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "bin")#可执行文件安装目录
           elseif(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Tools")
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "tools")#可执行文件(工具)安装目录
           endif()
         elseif(${CURRENT_TARGET_TYPE} STREQUAL "SHARED_LIBRARY")#动态库
-#         string(TOUPPER "${CURRENT_TARGET}_EXPORTS" SYMBOL_API_EXPORTS)
-#         set_property(TARGET ${CURRENT_TARGET} PROPERTY DEFINE_SYMBOL "${SYMBOL_API_EXPORTS}")
+          target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_TARGET}>_EXPORTS;$<UPPER_CASE:${CURRENT_TARGET}>_LIB")
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
-            if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")
+            if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#二次开发库(公开)
               install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}" DESTINATION "include")
-              install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}" LIBRARY DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}" ARCHIVE DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}")#普通动态库(非插件&&二次开发)安装目录
-            else()
-              install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "bin" LIBRARY DESTINATION "bin")#普通动态库(非插件&&仅运行)安装目录
             endif()
+            install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "bin" LIBRARY DESTINATION "bin" ARCHIVE DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}")#普通动态库(非插件&&仅运行)安装目录
           endif()
         endif()
-        if(MSVC_IDE)
-          install(FILES $<TARGET_PDB_FILE:${CURRENT_TARGET}> DESTINATION "pdb" OPTIONAL)#将pdb文件放入安装目录用于调试
-        endif()
+      endif()
+      if(MSVC_IDE)
+        install(FILES $<TARGET_PDB_FILE:${CURRENT_TARGET}> DESTINATION "pdb" OPTIONAL)#将pdb文件放入安装目录用于调试
       endif()
     endif()
+    #为C/C++库添加编译版本信息
+    set_property(TARGET ${CURRENT_TARGET} PROPERTY OUTPUT_NAME "${CURRENT_TARGET}$<$<AND:$<OR:$<STREQUAL:\"$<TARGET_PROPERTY:${CURRENT_TARGET},LINKER_LANGUAGE>\",\"C\">,$<STREQUAL:\"$<TARGET_PROPERTY:${CURRENT_TARGET},LINKER_LANGUAGE>\",\"CXX\">>,$<NOT:$<STREQUAL:\"${CURRENT_TARGET_TYPE}\",\"EXECUTABLE\">>>:${DEFAULT_VERSION_INFORMATION}>")
 #########################################################################################################################
   endif()
   message("")
@@ -664,13 +659,10 @@ macro(generateJavaPackage)
 endmacro()
 
 #指定生成CSharp可执行程序
-macro(generateCSharpLibrary)
+macro(generateCSharpProgram)
   if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)
     prepareTarget()#文件归集
-    add_executable(${CURRENT_TARGET」)#生成CSharp程序
-    csharp_set_designer_cs_properties(${CSHARP_SOURCE_FILES})
-    #添加.NET中的引用库
-    set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DOTNET_REFERENCES "System.Xml;")
+    add_executable(${CURRENT_TARGET」)#生成CSharp可执行程序
     configureTarget()#配置目标项目
   else()
     message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.8.2) OR HIGHER FOR CSHARP PROJECT")
@@ -682,9 +674,6 @@ macro(generateCSharpLibrary)
   if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)
     prepareTarget()#文件归集
     add_library(${CURRENT_TARGET} SHARED)#生成CSharp动态库
-    csharp_set_designer_cs_properties(${CSHARP_SOURCE_FILES})
-    #添加.NET中的引用库
-    set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DOTNET_REFERENCES "System.Xml;")
     configureTarget()#配置目标项目
   else()
     message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.8.2) OR HIGHER FOR CSHARP PROJECT")

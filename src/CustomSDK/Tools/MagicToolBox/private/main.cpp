@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "MagicToolBox.h"
 
 #include <BasicUIFramework/BasicUIFramework.h>
