@@ -1,5 +1,7 @@
 if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#此模块要求CMake版本至少3.1.0
-  cmake_policy(SET CMP0068 NEW)
+  if(${CMAKE_VERSION} VERSION_GREATER 3.9 OR ${CMAKE_VERSION} VERSION_EQUAL 3.9)#此模块要求CMake版本至少3.9.0
+    cmake_policy(SET CMP0068 NEW)
+  endif()
   if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})#编译环境与目标配置初始化
     set(CMAKE_WARN_VS10 OFF CACHE BOOL "CMAKE_WARN_VS10")#忽略将不支持VS2010的警告
 
@@ -153,18 +155,26 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
       endif()
     endif()
 
+    include(CheckLanguage)
+
     #Java环境初始化
     find_package(Java)
     if(Java_FOUND)
+      #Java编译指定为utf8编码,防止源码文件编码格式不符导致编译报错
+      list(APPEND CMAKE_JAVA_COMPILE_FLAGS "-encoding" "utf8")
       include(UseJava)
     endif()
 
     #CSharp环境初始化
     if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)
-      include(CSharpUtilities)
+      check_language("CSharp")
+      if(CMAKE_CSharp_COMPILER)
+        enable_language("CSharp")
+        include(CSharpUtilities)
 
-      set(CMAKE_CSharp_FLAGS "/langversion:default /errorreport:promt")
-      set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION "v4.0" CACHE STRING "CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION")
+        set(CMAKE_CSharp_FLAGS "/langversion:default /errorreport:promt")
+        set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION "v4.0" CACHE STRING "CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION")
+      endif()
     endif()
 
     #输出编译环境信息
@@ -300,9 +310,11 @@ macro(configureThirdPartyList)
           if(EXISTS "${CURRENT_LIBRARY_ROOT}/lib/${CRT_VERSION_NAME}/${PLATFORM}")
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib/${CRT_VERSION_NAME}/${PLATFORM}")
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib/${CRT_VERSION_NAME}/${PLATFORM}/${CMAKE_CFG_INTDIR}")
+            set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS_RELWITHDEBINFO "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib/${CRT_VERSION_NAME}/${PLATFORM}/Release")
           elseif(EXISTS "${CURRENT_LIBRARY_ROOT}/lib")
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib")
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib/${CMAKE_CFG_INTDIR}")
+            set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS_RELWITHDEBINFO "${SYMBOL_SEARCH_LIBRARY}${CURRENT_LIBRARY_ROOT}/lib/Release")
           endif()
           #链接静态库
           if(${CURRENT_LIBRARY_NAME} MATCHES "Qtnribbon")
@@ -425,6 +437,8 @@ macro(addLinkGroup)
   addBasicGroup()
 
   importTarget("TopSimRPC")
+  importTarget("TopSimDataInterfaceCWarp")
+  importTarget("TopSimDataInterfacePydWarp")
 endmacro()
 
 #导入BasicUIFramework
@@ -451,6 +465,7 @@ macro(prepareTarget)
   file(GLOB_RECURSE TS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ts")#归集翻译文件
   if(MSVC AND EXISTS "${PROJECT_SOURCE_DIR}/VersionInfo.rc.in")
     set(CURRENT_TARGET_VERSIONINFO_RC "${CMAKE_CURRENT_BINARY_DIR}/VersionInfo.rc")
+    string(TIMESTAP CURRENT_YEAR "%Y")
     configure_file("${PROJECT_SOURCE_DIR}/VersionInfo.rc.in" "${CURRENT_TARGET_VERSIONINFO_RC}")#将版本&版权等信息写入生成的二进制文件
     list(APPEND RESOURCE_FILES "${CURRENT_TARGET_VERSIONINFO_RC}")
   endif()
@@ -460,6 +475,10 @@ macro(prepareTarget)
 #############################################################################################################################
   #CSharp
   file(GLOB_RECURSE CSHARP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cs")#归集CSharp源文件
+#############################################################################################################################
+  #Python
+  file(GLOB_RECURSE PYTHON_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.py")#归集Python源文件
+#############################################################################################################################
 endmacro()
 
 #配置目标项目
@@ -470,37 +489,37 @@ macro(configureTarget)
   string(REPLACE "${PROJECT_SOURCE_DIR}" "${CMAKE_PROJECT_NAME}" FOLDER_PATH ${PARENT_DIRECTORY})#获取相对路径
   set_property(TARGET ${CURRENT_TARGET} PROPERTY FOLDER "${FOLDER_PATH}")#保持项目目录结构
 #############################################################################################################################
-  if(NOT JAVA_SOURCE_FILES)
+  if(NOT CURRENT_TARGET_TYPE STREQUAL "UTILITY")#非Java/Python代码
+#############################################################################################################################
+    #公共部分代码目录
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/public/include/${CURRENT_SOURCE_FOLDER}")
+      set(PUBLIC_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public/include")
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/public/${CURRENT_SOURCE_FOLDER}")
+      set(PUBLIC_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public")
+    else()
+      set(PUBLIC_HEADER_DIR "${PARENT_DIRECTORY}")
+    endif()
+#######################################################################################################################
+    #私有部分代码目录
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private/src/${CURRENT_SOURCE_FOLDER}")
+      set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private/src/${CURRENT_SOURCE_FOLDER}")
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private/src")
+      set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private/src")
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private")
+      set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private")
+    else()
+      set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+    endif()
     if(NOT CSHARP_SOURCE_FILES)#C/C++
 #############################################################################################################################
       target_sources(${CURRENT_TARGET} PRIVATE ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${RESOURCE_FILES})
-#############################################################################################################################
-      #公共部分代码目录
-      if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/public/include/${CURRENT_SOURCE_FOLDER}")
-        set(PUBLIC_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public/include")
-      elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/public/${CURRENT_SOURCE_FOLDER}")
-        set(PUBLIC_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/public")
-      else()
-        set(PUBLIC_HEADER_DIR "${PARENT_DIRECTORY}")
-      endif()
-#######################################################################################################################
-      #私有部分代码目录
-      if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private/src/${CURRENT_SOURCE_FOLDER}")
-        set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private/src/${CURRENT_SOURCE_FOLDER}")
-      elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private/src")
-        set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private/src")
-      elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/private")
-        set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/private")
-      else()
-        set(PRIVATE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-      endif()
 #######################################################################################################################
       if(NOT "${PRIVATE_HEADER_DIR}" STREQUAL "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}")#经过设计的源码目录(public|private),具有较复杂的目录结构
         foreach(CURRENT_SOURCE_CODE_FILE_PATH ${HEADER_FILES} ${SOURCE_FILES} ${FORM_FILES} ${TS_FILES})
           get_filename_component(CURRENT_SOURCE_CODE_DIRECTORY ${CURRENT_SOURCE_CODE_FILE_PATH} DIRECTORY)#获取当前文件目录
           string(REPLACE "${PRIVATE_HEADER_DIR}" "_Src" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_DIRECTORY}")
           string(REPLACE "${PUBLIC_HEADER_DIR}" "_Include" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_FILE_GROUP}")
-          string(REPLACE "/" "\\\\" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_FILE_GROUP}")
+          file(TO_NATIVE_PATH "${CURRENT_SOURCE_CODE_FILE_GROUP}" "CURRENT_SOURCE_CODE_FILE_GROUP")
           source_group("${CURRENT_SOURCE_CODE_FILE_GROUP}" FILES "${CURRENT_SOURCE_CODE_FILE_PATH}")
         endforeach()
       else()#简单目录结构
@@ -550,8 +569,8 @@ macro(configureTarget)
 #########################################################################################################################
       set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_${CMAKE_PROJECT_NAME} "${CMAKE_INSTALL_PREFIX}")#
 #########################################################################################################################
-      if(EXISTS "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}")
-        target_include_directories(${CURRENT_TARGET} PRIVATE "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}")
+      if(EXISTS "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}")
+        target_include_directories(${CURRENT_TARGET} PRIVATE "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}")
       endif()
       target_include_directories(${CURRENT_TARGET} PUBLIC "${PUBLIC_HEADER_DIR}")
       if(NOT ${PRIVATE_HEADER_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
@@ -567,15 +586,16 @@ macro(configureTarget)
     endif()
 #########################################################################################################################
     if(${CURRENT_TARGET_TYPE} STREQUAL "STATIC_LIBRARY")#静态库
-      target_compile_definitions(${CURRENT_TARGET} PUBLIC "USE_$<UPPER_CASE:${CURRENT_TARGET}>_STATIC")
+      target_compile_definitions(${CURRENT_TARGET} PUBLIC "USE_$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_STATIC")
       if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
         if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")
-          install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}" DESTINATION "include")
+          install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
           install(TARGETS ${CURRENT_TARGET} ARCHIVE DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}/static")#静态库安装目录
         endif()
       endif()
     else()
       if(${CURRENT_TARGET_TYPE} STREQUAL "MODULE_LIBRARY")#插件库
+        target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_EXPORTS;$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_LIB")
         if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Plugins")
           string(REGEX REPLACE "${PROJECT_SOURCE_DIR}/Plugins" "plugins" PLUGIN_INSTALL_PATH ${PARENT_DIRECTORY})
           install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "${PLUGIN_INSTALL_PATH}" LIBRARY DESTINATION "${PLUGIN_INSTALL_PATH}")#插件库安装目录
@@ -593,28 +613,37 @@ macro(configureTarget)
             if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#插件化的工具,直接暴露接口定义
               set_property(TARGET ${CURRENT_TARGET} PROPERTY ENABLE_EXPORTS "TRUE")
               target_include_directories(${CURRENT_TARGET} SYSTEM INTERFACE "${PUBLIC_HEADER_DIR}")
+              install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
             endif()
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "bin")#可执行文件安装目录
           elseif(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Tools")
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "tools")#可执行文件(工具)安装目录
           endif()
         elseif(${CURRENT_TARGET_TYPE} STREQUAL "SHARED_LIBRARY")#动态库
-          target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_TARGET}>_EXPORTS;$<UPPER_CASE:${CURRENT_TARGET}>_LIB")
+          target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_EXPORTS;$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_LIB")
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
             if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#二次开发库(公开)
-              install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_TARGET}" DESTINATION "include")
+              install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
             endif()
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "bin" LIBRARY DESTINATION "bin" ARCHIVE DESTINATION "lib/${CRT_VERSION_NAME}_${PLATFORM}")#普通动态库(非插件&&仅运行)安装目录
           endif()
         endif()
       endif()
       if(MSVC_IDE)
-        install(FILES $<TARGET_PDB_FILE:${CURRENT_TARGET}> DESTINATION "pdb" OPTIONAL)#将pdb文件放入安装目录用于调试
+        #install(FILES $<TARGET_PDB_FILE:${CURRENT_TARGET}> DESTINATION "pdb" OPTIONAL)#将pdb文件放入安装目录用于调试
       endif()
     endif()
     #为C/C++库添加编译版本信息
     set_property(TARGET ${CURRENT_TARGET} PROPERTY OUTPUT_NAME "${CURRENT_TARGET}$<$<AND:$<OR:$<STREQUAL:\"$<TARGET_PROPERTY:${CURRENT_TARGET},LINKER_LANGUAGE>\",\"C\">,$<STREQUAL:\"$<TARGET_PROPERTY:${CURRENT_TARGET},LINKER_LANGUAGE>\",\"CXX\">>,$<NOT:$<STREQUAL:\"${CURRENT_TARGET_TYPE}\",\"EXECUTABLE\">>>:${DEFAULT_VERSION_INFORMATION}>")
 #########################################################################################################################
+  elseif(PYTHON_SOURCE_FILES)#
+    #Python代码保持原始目录结构
+    foreach(CURRENT_SOURCE_CODE_FILE_PATH ${PYTHON_SOURCE_FILES})
+      get_filename_component(CURRENT_SOURCE_CODE_DIRECTORY ${CURRENT_SOURCE_CODE_FILE_PATH} DIRECTORY)#获取当前文件目录
+      string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" CURRENT_SOURCE_CODE_FILE_GROUP "${CURRENT_SOURCE_CODE_DIRECTORY}")
+      file(TO_NATIVE_PATH "${CURRENT_SOURCE_CODE_FILE_GROUP}" "CURRENT_SOURCE_CODE_FILE_GROUP")
+      source_group("${CURRENT_SOURCE_CODE_FILE_GROUP}" FILES "${CURRENT_SOURCE_CODE_FILE_PATH}")
+    endforeach()
   endif()
   message("")
 endmacro()
@@ -678,4 +707,18 @@ macro(generateCSharpLibrary)
   else()
     message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.8.2) OR HIGHER FOR CSHARP PROJECT")
   endif()
+endmacro()
+
+#指定生成Python可执行程序
+macro(generatePythonProgram)
+  prepareTarget()#文件归集
+  add_cusstom_target(${CURRENT_TARGET} SOURCES "${PYTHON_SOURCE_FILES}")#组织Python源代码
+  configureTarget()#配置目标项目
+endmacro()
+
+#指定生成常规动态链接库
+macro(generatePythonLibrary)
+  generateDynamicLibrary()
+  set_property(TARGET ${CURRENT_TARGET} PROPERTY RUNTIME_OUTPUT_NAME "${CURRENT_TARGET}")#
+  set_property(TARGET ${CURRENT_TARGET} PROPERTY SUFFIX ".pyd")#
 endmacro()
