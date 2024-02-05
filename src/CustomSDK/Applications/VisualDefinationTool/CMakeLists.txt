@@ -3,4 +3,4 @@ set(THIRD_LIBRARY_LIST boost)
 
 generateExecutableProgram()
 
-target_link_libraries(${CURRENT_TARGET} PRIVATE BasicUIFramework)
+target_link_libraries(${CURRENT_TARGET} PRIVATE "BasicUIFramework")

@@ -1,17 +1,18 @@
-if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#此模块要求CMake版本至少3.1.0
-  if(${CMAKE_VERSION} VERSION_GREATER 3.9 OR ${CMAKE_VERSION} VERSION_EQUAL 3.9)#此模块要求CMake版本至少3.9.0
+if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)#此模块要求CMake版本至少3.8.2
+  if(${CMAKE_VERSION} VERSION_GREATER 3.9 OR ${CMAKE_VERSION} VERSION_EQUAL 3.9)#
     cmake_policy(SET CMP0068 NEW)
   endif()
   if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})#编译环境与目标配置初始化
     set(CMAKE_WARN_VS10 OFF CACHE BOOL "CMAKE_WARN_VS10")#忽略将不支持VS2010的警告
 
-    set(CMAKE_C_STANDARD 11)#设置语言标准要求"C11"
-    set(CMAKE_CXX_STANDARD 11)#设置语言标准要求"C++11"
+    set(CMAKE_C_STANDARD "11")#设置语言标准要求"C11"
+    set(CMAKE_CXX_STANDARD "11")#设置语言标准要求"C++11"
 
-    set(CMAKE_C_STANDARD_REQUIRED ON)#设置语言标准要求必须满足
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)#设置语言标准要求必须满足
+    set(CMAKE_C_STANDARD_REQUIRED "ON")#设置语言标准要求必须满足
+    set(CMAKE_CXX_STANDARD_REQUIRED "ON")#设置语言标准要求必须满足
 
-    set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)#生成位置无关代码
+    set(CMAKE_POSITION_INDEPENDENT_CODE "TRUE")#生成位置无关代码
+    set(CMAKE_ENABLE_EXPORT "TRUE")
 
     #设置编译配置(VS支持多配置)
     if(NOT CMAKE_CONFIGURATION_TYPES)
@@ -76,7 +77,7 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
         set(PLATFORM "x32" CACHE STRING "PLATFORM")
       endif()
 
-      #库文件后缀
+      #库文件调试后缀
       set(CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "CMAKE_DEBUG_POSTFIX" FORCE)
       #库文件编译信息
       set(DEFAULT_VERSION_INFORMATION "-${CRT_VERSION_NAME}-${PLATFORM}" CACHE STRING "DEFAULT_VERSION_INFORMATION" FORCE)
@@ -88,8 +89,8 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
       #确定处理器架构
       set(PLATFORM "${CMAKE_SYSTEM_PROCESSOR}" CACHE STRING "PLATFORM")
       #配置运行时库加载路径
-      set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-      #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+      set(CMAKE_BUILD_WITH_INSTALL_RPATH "TRUE")
+      #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH "TRUE")
       #set(CMAKE_SKIP_BUILD_RPATH TRUE)
       #set(CMAKE_SKIP_INSTALL_RPATH TRUE)
       set(CMAKE_INSTALL_RPATH ".;../lib/${CRT_VERSION_NAME}_${PLATFORM};../lib;../thirdparty/Qt/lib;./lib/${CRT_VERSION_NAME}_${PLATFORM};./lib;./thirdparty;")
@@ -172,7 +173,7 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
         enable_language("CSharp")
         include(CSharpUtilities)
 
-        set(CMAKE_CSharp_FLAGS "/langversion:default /errorreport:promt")
+        set(CMAKE_CSharp_FLAGS "/langversion:default /errorreport:prompt")
         set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION "v4.0" CACHE STRING "CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION")
       endif()
     endif()
@@ -205,7 +206,7 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.1 OR ${CMAKE_VERSION} VERSION_EQUAL 3.1)#�
     message("")
   endif()
 else()
-  message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.1.0) OR HIGHER")
+  message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.8.2) OR HIGHER")
 endif()
 
 #配置Qt库
@@ -229,8 +230,8 @@ macro(configureQtModules)
         find_package(Qt6 QUIET REQUIRED COMPONENTS ${QT_MODULE_LIST})
         set(QT_MODULE_PREFIX "Qt6::")
       elseif(Qt5_FOUND)#使用Qt5
+        list(REMOVE_ITEM QT_MODULE_LIST "Core5Compat")#这些模块在Qt5中没有独立存在
         find_package(Qt5 QUIET REQUIRED COMPONENTS ${QT_MODULE_LIST})
-        list(REMOVE_ITEM QT_MODULE_LIST "Core5Compat")#这些模块在Qt5中没有
         set(QT_MODULE_PREFIX "Qt5::")
       elseif(Qt4_FOUND OR QT4_FOUND)#使用Qt4
         list(REMOVE_ITEM QT_MODULE_LIST "Widgets" "PrintSupport" "Concurrent" "Core5Compat")#这些模块在Qt4中没有独立存在
@@ -375,15 +376,15 @@ macro(configureHuaruLicense)
   endif()
 endmacro()
 
-#从$ENV{HuaruSDK}导入公司内部其他项目的动态库(二方库)      用于依赖指定版本的SDK进行编译
+#从$ENV{SecondParty}导入公司内部其他项目的动态库(二方库)      用于依赖指定版本的SDK进行编译
 macro(importTarget IMPORTED_TARGET_NAME)
  if(NOT TARGET "${IMPORTED_TARGET_NAME}")
-    if(DEFINED ENV{HuaruSDK})
-      if(EXISTS "$ENV{HuaruSDK}/include/${IMPORTED_TARGET_NAME}")#依赖已存在的指定版本的库
+    if(DEFINED ENV{SecondParty})
+      if(EXISTS "$ENV{SecondParty}/include/${IMPORTED_TARGET_NAME}")#依赖已存在的指定版本的库
         message(STATUS "TARGET:${IMPORTED_TARGET_NAME}\t IMPORTED")
         add_library(${IMPORTED_TARGET_NAME} SHARED IMPORTED)
         set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY IMPORTED_CONFIGURATIONS "${CMAKE_CONFIGURATION_TYPES}")
-        set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$ENV{HuaruSDK}/include")
+        set_property(TARGET "${IMPORTED_TARGET_NAME}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$ENV{SecondParty}/include")
         foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
           string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER_CASE)
           set(IMPORTED_TARGET_BASE_NAME "${IMPORTED_TARGET_NAME}${DEFAULT_VERSION_INFORMATION}${CMAKE_${CONFIG_TYPE_UPPER_CASE}_POSTFIX}")
@@ -392,7 +393,7 @@ macro(importTarget IMPORTED_TARGET_NAME)
             set(IMPORTED_TARGET_IMPLIB "${IMPORTED_TARGET_NAME}_IMPLIB_${CONFIG_TYPE_UPPER_CASE}")#静态库路径
             set(${IMPORTED_TARGET_IMPLIB} "${IMPORTED_TARGET_BASE_NAME}-NOTFOUND" CACHE STRING "${IMPORTED_TARGET_IMPLIB}" FORCE)#清除之前找到的二方库路径缓存
             find_library(${IMPORTED_TARGET_IMPLIB} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_FIND_LIBRARY_SUFFIX}"
-              HINTS "$ENV{HuaruSDK}/lib"
+              HINTS "$ENV{SecondParty}/lib"
               PATH_SUFFIXES "${CRT_VERSION_NAME}_${PLATFORM}" "${PLATFORM}" "${CRT_VERSION_NAME}/${PLATFORM}" "${CRT_VERSION_NAME}_${PLATFORM}/static" "${PLATFORM}/static" "${CRT_VERSION_NAME}/${PLATFORM}/static"
               NO_DEFAULT_PATH)
             if(NOT ${${IMPORTED_TARGET_IMPLIB}} STREQUAL "${IMPORTED_TARGET_IMPLIB}-NOTFOUND")
@@ -407,7 +408,7 @@ macro(importTarget IMPORTED_TARGET_NAME)
             set(IMPORTED_TARGET_LOCATION "${IMPORTED_TARGET_NAME}_LOCATION_${CONFIG_TYPE_UPPER_CASE}")#动态库路径
             set(${IMPORTED_TARGET_LOCATION} "${IMPORTED_TARGET_BASE_NAME}-NOTFOUND" CACHE STRING "${IMPORTED_TARGET_LOCATION}" FORCE)#清除之前找到的二方库路径缓存
             find_file(${IMPORTED_TARGET_LOCATION} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}"
-              HINTS "$ENV{HuaruSDK}"
+              HINTS "$ENV{SecondParty}"
               PATH_SUFFIXES "bin" "lib" "lib/${CRT_VERSION_NAME}_${PLATFORM}" "lib/${PLATFORM}"
               NO_DEFAULT_PATH)
             if(NOT ${${IMPORTED_TARGET_LOCATION}} STREQUAL "${IMPORTED_TARGET_LOCATION}-NOTFOUND")
@@ -420,7 +421,7 @@ macro(importTarget IMPORTED_TARGET_NAME)
         message(FATAL_ERROR "${IMPORTED_TARGET_NAME} not imported,libraries cannot be found")
       endif()
     else()
-      message(FATAL_ERROR "ENV{HuaruSDK} not defined to import target:${IMPORTED_TARGET_NAME}")
+      message(FATAL_ERROR "ENV{SecondParty} not defined to import target:${IMPORTED_TARGET_NAME}")
     endif()
   endif()
 endmacro()
@@ -538,11 +539,11 @@ macro(configureTarget)
       if(MSVC_IDE)
         #在VS中重定相关变量
         if(${CMAKE_VERSION} VERSION_GREATER 3.8 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8)
-          set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_OutputPath "${CMAKE_CURRENT_BINARY_DIR}")#设置VS中$(OutputPath)的值
-          set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(OutputPath)")#设置VS调试工作目录为$(OutputPath)
+          #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_OutputPath "${CMAKE_CURRENT_BINARY_DIR}")#设置VS中$(OutputPath)的值
+          #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$ENV{${CMAKE_PROJECT_NAME}}/bin")#设置VS调试工作目录为$(OutputPath)
           if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
-            set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_PATH "${QT_BINARY_DIR};${CMAKE_INSTALL_PREFIX}/lib/${CRT_VERSION_NAME}_${PLATFORM};$ENV{PATH}")#设置VS中$(PATH)的值
-            set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$(PATH)")#设置VS调试环境为$(PATH)
+            #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_PATH "${QT_BINARY_DIR};${CMAKE_INSTALL_PREFIX}/lib/${CRT_VERSION_NAME}_${PLATFORM};$ENV{PATH}")#设置VS中$(PATH)的值
+            #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$(PATH)")#设置VS调试环境为$(PATH)
           endif()
         endif()
         #预编译头处理
@@ -586,7 +587,7 @@ macro(configureTarget)
     endif()
 #########################################################################################################################
     if(${CURRENT_TARGET_TYPE} STREQUAL "STATIC_LIBRARY")#静态库
-      target_compile_definitions(${CURRENT_TARGET} PUBLIC "USE_$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_STATIC")
+      target_compile_definitions(${CURRENT_TARGET} PUBLIC "USE_${CURRENT_SOURCE_FOLDER}_STATIC;")
       if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
         if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")
           install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
@@ -595,7 +596,7 @@ macro(configureTarget)
       endif()
     else()
       if(${CURRENT_TARGET_TYPE} STREQUAL "MODULE_LIBRARY")#插件库
-        target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_EXPORTS;$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_LIB")
+        target_compile_definitions(${CURRENT_TARGET} PRIVATE "${CURRENT_SOURCE_FOLDER}_EXPORTS;")
         if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Plugins")
           string(REGEX REPLACE "${PROJECT_SOURCE_DIR}/Plugins" "plugins" PLUGIN_INSTALL_PATH ${PARENT_DIRECTORY})
           install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "${PLUGIN_INSTALL_PATH}" LIBRARY DESTINATION "${PLUGIN_INSTALL_PATH}")#插件库安装目录
@@ -611,7 +612,6 @@ macro(configureTarget)
           endif()
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Applications")
             if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#插件化的工具,直接暴露接口定义
-              set_property(TARGET ${CURRENT_TARGET} PROPERTY ENABLE_EXPORTS "TRUE")
               target_include_directories(${CURRENT_TARGET} SYSTEM INTERFACE "${PUBLIC_HEADER_DIR}")
               install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
             endif()
@@ -620,7 +620,7 @@ macro(configureTarget)
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "tools")#可执行文件(工具)安装目录
           endif()
         elseif(${CURRENT_TARGET_TYPE} STREQUAL "SHARED_LIBRARY")#动态库
-          target_compile_definitions(${CURRENT_TARGET} PRIVATE "$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_EXPORTS;$<UPPER_CASE:${CURRENT_SOURCE_FOLDER}>_LIB")
+          target_compile_definitions(${CURRENT_TARGET} PRIVATE "${CURRENT_SOURCE_FOLDER}_EXPORTS;")
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
             if(NOT ${PUBLIC_HEADER_DIR} STREQUAL "${PARENT_DIRECTORY}")#二次开发库(公开)
               install(DIRECTORY "${PUBLIC_HEADER_DIR}/${CURRENT_SOURCE_FOLDER}" DESTINATION "include")
@@ -648,10 +648,10 @@ macro(configureTarget)
   message("")
 endmacro()
 
-#指定生成可执行程序
+#指定生成C/C++可执行程序
 macro(generateExecutableProgram)
   prepareTarget()#文件归集
-  add_executable(${CURRENT_TARGET})#生成可执行文件
+  add_executable(${CURRENT_TARGET})#生成C/C++可执行文件
   configureTarget()#配置目标项目
 endmacro()
 
@@ -680,7 +680,7 @@ endmacro()
 macro(generateJavaPackage)
  if(Java_FOUND)
     prepareTarget()#文件归集
-    add_jar(${CURRENT_TARGET} SOURCES "${JAVA_SOURCE_FILES}")#生成Jar包
+    add_jar(${CURRENT_TARGET} SOURCES "${JAVA_SOURCE_FILES}" ENTRY_POINT "${JAVA_ENTRY_POINT}")#生成Jar包
     configureTarget()#配置目标项目
   else()
     message(FATAL_ERROR "Module[\"Java\"] not found")
@@ -691,7 +691,7 @@ endmacro()
 macro(generateCSharpProgram)
   if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.2)
     prepareTarget()#文件归集
-    add_executable(${CURRENT_TARGET」)#生成CSharp可执行程序
+    add_executable(${CURRENT_TARGET})#生成CSharp可执行程序
     configureTarget()#配置目标项目
   else()
     message(FATAL_ERROR "CURRENT CMAKE_VERSION: (${CMAKE_VERSION}) VERSION_REQUIRED: (3.8.2) OR HIGHER FOR CSHARP PROJECT")
@@ -712,13 +712,14 @@ endmacro()
 #指定生成Python可执行程序
 macro(generatePythonProgram)
   prepareTarget()#文件归集
-  add_cusstom_target(${CURRENT_TARGET} SOURCES "${PYTHON_SOURCE_FILES}")#组织Python源代码
+  add_custom_target(${CURRENT_TARGET} SOURCES "${PYTHON_SOURCE_FILES}")#组织Python源代码
   configureTarget()#配置目标项目
 endmacro()
 
-#指定生成常规动态链接库
+#指定生成常规Python动态链接库
 macro(generatePythonLibrary)
   generateDynamicLibrary()
   set_property(TARGET ${CURRENT_TARGET} PROPERTY RUNTIME_OUTPUT_NAME "${CURRENT_TARGET}")#
   set_property(TARGET ${CURRENT_TARGET} PROPERTY SUFFIX ".pyd")#
 endmacro()
+

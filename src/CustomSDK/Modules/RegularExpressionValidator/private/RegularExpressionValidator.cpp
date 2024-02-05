@@ -18,9 +18,16 @@ RegularExpressionValidator::RegularExpressionValidator(QWidget* parent, Qt::Wind
   }
 
 	ui->comboBox_MatchRules->addItem("Custom", "");
+	ui->comboBox_MatchRules->addItem("Port", "(?:[0-5]?\\d\{0,4})|(?:6[0-4]\\d{3})|(?:65[0-4]\\d{2})|(?:655[0-2]\\d)|(?:6553[0-5])");
+	ui->comboBox_MatchRules->addItem("IP(v4)", "(?:(?:(?:25[0-5])|(?:2[0-4]\\d)|(?:[0-1]?\\d?\\d))\.)\{3}(?:(?:25[0-5])|(?:2[0-4]\\d)|(?:[0-1]?\\d?\\d))");
+	ui->comboBox_MatchRules->addItem("InternationAddress(v4)", "((?:(?:(?:25[0-5])|(?:2[0-4]\\d)|(?:[0-1]?\\d?\\d))\.)\{3}(?:(?:25[0-5])|(?:2[0-4]\\d)|(?:[0-1]?\\d?\\d))):((?:[0-5]?\\d\{0,4})|(?:6[0-4]\\d{3})|(?:65[0-4]\\d{2})|(?:655[0-2]\\d)|(?:6553[0-5]))");
+
+  /*
+	ui->comboBox_MatchRules->addItem("Custom", "");
 	ui->comboBox_MatchRules->addItem("Port", "(?:\[0-5\]?\\d\{0,4\})|(?:6\[0-4\]\\d{3})|(?:65\[0-4\]\\d{2})|(?:655\[0-2\]\\d)|(?:6553\[0-5\])");
 	ui->comboBox_MatchRules->addItem("IP(v4)", "(?:(?:(?:25\[0-5\])|(?:2\[0-4\]\\d)|(?:\[0-1\]?\\d?\\d))\.)\{3\}(?:(?:25\[0-5\])|(?:2\[0-4\]\\d)|(?:\[0-1\]?\\d?\\d))");
 	ui->comboBox_MatchRules->addItem("InternationAddress(v4)", "((?:(?:(?:25\[0-5\])|(?:2\[0-4\]\\d)|(?:\[0-1\]?\\d?\\d))\.)\{3\}(?:(?:25\[0-5\])|(?:2\[0-4\]\\d)|(?:\[0-1\]?\\d?\\d))):((?:\[0-5\]?\\d\{0,4\})|(?:6\[0-4\]\\d{3})|(?:65\[0-4\]\\d{2})|(?:655\[0-2\]\\d)|(?:6553\[0-5\]))");
+  */
 }
 
 RegularExpressionValidator::~RegularExpressionValidator()
@@ -50,31 +57,29 @@ void RegularExpressionValidator::on_pushButton_Validate_clicked()
 	const std::string match_content = ui->textEdit_MatchContent->toPlainText().toStdString();
 	if (!match_rules.empty()&&!match_content.empty())
 	{
-    std::regex regex(match_rules);
-		//if(regex.is_valid())
-		{
+    try
+    {
+      std::regex regex(match_rules);
       std::smatch smatch_content;
 			if (std::regex_match(match_content,smatch_content,regex))
 			{//匹配成功(完全匹配)
-				QString message_content =  "Match Success!\n";
-        /*
-				QStringList content_captured = regex.capturedTexts();
-				for (auto it_content_captured= content_captured.begin();it_content_captured!= content_captured.end();++it_content_captured)
-				{
-					message_content += *it_content_captured + "\n";
-				}
-        */
-				CustomMessageBox::information(this, "Information", message_content);
+        std::string message_content =  "Match Success!\n";
+        message_content += "{\n";
+        std::for_each(smatch_content.begin(),smatch_content.end(),[&](const std::string& matched_block)
+            {
+              message_content += " " + matched_block + "\n";
+            });
+        message_content += "}\n";
+				CustomMessageBox::information(this, "Information", QString::fromStdString(message_content));
 			}
 			else
 			{//匹配失败
 				CustomMessageBox::information(this, "Information", "Match Failed!");
 			}
-		}
-		//else
+    }
+    catch (std::regex_error& e)
 		{//正则表达式非法
-
-		}
+    }
 	}
 	else
 	{//正则表达式和匹配内容不能为空
