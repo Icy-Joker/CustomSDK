@@ -6,9 +6,9 @@ chcp 65001
 setlocal EnableDelayedExpansion
 
 :: 项目解决方案名称
-set project_name=CustomSDK
+set PROJECT_NAME=CustomSDK
 :: 安装目录
-:: set project_install_directory=
+:: set INSTALL_DIRECTORY=
 
 :: %SecondParty%
 set SecondParty=
@@ -20,32 +20,32 @@ set BOOST_DIR=%ThirdParty%/boost
 set QT_DIR=%ThirdParty%/Qt
 
 :: 此处必须注意.为了保持目录结构，脚本名称必须以"build_"开头
-set script_name=%~n0
+set SCRIPT_NAME=%~n0
 :: 记录脚本所在目录,防止目录错乱
-set script_directory=%~dp0
-pushd "%script_directory%"
+set SCRIPT_DIRECTORY=%~dp0
+pushd "%SCRIPT_DIRECTORY%"
   ::
-  pushd "../%project_name%"
-    set source_directory=%cd%
+  pushd "../%PROJECT_NAME%"
+    set SOURCE_DIRECTORY=%cd%
   popd
   :: CMake生成项目解決方案所在目录
-  set build_directory=%TMP%/%project_name%/%script_name:~6%
-  if NOT EXIST "%build_directory%" (
-    mkdir "%build_directory%"
+  set BUILD_DIRECTORY=../build/%SCRIPT_NAME:~6%
+  if NOT EXIST "%BUILD_DIRECTORY%" (
+    mkdir "%BUILD_DIRECTORY%"
   )
-  pushd "%build_directory%"
+  pushd "%BUILD_DIRECTORY%"
     :: 删除已有CMakeCache
     if EXIST "CMakeCache.txt" (
       del "CMakeCache.txt"
     )
     :: 生成解決方案
-    cmake -G "Visual Studio 17 2022" -A "win32" "%source_directory%"
+    cmake -G "Visual Studio 17 2022" -A "win32" "%SOURCE_DIRECTORY%"
     :: 自动化步骤
     if !errorlevel! EQU 0 (
       ::支持一键打开顶目解决方案
       choice /t 5 /d N /m "Do you want to open the solution?"
       if !errorlevel! EQU 1 (
-        start %project_name%.sln
+        start %PROJECT_NAME%.sln
       )
     ) else (
       :: 若CMake执行失败则暂停命令行以查看错误信息
