@@ -133,8 +133,12 @@ if(${CMAKE_VERSION} VERSION_GREATER 3.8.2 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8.
     #若未设置安装目录,则自定义安装路径
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       #获取工程根目录
-      get_filename_component(ROOT_DIRECTORY ${CMAKE_SOURCE_DIR} DIRECTORY CACHE)
-      get_filename_component(CMAKE_INSTALL_PREFIX_DEFAULT ${ROOT_DIRECTORY} DIRECTORY CACHE)
+      if(DEFINED ENV{INSTALL_DIRECTORY})
+        set(CMAKE_INSTALL_PREFIX_DEFAULT $ENV{INSTALL_DIRECTORY} CACHE PATH "CMAKE_INSTALL_PREFIX_DEFAULT" FORCE)
+      else()
+        get_filename_component(ROOT_DIRECTORY ${CMAKE_SOURCE_DIR} DIRECTORY CACHE)
+        get_filename_component(CMAKE_INSTALL_PREFIX_DEFAULT ${ROOT_DIRECTORY} DIRECTORY CACHE)
+      endif()
       set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX_DEFAULT} CACHE INTERNAL "CMAKE_INSTALL_PREFIX" FORCE)
     endif()
 
@@ -562,16 +566,7 @@ macro(configureTarget)
         set(PCH_HEADER_FILE "${PRIVATE_HEADER_DIR}/stdafx.h")
         set(PCH_SOURCE_FILE "${PRIVATE_HEADER_DIR}/stdafx.cpp")
       endif()
-      if(MSVC_IDE)
-        #在VS中重定相关变量
-        if(${CMAKE_VERSION} VERSION_GREATER 3.8 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8)
-          #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_OutputPath "${CMAKE_CURRENT_BINARY_DIR}")#设置VS中$(OutputPath)的值
-          #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$ENV{${CMAKE_PROJECT_NAME}}/bin")#设置VS调试工作目录为$(OutputPath)
-          if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
-            #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_PATH "${QT_BINARY_DIR};${CMAKE_INSTALL_PREFIX}/lib/${CRT_VERSION_NAME}_${PLATFORM};$ENV{PATH}")#设置VS中$(PATH)的值
-            #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$(PATH)")#设置VS调试环境为$(PATH)
-          endif()
-        endif()
+      if(MSVC)
         #预编译头处理
         if(PCH_HEADER_FILE)
           set(PCH_DIR "${CMAKE_CURRENT_BINARY_DIR}/pch/${CMAKE_CFG_INTDIR}")
@@ -634,7 +629,7 @@ macro(configureTarget)
           target_compile_definitions(${CURRENT_TARGET} PRIVATE "PROGRAM_BASE_NAME=\"${CURRENT_TARGET}\"")
           set_property(TARGET ${CURRENT_TARGET} PROPERTY DEBUG_POSTFIX "d")#设置可执行程序(调试版本)后缀
           #GUI程序设置程序入口、获取UAC权限
-          if(MSVC_IDE AND DEFINED USE_GUI)
+          if(MSVC AND DEFINED USE_GUI)
             set_property(TARGET ${CURRENT_TARGET} APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /level='requireAdministrator'")#GUI程序配置
           endif()
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Applications")
@@ -646,6 +641,16 @@ macro(configureTarget)
           elseif(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Tools")
             install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "tools")#可执行程序(工具)安装目录
           endif()
+          if(MSVC)
+            #在VS中重定调试相关变量
+            if(${CMAKE_VERSION} VERSION_GREATER 3.8 OR ${CMAKE_VERSION} VERSION_EQUAL 3.8)
+                #set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(${CMAKE_PROJECT_NAME})/bin")#设置VS调试工作目录
+                if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
+                    set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_GLOBAL_PATH "${QT_BINARY_DIR};$(${CMAKE_PROJECT_NAME})/bin;$ENV{PATH};")#设置VS中$(PATH)的值
+                    set_property(TARGET ${CURRENT_TARGET} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$(PATH)")#设置VS调试环境为$(PATH)
+                endif()
+            endif()
+          endif()
         elseif(${CURRENT_TARGET_TYPE} STREQUAL "SHARED_LIBRARY")#动态库
           target_compile_definitions(${CURRENT_TARGET} PRIVATE "${CURRENT_SOURCE_FOLDER}_EXPORTS;")
           if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES "${PROJECT_SOURCE_DIR}/Libraries")
@@ -656,7 +661,7 @@ macro(configureTarget)
           endif()
         endif()
       endif()
-      if(MSVC_IDE)
+      if(MSVC)
         #install(FILES $<TARGET_PDB_FILE:${CURRENT_TARGET}> DESTINATION "pdb" OPTIONAL)#将pdb文件放入安装目录用于调试
       endif()
     endif()
@@ -749,4 +754,3 @@ macro(generatePythonLibrary)
   set_property(TARGET ${CURRENT_TARGET} PROPERTY RUNTIME_OUTPUT_NAME "${CURRENT_TARGET}")#
   set_property(TARGET ${CURRENT_TARGET} PROPERTY SUFFIX ".pyd")#
 endmacro()
-
