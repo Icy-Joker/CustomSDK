@@ -14,7 +14,7 @@ pushd "$SCRIPT_DIRECTORY"
   pushd "../$PROJECT_NAME"
     SOURCE_DIRECTORY=$PWD #记录项目源码目录
   popd
-  BUILD_DIRECTORY=$TMPDIR/$PROJECT_NAME/$SCRIPT_NAME #项目工程目录
+  BUILD_DIRECTORY=../$SCRIPT_NAME #项目工程目录
   if ! test -d "$BUILD_DIRECTORY"
   then
     mkdir -p "$BUILD_DIRECTORY"
