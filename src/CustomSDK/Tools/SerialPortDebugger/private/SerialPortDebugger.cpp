@@ -48,16 +48,16 @@ void SerialPortDebugger::on_pushButton_SerialPortControl_clicked()
 {
   qDebug("on_pushButton_SerialPortControl_clicked");
 
-  if(ui->pushButton_SerialPortControl->text() == QString::fromLocal8Bit("´ò¿ª´®¿Ú"))
+  if(ui->pushButton_SerialPortControl->text() == QString::fromLocal8Bit("æ‰“å¼€ä¸²å£"))
   {
-    //»ñÈ¡´®ÐÐ¶Ë¿Ú²ÎÊý
+    //èŽ·å–ä¸²è¡Œç«¯å£å‚æ•°
     std::string port_name = ui->comboBox_SerialPortName->currentText().toStdString();
     unsigned int baud_rate = ui->comboBox_BaudRate->currentText().toUInt();
     unsigned int character_size = ui->comboBox_CharacterSize->currentText().toUInt();
     unsigned int stop_bits = ui->comboBox_StopBits->currentText().toUInt();
     unsigned int parity = ui->comboBox_Parity->currentText().toUInt();
     unsigned int flow_control = ui->comboBox_FlowControl->currentText().toUInt();
-    //´ò¿ª²¢ÅäÖÃ´®¿Ú
+    //æ‰“å¼€å¹¶é…ç½®ä¸²å£
     if(_p->serial_port_ptr = boost::make_shared<boost::asio::serial_port>(_p->io_context))
     {
       try
@@ -65,7 +65,7 @@ void SerialPortDebugger::on_pushButton_SerialPortControl_clicked()
         _p->serial_port_ptr->open(port_name.c_str());
         if(_p->serial_port_ptr->is_open())
         {
-          ui->pushButton_SerialPortControl->setText(QString::fromLocal8Bit("¹Ø±Õ´®¿Ú"));
+          ui->pushButton_SerialPortControl->setText(QString::fromLocal8Bit("å…³é—­ä¸²å£"));
 
           _p->serial_port_ptr->set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
           _p->serial_port_ptr->set_option(boost::asio::serial_port_base::character_size(character_size));
@@ -96,7 +96,7 @@ void SerialPortDebugger::on_pushButton_SerialPortControl_clicked()
         {
           case boost::asio::error::eof:
           {
-            ui->textBrowser->append(QString::fromLocal8Bit("ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÎÄ¼þ(%1)").arg(QString::fromStdString(port_name)));
+            ui->textBrowser->append(QString::fromLocal8Bit("ç³»ç»Ÿæ‰¾ä¸åˆ°æŒ‡å®šçš„æ–‡ä»¶(%1)").arg(QString::fromStdString(port_name)));
             break;
           }
           default:
@@ -108,9 +108,9 @@ void SerialPortDebugger::on_pushButton_SerialPortControl_clicked()
       }
     }
   }
-  else if(ui->pushButton_SerialPortControl->text() == QString::fromLocal8Bit("¹Ø±Õ´®¿Ú"))
+  else if(ui->pushButton_SerialPortControl->text() == QString::fromLocal8Bit("å…³é—­ä¸²å£"))
   {
-    ui->pushButton_SerialPortControl->setText(QString::fromLocal8Bit("´ò¿ª´®¿Ú"));
+    ui->pushButton_SerialPortControl->setText(QString::fromLocal8Bit("æ‰“å¼€ä¸²å£"));
 
     if(_p->serial_port_ptr)
     {
