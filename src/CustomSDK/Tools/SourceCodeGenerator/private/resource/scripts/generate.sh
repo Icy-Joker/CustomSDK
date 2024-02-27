@@ -6,7 +6,7 @@ pushd "$script_directory"
   pushd "../.."
     #设置CustomSDK环境变量
     export CustomSDK=$PWD
-    pushd "bin"
+    pushd "tools"
       #./SourceCodeGenerator --project_name ""
       #./SourceCodeGenerator --project_name "$CustomSDK/src/CustomSDK"
 

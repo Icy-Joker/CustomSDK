@@ -45,11 +45,6 @@ const char* TEMPLATE_TARGET_HEADER =
 "#ifndef __##BLOCK_TARGET_NAME_UPPER_CASE##_H__\n"
 "# define __##BLOCK_TARGET_NAME_UPPER_CASE##_H__\n"
 "\n"
-"extern \"C\"\n"
-"{\n"
-"  ##BLOCK_TARGET_NAME##_API void Initialize##BLOCK_TARGET_NAME##();\n"
-"}\n"
-"\n"
 "#endif // !__##BLOCK_TARGET_NAME_UPPER_CASE##_H__\n"
 "";
 
@@ -58,9 +53,12 @@ const char* TEMPLATE_TARGET_SOURCE =
 "\n"
 "#include \"##BLOCK_TARGET_NAME##.h\"\n"
 "\n"
-"##BLOCK_TARGET_NAME##_API void Initialize##BLOCK_TARGET_NAME##()\n"
+"extern \"C\"\n"
 "{\n"
-"}\n"
+"  ##BLOCK_TARGET_NAME##_API void Initialize##BLOCK_TARGET_NAME##()\n"
+"  {\n"
+"  }\n"
+"\n"
 "";
 
 const char* TEMPLATE_CLASS_PRIVATE_HEADER =
