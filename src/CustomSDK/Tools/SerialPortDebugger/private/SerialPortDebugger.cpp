@@ -76,7 +76,7 @@ void SerialPortDebugger::on_pushButton_SerialPortControl_clicked()
           std::array<char,1024> read_buffer;
           static std::function<void(const boost::system::error_code&,std::size_t)> function_async_receive_message = [&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
           {
-            if(error_code.value() == 0)
+            if(!error_code)
             {
               //read_buffer[bytes_transferred] = '\0';
               ui->textBrowser->append(QString("bytes received:%1 message:%2").arg(QString::number(bytes_transferred)).arg(read_buffer.data()));
@@ -132,7 +132,7 @@ void SerialPortDebugger::on_pushButton_SendMessage_clicked()
     std::string user_message = ui->lineEdit_UserMessage->text().toStdString();
     _p->serial_port_ptr->async_write_some(boost::asio::buffer(user_message.data(),user_message.length()+1),[&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
     {
-      if(error_code.value() == 0)
+      if(!error_code)
       {
         ui->textBrowser->append(QString("bytes_transferred:%1 message:%2").arg(QString::number(bytes_transferred)).arg(QString::fromLocal8Bit(user_message.c_str())));
       }
