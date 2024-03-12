@@ -1,13 +1,13 @@
 #
-set(BOOST_MODULE_LIST "thread;system;filesystem;date_time;program_options;regex;atomic;chrono;")#ÅäÖÃBoostÄ£¿é
+set(BOOST_MODULE_LIST "thread;system;filesystem;date_time;program_options;regex;atomic;chrono;")#é…ç½®Boostæ¨¡å—
 #
-set(QT_MODULE_LIST "Core;Gui;Widgets;Sql")#ÅäÖÃQtÄ£¿é
+set(QT_MODULE_LIST "Core;Gui;Widgets;Sql")#é…ç½®Qtæ¨¡å—
 #
-set(THIRD_LIBRARY_LIST "icu4c;soci")#ÅäÖÃÆäËûÈı·½¿â
+set(THIRD_LIBRARY_LIST "icu4c;soci")#é…ç½®å…¶ä»–ä¸‰æ–¹åº“
 #
-generateExecutableProgram()#Éú³É¿ÉÖ´ĞĞ³ÌĞò
+generateExecutableProgram()#ç”Ÿæˆå¯æ‰§è¡Œç¨‹åº
 #
-#target_compiler_definitions("${CURRENT_TARGET}" PRIVATE "")#Ìí¼ÓÔ¤´¦Àíºê
+#target_compiler_definitions("${CURRENT_TARGET}" PRIVATE "")#æ·»åŠ é¢„å¤„ç†å®
 #
-#target_link_libraries("${CURRENT_TARGET}" PRIVATE "")#Ìí¼ÓÒÀÀµ¿â
+#target_link_libraries("${CURRENT_TARGET}" PRIVATE "")#æ·»åŠ ä¾èµ–åº“
 target_link_libraries("${CURRENT_TARGET}" PRIVATE "soci_sqlite3")

@@ -207,7 +207,7 @@ bool CustomProject::generate(const std::string& output_directory) const
   const std::string& project_description = getDescription();
   const std::string& project_version = getVersion();
   const std::map<std::string,std::set<std::string>>& map_project_child_folder = getAllChildTarget();
-  //��Ŀ��Ŀ¼
+  //项目根目录
   const std::string project_output_directory = output_directory.empty() ? project_name : (output_directory + "/" + project_name);
 
   if(!boost::filesystem::exists(project_output_directory))

@@ -459,19 +459,19 @@ bool CustomTarget::generateCMakeConfiguration(const std::string& output_director
       std::string template_cmake_configuration(TEMPLATE_CMAKE_CONFIGURATION);
       if(getType() == "StaticLibrary")
       {
-        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateStaticLibrary()#Éú³É¾²Ì¬¿â");
+        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateStaticLibrary()#ç”Ÿæˆé™æ€åº“");
       }
       else if(getType() == "DynamicLibrary")
       {
-        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateDynamicLibrary()#Éú³É¶¯Ì¬¿â");
+        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateDynamicLibrary()#ç”ŸæˆåŠ¨æ€åº“");
       }
       else if(getType() == "PluginLibrary")
       {
-        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generatePluginLibrary()#Éú³É²å¼ş¿â");
+        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generatePluginLibrary()#ç”Ÿæˆæ’ä»¶åº“");
       }
       else if(getType() == "ExecutableProgram")
       {
-        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateExecutableProgram()#Éú³É¿ÉÖ´ĞĞ³ÌĞò");
+        template_cmake_configuration = std::regex_replace(template_cmake_configuration,std::regex("##BLOCK_TARGET_GENERATE_COMMAND##"),"generateExecutableProgram()#ç”Ÿæˆå¯æ‰§è¡Œç¨‹åº");
       }
       else
       {
@@ -514,10 +514,10 @@ bool CustomTarget::generate(const std::string& output_directory) const
       const std::string& target_public_directory = target_directory + "/public/" + target_name;
       const std::string& target_private_directory = target_directory + "/private";
 
-      //Ô¤±àÒëÍ·
+      //é¢„ç¼–è¯‘å¤´
       generatePreCompiledHeader(target_private_directory);
       generatePreCompiledSource(target_private_directory);
-      //ÀàĞÍÌØ¶¨ÎÄ¼ş
+      //ç±»å‹ç‰¹å®šæ–‡ä»¶
       if(target_type == "ExecutableProgram")
       {
         if(target_enable_export || !target_public_class_list .empty())
@@ -538,7 +538,7 @@ bool CustomTarget::generate(const std::string& output_directory) const
         generateTargetHeader(target_public_directory);
         generateTargetSource(target_private_directory);
       }
-      //¹«¿ªÀà
+      //å…¬å¼€ç±»
       std::for_each(target_public_class_list.cbegin(),target_public_class_list.cend(),[&](const std::string& class_name_exist)
       {
         generateClassHeader(class_name_exist,true,target_public_directory);
@@ -546,7 +546,7 @@ bool CustomTarget::generate(const std::string& output_directory) const
         generateClassSource(class_name_exist,target_private_directory);
         generateClassPrivateSource(class_name_exist,target_private_directory);
       });
-      //Ë½ÓĞÀà
+      //ç§æœ‰ç±»
       std::for_each(target_private_class_list.cbegin(),target_private_class_list.cend(),[&](const std::string& class_name_exist)
       {
         generateClassHeader(class_name_exist,false,target_private_directory);
@@ -554,7 +554,7 @@ bool CustomTarget::generate(const std::string& output_directory) const
         generateClassSource(class_name_exist,target_private_directory);
         generateClassPrivateSource(class_name_exist,target_private_directory);
       });
-      //CMakeÅäÖÃÎÄ¼ş
+      //CMakeé…ç½®æ–‡ä»¶
       generateCMakeConfiguration(target_directory);
     }
     else

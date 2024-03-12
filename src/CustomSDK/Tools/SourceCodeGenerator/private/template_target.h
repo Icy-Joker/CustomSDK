@@ -136,17 +136,17 @@ const char* TEMPLATE_ENTRY_METHOD =
 
 const char* TEMPLATE_CMAKE_CONFIGURATION =
 "#\n"
-"set(BOOST_MODULE_LIST \"thread;system;filesystem;date_time;program_options;regex;atomic;chrono;\")#配置Boost模块\n"
+"set(BOOST_MODULE_LIST \"thread;system;filesystem;date_time;program_options;regex;atomic;chrono;\")#閰嶇疆Boost妯″潡\n"
 "#\n"
-"#set(QT_MODULE_LIST \"Core;Gui;Widgets;\")#配置Qt模块\n"
+"#set(QT_MODULE_LIST \"Core;Gui;Widgets;\")#閰嶇疆Qt妯″潡\n"
 "#\n"
-"set(THIRD_LIBRARY_LIST \"icu4c\")#配置其他三方库\n"
+"set(THIRD_LIBRARY_LIST \"icu4c\")#閰嶇疆鍏朵粬涓夋柟搴揬n"
 "#\n"
 "##BLOCK_TARGET_GENERATE_COMMAND##\n"
 "#\n"
-"#target_compiler_definitions(\"${CURRENT_TARGET}\" PRIVATE \"\")#添加预处理宏\n"
+"#target_compiler_definitions(\"${CURRENT_TARGET}\" PRIVATE \"\")#娣诲姞棰勫鐞嗗畯\n"
 "#\n"
-"#target_link_libraries(\"${CURRENT_TARGET}\" PRIVATE \"\")#添加依赖库\n"
+"#target_link_libraries(\"${CURRENT_TARGET}\" PRIVATE \"\")#娣诲姞渚濊禆搴揬n"
 "";
 
 #endif // !__TEMPLATE_TARGET_H__

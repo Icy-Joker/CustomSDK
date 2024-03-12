@@ -11,29 +11,29 @@ int main(int argc, char* argv[])
 {
   int result = 0;
 
-  //Éú³ÉProject
+  //ç”ŸæˆProject
   boost::program_options::options_description description_project("For Project");
   description_project.add_options()
-    ("project_name",boost::program_options::value<std::string>(),"ÏîÄ¿Ãû³Æ")
-    ("project_description",boost::program_options::value<std::string>()->default_value(std::string()),"ÏîÄ¿ÃèÊö")
-    ("project_version",boost::program_options::value<std::string>()->default_value(std::string("0.0.0.0")),"ÏîÄ¿°æ±¾ºÅ")
-    ("child_folder",boost::program_options::value<std::string>()->default_value(std::string()),"ÏîÄ¿×ÓÀà±ğ(ÒÔ','·Ö¸ô");
-  //Éú³ÉTarget
+    ("project_name",boost::program_options::value<std::string>(),"é¡¹ç›®åç§°")
+    ("project_description",boost::program_options::value<std::string>()->default_value(std::string()),"é¡¹ç›®æè¿°")
+    ("project_version",boost::program_options::value<std::string>()->default_value(std::string("0.0.0.0")),"é¡¹ç›®ç‰ˆæœ¬å·")
+    ("child_folder",boost::program_options::value<std::string>()->default_value(std::string()),"é¡¹ç›®å­ç±»åˆ«(ä»¥','åˆ†éš”");
+  //ç”ŸæˆTarget
   boost::program_options::options_description description_target("For Target");
   description_target.add_options()
-    ("target_name",boost::program_options::value<std::string>(),"Ä¿±êÃû³Æ")
-    ("target_type,t",boost::program_options::value<std::string>(),"Ä¿±êÀàĞÍ(StaticLibrary|DynamicLibrary|PluginLibrary|ExecutableProgram)")
-    ("enable_export","ÔÊĞíµ¼³ö·ûºÅ,½ö¶Ô¿ÉÖ´ĞĞ³ÌĞòÓĞĞ§(ÌØÊâÇé¿öÏÂÊ¹ÓÃ,ÀıÈçĞèÒªÎª¿ÉÀ©Õ¹µÄ¿ÉÖ´ĞĞ³ÌĞòÌí¼Ó²å¼şÊ±)")
-    ("public_class",boost::program_options::value<std::string>()->default_value(std::string()),"¹«¿ªÀàÁĞ±í(ÒÔ','·Ö¸ô)")
-    ("private_class",boost::program_options::value<std::string>()->default_value(std::string()),"Ë½ÓĞÀàÁĞ±í(ÒÔ','·Ö¸ô)");
+    ("target_name",boost::program_options::value<std::string>(),"ç›®æ ‡åç§°")
+    ("target_type,t",boost::program_options::value<std::string>(),"ç›®æ ‡ç±»å‹(StaticLibrary|DynamicLibrary|PluginLibrary|ExecutableProgram)")
+    ("enable_export","å…è®¸å¯¼å‡ºç¬¦å·,ä»…å¯¹å¯æ‰§è¡Œç¨‹åºæœ‰æ•ˆ(ç‰¹æ®Šæƒ…å†µä¸‹ä½¿ç”¨,ä¾‹å¦‚éœ€è¦ä¸ºå¯æ‰©å±•çš„å¯æ‰§è¡Œç¨‹åºæ·»åŠ æ’ä»¶æ—¶)")
+    ("public_class",boost::program_options::value<std::string>()->default_value(std::string()),"å…¬å¼€ç±»åˆ—è¡¨(ä»¥','åˆ†éš”)")
+    ("private_class",boost::program_options::value<std::string>()->default_value(std::string()),"ç§æœ‰ç±»åˆ—è¡¨(ä»¥','åˆ†éš”)");
   //
   boost::program_options::options_description description_global("Allowed options");
   description_global.add_options()
-    ("help,h","´òÓ¡´Ë°ïÖúĞÅÏ¢");
+    ("help,h","æ‰“å°æ­¤å¸®åŠ©ä¿¡æ¯");
   description_global.add(description_project);
   description_global.add(description_target);
   description_global.add_options()
-    ("output_directory,o",boost::program_options::value<std::string>()->default_value(std::string()),"Êä³öÄ¿Â¼");
+    ("output_directory,o",boost::program_options::value<std::string>()->default_value(std::string()),"è¾“å‡ºç›®å½•");
 
   boost::program_options::variables_map map_variables;
   try
