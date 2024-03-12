@@ -11,6 +11,8 @@ int main(int argc,char* argv[])
 {
   int result = 0;
 
+  const std::string message = (argc == 2) ? argv[1] : "Hello World";
+
   boost::asio::io_context io_context;
   boost::asio::ip::tcp::socket socket(io_context);
 
@@ -33,17 +35,19 @@ int main(int argc,char* argv[])
               if(!error_code)
               {
                 std::cout << "bytes_transferred:" << bytes_transferred << std::endl;
-                socket.async_send(boost::asio::buffer("Hello Wrold"),function_async_send);
+                socket.async_send(boost::asio::buffer(message.data(),message.size()),function_async_send);
               }
               else
               {
                 std::cout << "error_code:" << error_code << std::endl;
+                result = error_code.value();
+                return result;
               }
               boost::this_thread::sleep_for(boost::chrono::milliseconds(1000));
             };
             if(socket.is_open())
             {
-              socket.async_send(boost::asio::buffer("Hello Wrold"),function_async_send);
+              socket.async_send(boost::asio::buffer(message.data(),message.size()),function_async_send);
             }
           });
           thread_async_send.join();
