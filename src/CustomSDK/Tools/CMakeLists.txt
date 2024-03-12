@@ -4,3 +4,4 @@ add_subdirectory("SourceCodeGenerator")#
 add_subdirectory("SerialPortDebugger")#
 add_subdirectory("IdentifyCardNumberChecker")#
 add_subdirectory("VisualDesigner")#
+add_subdirectory("QRCodeGenerator")#
