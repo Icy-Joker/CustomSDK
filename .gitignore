@@ -1,0 +1,16 @@
+#默认忽略自动生成的文件目录
+/bin
+/etc
+/examples
+/include
+/lib
+/pdb
+/plugins
+/src/build**
+/test
+/thirdparty
+/tools
+#IDE相关忽略规则
+.idea/
+#其他杂项文件
+.DS_Store
