@@ -1,0 +1,65 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "RelWithDebInfo",
+      "description": "RelWithDebInfo configuration",
+      "hidden": false,
+      "binaryDir": "${sourceParentDir}/build/clion/relwithdebinfo",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "Debug",
+      "description": "Debug configuration",
+      "hidden": false,
+      "binaryDir": "${sourceParentDir}/build/clion/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "Release",
+      "description": "Release configuration",
+      "hidden": false,
+      "binaryDir": "${sourceParentDir}/build/clion/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "inherits": "Release",
+      "name": "x86_64-elf",
+      "description": "Build for x86_64 architecture",
+      "binaryDir": "${sourceParentDir}/build/clion/x86_64-elf",
+      "toolchainFile": "${sourceDir}/x86_64-elf.cmake"
+    },
+    {
+      "inherits": "Release",
+      "name": "aarch64-elf",
+      "description": "Build for AArch64 architecture",
+      "binaryDir": "${sourceParentDir}/build/clion/aarch64-elf",
+      "toolchainFile": "${sourceDir}/aarch64-elf.cmake"
+    },
+    {
+      "inherits": "Release",
+      "name": "arm-none-eabi",
+      "description": "Build for ARM (32-bit, EABI)",
+      "binaryDir": "${sourceParentDir}/build/clion/arm-none-eabi",
+      "toolchainFile": "${sourceDir}/arm-none-eabi.cmake"
+    },
+    {
+      "inherits": "Release",
+      "name": "i686-elf",
+      "description": "Build for i686 architecture",
+      "binaryDir": "${sourceParentDir}/build/clion/i686-elf",
+      "toolchainFile": "${sourceDir}/i686-elf.cmake"
+    }
+  ]
+}
