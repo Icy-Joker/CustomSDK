@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NetworkTool</class>
+ <widget class="QMainWindow" name="NetworkTool">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>NetworkTool</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_ICMP">
+       <attribute name="title">
+        <string>ICMP</string>
+       </attribute>
+      </widget>
+      <widget class="TcpSocketServer" name="tab_TcpSocketServer">
+       <attribute name="title">
+        <string>Tcp服务端</string>
+       </attribute>
+      </widget>
+      <widget class="TcpSocketClient" name="tab_TcpSocketClient">
+       <attribute name="title">
+        <string>Tcp客户端</string>
+       </attribute>
+      </widget>
+      <widget class="UdpSocketServer" name="tab_UdpSocketServer">
+       <attribute name="title">
+        <string>Udp服务端</string>
+       </attribute>
+      </widget>
+      <widget class="UdpSocketClient" name="tab_UdpSocketClient">
+       <attribute name="title">
+        <string>Udp客户端</string>
+       </attribute>
+      </widget>
+      <widget class="HttpServer" name="tab_HttpServer">
+       <attribute name="title">
+        <string>Http服务端</string>
+       </attribute>
+      </widget>
+      <widget class="HttpClient" name="tab_HttpClient">
+       <attribute name="title">
+        <string>Http客户端</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TcpSocketServer</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/TcpSocketServer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TcpSocketClient</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/TcpSocketClient.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>UdpSocketServer</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/UdpSocketServer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>UdpSocketClient</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/UdpSocketClient.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>HttpClient</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/HttpClient.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>HttpServer</class>
+   <extends>QWidget</extends>
+   <header location="global">NetworkTool/HttpServer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
