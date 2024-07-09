@@ -27,6 +27,7 @@
       <MagicTool identifier="Plugin_RegularExpressionValidator" location="../plugins/MagicTools" name="正则验证工具" icon="RegularExpressionValidator.png" />
       <MagicTool identifier="Plugin_SerialPortDebugger" location="../plugins/MagicTools" name="串口调试工具" icon="SerialPortDebugger.png" />
       <MagicTool identifier="Plugin_StyleSheetViewer" location="../plugins/MagicTools" name="样式表编辑工具" icon="StyleSheetViewer.png" />
+      <MagicTool identifier="Plugin_XmlVisualEditor" location="../plugins/MagicTools" name="Xml编辑器" icon="XmlVisualEditor.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
