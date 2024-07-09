@@ -23,6 +23,7 @@
       <MagicTool identifier="Plugin_MediaPlayer" location="../plugins/MagicTools" name="媒体播放器" icon="MediaPlayer.png" />
       <MagicTool identifier="Plugin_NetworkTool" location="../plugins/MagicTools" name="网络测试工具" icon="NetworkTool.png" />
       <MagicTool identifier="Plugin_PortScanner" location="../plugins/MagicTools" name="端口扫描器" icon="PortScanner.png" />
+      <MagicTool identifier="Plugin_QRCodeGenerator" location="../plugins/MagicTools" name="二维码生成工具" icon="QRCodeGenerator.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
