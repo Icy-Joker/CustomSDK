@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>MediaPlayer</class>
+  <widget class="QMainWindow" name="MediaPlayer">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>600</height>
+      </rect>
+    </property>
+    <property name="minimumSize">
+      <size>
+        <width>800</width>
+        <height>600</height>
+      </size>
+    </property>
+    <property name="windowTitle">
+      <string>MediaPlayer</string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+          <widget class="QVideoWidget" name="videoWidget" native="true" />
+        </item>
+        <item>
+          <widget class="QSlider" name="horizontalSlider_Progress">
+            <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+          </widget>
+        </item>
+      </layout>
+    </widget>
+    <widget class="QMenuBar" name="menubar">
+      <property name="geometry">
+        <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>800</width>
+          <height>43</height>
+        </rect>
+      </property>
+      <widget class="QMenu" name="menu">
+        <property name="title">
+          <string>文件</string>
+        </property>
+        <addaction name="action_Load" />
+      </widget>
+      <addaction name="menu" />
+    </widget>
+    <widget class="QStatusBar" name="statusbar" />
+    <action name="action_Load">
+      <property name="text">
+        <string>打开</string>
+      </property>
+    </action>
+  </widget>
+  <customwidgets>
+    <customwidget>
+      <class>QVideoWidget</class>
+      <extends>QWidget</extends>
+      <header location="global">QVideoWidget</header>
+      <container>1</container>
+    </customwidget>
+  </customwidgets>
+  <resources />
+  <connections />
+</ui>
