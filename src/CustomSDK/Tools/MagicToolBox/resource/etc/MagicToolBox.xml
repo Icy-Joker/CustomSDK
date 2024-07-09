@@ -25,6 +25,7 @@
       <MagicTool identifier="Plugin_PortScanner" location="../plugins/MagicTools" name="端口扫描器" icon="PortScanner.png" />
       <MagicTool identifier="Plugin_QRCodeGenerator" location="../plugins/MagicTools" name="二维码生成工具" icon="QRCodeGenerator.png" />
       <MagicTool identifier="Plugin_RegularExpressionValidator" location="../plugins/MagicTools" name="正则验证工具" icon="RegularExpressionValidator.png" />
+      <MagicTool identifier="Plugin_SerialPortDebugger" location="../plugins/MagicTools" name="串口调试工具" icon="SerialPortDebugger.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
