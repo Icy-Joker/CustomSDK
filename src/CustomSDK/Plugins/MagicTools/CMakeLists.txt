@@ -11,3 +11,4 @@ add_subdirectory("Plugin_JsonVisualEditor")#
 add_subdirectory("Plugin_MarkDownEditor")#
 add_subdirectory("Plugin_MediaPlayer")#
 add_subdirectory("Plugin_NetworkTool")#
+add_subdirectory("Plugin_PortScanner")#
