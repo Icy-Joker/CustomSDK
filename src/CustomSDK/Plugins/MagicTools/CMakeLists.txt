@@ -13,3 +13,4 @@ add_subdirectory("Plugin_MediaPlayer")#
 add_subdirectory("Plugin_NetworkTool")#
 add_subdirectory("Plugin_PortScanner")#
 add_subdirectory("Plugin_QRCodeGenerator")#
+add_subdirectory("Plugin_RegularExpressionValidator")#
