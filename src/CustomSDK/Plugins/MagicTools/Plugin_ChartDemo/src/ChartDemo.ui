@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChartDemo</class>
+ <widget class="QMainWindow" name="ChartDemo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>ChartDemo</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="LineChart" name="page_LineChart">
+       <attribute name="title">
+        <string>折线图</string>
+       </attribute>
+      </widget>
+      <widget class="BarChart" name="page_BarChart">
+       <attribute name="title">
+        <string>柱状图</string>
+       </attribute>
+      </widget>
+      <widget class="PieChart" name="page_PieChart">
+       <attribute name="title">
+        <string>饼图</string>
+       </attribute>
+      </widget>
+      <widget class="SplineChart" name="page_SplineChart">
+       <attribute name="title">
+        <string>曲线图</string>
+       </attribute>
+      </widget>
+      <widget class="StackedBarChart" name="page_StackedBarChart">
+       <attribute name="title">
+        <string>垂直堆叠条形图</string>
+       </attribute>
+      </widget>
+      <widget class="PercentBarChart" name="page_PercentBarChart">
+       <attribute name="title">
+        <string>简单垂直百分比条形图示例</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>43</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LineChart</class>
+   <extends>QWidget</extends>
+   <header location="global">LineChart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BarChart</class>
+   <extends>QWidget</extends>
+   <header location="global">BarChart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PieChart</class>
+   <extends>QWidget</extends>
+   <header location="global">PieChart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SplineChart</class>
+   <extends>QWidget</extends>
+   <header location="global">SplineChart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StackedBarChart</class>
+   <extends>QWidget</extends>
+   <header location="global">StackedBarChart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PercentBarChart</class>
+   <extends>QWidget</extends>
+   <header location="global">PercentBarChart.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
