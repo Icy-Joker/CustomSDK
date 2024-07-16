@@ -10,6 +10,7 @@
   <MagicToolBox enable_auto_load="false" auto_load_directory="../plugins/MagicTools">
     <MagicBox name="常规">
       <!-- MagicTool identifier="" location="../plugins/MagicTools" name="" icon="" / -->
+      <MagicTool identifier="Plugin_Base64Converter" location="../plugins/MagicTools" name="Base64转换工具" icon="Base64Converter.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
