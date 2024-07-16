@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/data">
+    <file alias="information.sql">data/information.sql</file>
+  </qresource>
+  <qresource prefix="/icons">
+    <file alias="icon.png">icons/icon.png</file>
+  </qresource>
+  <qresource prefix="/images">
+    <file alias="icon.png">images/icon.png</file>
+  </qresource>
+</RCC>
