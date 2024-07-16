@@ -12,6 +12,7 @@
       <!-- MagicTool identifier="" location="../plugins/MagicTools" name="" icon="" / -->
       <MagicTool identifier="Plugin_Base64Converter" location="../plugins/MagicTools" name="Base64转换工具" icon="Base64Converter.png" />
       <MagicTool identifier="Plugin_BinaryViewer" location="../plugins/MagicTools" name="二进制查看器" icon="BinaryViewer.png" />
+      <MagicTool identifier="Plugin_ChartDemo" location="../plugins/MagicTools" name="图表示例" icon="ChartDemo.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
