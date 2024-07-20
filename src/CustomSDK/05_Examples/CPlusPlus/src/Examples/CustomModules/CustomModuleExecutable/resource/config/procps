@@ -1,0 +1,45 @@
+procps
+lsof
+net-tools
+
+
+
+mkdir -p /mnt/rootfs
+
+dnf groupinstall -y "Minimal Install" --installroot=/mnt/rootfs --releasever=10 --setopt=install_weak_deps=False --nodocs
+
+
+
+dnf groupinstall -y "Container Node" --installroot=/mnt/rootfs --releasever=10 --setopt=install_weak_deps=False --nodocs
+
+
+
+
+
+
+
+autoconf
+automake
+cmake
+dnf
+dos2unix
+enca
+gcc
+gcc-c++
+gcc-gdb-plugin
+gdb
+git
+java-1.8.0-openjdk-devel
+libpcap
+libtool
+lsof
+make
+net-tools
+nginx
+passwd
+procps-ng
+swig
+tree
+util-linux
+vim-enhanced
+wget
