@@ -1,0 +1,61 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file alias="checkbox_checked-disabled.png">icons/checkbox_checked-disabled.png</file>
+    <file alias="checkbox_checked-hover.png">icons/checkbox_checked-hover.png</file>
+    <file alias="checkbox_checked-normal.png">icons/checkbox_checked-normal.png</file>
+    <file alias="checkbox_partiallychecked-disabled.png">icons/checkbox_partiallychecked-disabled.png</file>
+    <file alias="checkbox_partiallychecked-hover.png">icons/checkbox_partiallychecked-hover.png</file>
+    <file alias="checkbox_partiallychecked-normal.png">icons/checkbox_partiallychecked-normal.png</file>
+    <file alias="checkbox_unchecked-disabled.png">icons/checkbox_unchecked-disabled.png</file>
+    <file alias="checkbox_unchecked-hover.png">icons/checkbox_unchecked-hover.png</file>
+    <file alias="checkbox_unchecked-normal.png">icons/checkbox_unchecked-normal.png</file>
+    <file alias="downarrow-disabled.png">icons/downarrow-disabled.png</file>
+    <file alias="downarrow-hover.png">icons/downarrow-hover.png</file>
+    <file alias="downarrow-normal.png">icons/downarrow-normal.png</file>
+    <file alias="mainwindow_close-hover.png">icons/mainwindow_close-hover.png</file>
+    <file alias="mainwindow_close-normal.png">icons/mainwindow_close-normal.png</file>
+    <file alias="mainwindow_close-pressed.png">icons/mainwindow_close-pressed.png</file>
+    <file alias="mainwindow_maximize-hover.png">icons/mainwindow_maximize-hover.png</file>
+    <file alias="mainwindow_maximize-normal.png">icons/mainwindow_maximize-normal.png</file>
+    <file alias="mainwindow_maximize-pressed.png">icons/mainwindow_maximize-pressed.png</file>
+    <file alias="mainwindow_minimize-hover.png">icons/mainwindow_minimize-hover.png</file>
+    <file alias="mainwindow_minimize-normal.png">icons/mainwindow_minimize-normal.png</file>
+    <file alias="mainwindow_minimize-pressed.png">icons/mainwindow_minimize-pressed.png</file>
+    <file alias="mainwindow_resume-hover.png">icons/mainwindow_resume-hover.png</file>
+    <file alias="mainwindow_resume-normal.png">icons/mainwindow_resume-normal.png</file>
+    <file alias="mainwindow_resume-pressed.png">icons/mainwindow_resume-pressed.png</file>
+    <file alias="radiobutton_selected-disabled.png">icons/radiobutton_selected-disabled.png</file>
+    <file alias="radiobutton_selected-hover.png">icons/radiobutton_selected-hover.png</file>
+    <file alias="radiobutton_selected-normal.png">icons/radiobutton_selected-normal.png</file>
+    <file alias="radiobutton_unselected-disabled.png">icons/radiobutton_unselected-disabled.png</file>
+    <file alias="radiobutton_unselected-hover.png">icons/radiobutton_unselected-hover.png</file>
+    <file alias="radiobutton_unselected-normal.png">icons/radiobutton_unselected-normal.png</file>
+    <file alias="subwindow_close-hover.png">icons/subwindow_close-hover.png</file>
+    <file alias="subwindow_close-normal.png">icons/subwindow_close-normal.png</file>
+    <file alias="subwindow_maximize-hover.png">icons/subwindow_maximize-hover.png</file>
+    <file alias="subwindow_maximize-normal.png">icons/subwindow_maximize-normal.png</file>
+    <file alias="subwindow_minimize-hover.png">icons/subwindow_minimize-hover.png</file>
+    <file alias="subwindow_minimize-normal.png">icons/subwindow_minimize-normal.png</file>
+    <file alias="uparrow-disabled.png">icons/uparrow-disabled.png</file>
+    <file alias="uparrow-hover.png">icons/uparrow-hover.png</file>
+    <file alias="uparrow-normal.png">icons/uparrow-normal.png</file>
+    <file alias="window_close-hover.png">icons/window_close-hover.png</file>
+    <file alias="window_close-normal.png">icons/window_close-normal.png</file>
+    <file alias="window_close-pressed.png">icons/window_close-pressed.png</file>
+    <file alias="window_maximize-hover.png">icons/window_maximize-hover.png</file>
+    <file alias="window_maximize-normal.png">icons/window_maximize-normal.png</file>
+    <file alias="window_maximize-pressed.png">icons/window_maximize-pressed.png</file>
+    <file alias="window_minimize-hover.png">icons/window_minimize-hover.png</file>
+    <file alias="window_minimize-normal.png">icons/window_minimize-normal.png</file>
+    <file alias="window_minimize-pressed.png">icons/window_minimize-pressed.png</file>
+    <file alias="window_resume-hover.png">icons/window_resume-hover.png</file>
+    <file alias="window_resume-normal.png">icons/window_resume-normal.png</file>
+    <file alias="window_resume-pressed.png">icons/window_resume-pressed.png</file>
+  </qresource>
+  <qresource prefix="/stylesheet">
+    <file alias="default_style.qss">stylesheet/default_style.qss</file>
+  </qresource>
+  <qresource prefix="/translations">
+    <file alias="qt_zh_CN.qm">translations/qt_zh_CN.qm</file>
+  </qresource>
+</RCC>
