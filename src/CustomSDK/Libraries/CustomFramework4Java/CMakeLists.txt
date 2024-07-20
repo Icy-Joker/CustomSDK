@@ -1,0 +1,27 @@
+#
+set(BOOST_MODULE_LIST "thread;system;filesystem;date_time;program_options;regex;atomic;chrono;")#配置Boost模块
+#
+#set(QT_MODULE_LIST "Core;Gui;Widgets;Core5Compat;")#配置Qt模块
+#
+set(THIRD_LIBRARY_LIST "icu4c;pugixml;fmt;spdlog;")#配置其他三方库
+#
+#set(SWIG_TARGET_SOURCE_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/Modules/CustomFramework4Java/src")
+if(SWIG_FOUND)
+  if(Java_FOUND)
+    generateSWIGLibraryForJava()
+    if(TARGET "${CURRENT_TARGET}")
+      #target_compile_definitions("${CURRENT_TARGET}" PRIVATE "")#添加预处理宏
+      #
+      #target_include_directories("${CURRENT_TARGET}" PRIVATE "")#添加头文件搜索路径
+      target_include_directories(${CURRENT_TARGET} SYSTEM PRIVATE "${JAVA_INCLUDE_PATH};${JAVA_INCLUDE_PATH2}")
+      #
+      #target_link_directories("${CURRENT_TARGET}" PRIVATE "")#添加链接库搜索路径
+      #
+      #target_link_libraries("${CURRENT_TARGET}" PRIVATE "")#添加依赖库
+      target_link_libraries(${CURRENT_TARGET} PRIVATE "BasicSupport")
+      target_link_libraries(${CURRENT_TARGET} PRIVATE "BasicFramework")
+      #
+      install(FILES "${CMAKE_JAVA_TARGET_OUTPUT_DIR}/${CURRENT_TARGET}.jar" DESTINATION "bin" OPTIONAL)#安装Java封装库
+    endif()
+  endif()
+endif()
