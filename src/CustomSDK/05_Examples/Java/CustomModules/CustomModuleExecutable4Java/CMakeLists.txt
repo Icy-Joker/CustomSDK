@@ -1,0 +1,23 @@
+#
+set(CURRENT_JAVA_INCLUDE_PATHS "")#
+#list(APPEND CURRENT_JAVA_INCLUDE_PATHS "")#添加Java编译依赖
+list(APPEND CURRENT_JAVA_INCLUDE_PATHS "${CMAKE_JAVA_TARGET_OUTPUT_DIR}/CustomFramework4Java.jar")#
+#
+set(CURRENT_JAVA_CLASS_PATHS "")#
+#list(APPEND CURRENT_JAVA_CLASS_PATHS "")#添加Java运行依赖
+#
+set(CURRENT_JAVA_ENTRY_POINT "")#
+set(CURRENT_JAVA_ENTRY_POINT "examples/CustomModuleExecutable")#配置主类
+#
+generateJavaPackage()#
+#
+if(TARGET "${CURRENT_TARGET}")
+  #
+  install_jar(${CURRENT_TARGET} DESTINATION "test/bin")
+  install(DIRECTORY "resource/config" DESTINATION "test" FILES_MATCHING PATTERN "*.xml")
+  if("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
+    install(DIRECTORY "resource/scripts" DESTINATION "test" FILES_MATCHING PATTERN "*.bat")
+  else()
+    install(DIRECTORY "resource/scripts" DESTINATION "test" FILES_MATCHING PATTERN "*.sh" PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+  endif()
+endif()
