@@ -3,3 +3,4 @@ add_subdirectory("BasicSupport")#
 add_subdirectory("BasicFramework")#
 add_subdirectory("BasicUIFramework")#
 add_subdirectory("CustomFramework")#
+add_subdirectory("CustomFramework4CSharp")#
