@@ -15,3 +15,4 @@ add_subdirectory("Plugin_PortScanner")#
 add_subdirectory("Plugin_QRCodeGenerator")#
 add_subdirectory("Plugin_RegularExpressionValidator")#
 add_subdirectory("Plugin_SerialPortDebugger")#
+add_subdirectory("Plugin_StyleSheetViewer")#
