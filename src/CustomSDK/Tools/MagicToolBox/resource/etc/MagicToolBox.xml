@@ -14,6 +14,7 @@
       <MagicTool identifier="Plugin_BinaryViewer" location="../plugins/MagicTools" name="二进制查看器" icon="BinaryViewer.png" />
       <MagicTool identifier="Plugin_ChartDemo" location="../plugins/MagicTools" name="图表示例" icon="ChartDemo.png" />
       <MagicTool identifier="Plugin_CryptologyTool" location="../plugins/MagicTools" name="加密与解密示例" icon="CryptologyTool.png" />
+      <MagicTool identifier="Plugin_CustomDelegateDemo" location="../plugins/MagicTools" name="自定义委托示例" icon="CustomDelegateDemo.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
