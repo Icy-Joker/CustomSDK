@@ -4,3 +4,4 @@ add_subdirectory("HttpClient")#
 add_subdirectory("TcpSocketClient")#
 add_subdirectory("TcpSocketServer")#
 add_subdirectory("UdpSocketClient")#
+add_subdirectory("UdpSocketServer")#
