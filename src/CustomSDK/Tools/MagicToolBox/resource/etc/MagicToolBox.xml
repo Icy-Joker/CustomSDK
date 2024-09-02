@@ -16,6 +16,7 @@
       <MagicTool identifier="Plugin_CryptologyTool" location="../plugins/MagicTools" name="加密与解密示例" icon="CryptologyTool.png" />
       <MagicTool identifier="Plugin_CustomDelegateDemo" location="../plugins/MagicTools" name="自定义委托示例" icon="CustomDelegateDemo.png" />
       <MagicTool identifier="Plugin_DatabaseVisualizationTool" location="../plugins/MagicTools" name="数据库可视化工具" icon="DatabaseVisualizationTool.png" />
+      <MagicTool identifier="Plugin_GraphicsViewDemo" location="../plugins/MagicTools" name="2D场景绘制示" icon="GraphicsViewDemo.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
