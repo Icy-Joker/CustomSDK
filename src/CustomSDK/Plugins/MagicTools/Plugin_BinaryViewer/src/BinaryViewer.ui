@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>BinaryViewer</class>
+  <widget class="QMainWindow" name="BinaryViewer">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>600</height>
+      </rect>
+    </property>
+    <property name="minimumSize">
+      <size>
+        <width>800</width>
+        <height>600</height>
+      </size>
+    </property>
+    <property name="windowTitle">
+      <string>BinaryViewer</string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+          <widget class="QTableView" name="tableView" />
+        </item>
+      </layout>
+    </widget>
+    <widget class="QStatusBar" name="statusBar" />
+    <widget class="QMenuBar" name="menuBar">
+      <property name="geometry">
+        <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>800</width>
+          <height>43</height>
+        </rect>
+      </property>
+      <widget class="QMenu" name="menu_File">
+        <property name="title">
+          <string>文件</string>
+        </property>
+        <addaction name="action_Open" />
+        <addaction name="action_Reopen" />
+        <addaction name="action_Save" />
+        <addaction name="action_SaveAs" />
+      </widget>
+      <widget class="QMenu" name="menu_Edit">
+        <property name="title">
+          <string>编辑</string>
+        </property>
+        <addaction name="action_Search" />
+        <addaction name="action_Replace" />
+      </widget>
+      <addaction name="menu_File" />
+      <addaction name="menu_Edit" />
+    </widget>
+    <action name="action_Open">
+      <property name="text">
+        <string>打开</string>
+      </property>
+    </action>
+    <action name="action_Reopen">
+      <property name="text">
+        <string>重新加载</string>
+      </property>
+    </action>
+    <action name="action_Save">
+      <property name="text">
+        <string>保存</string>
+      </property>
+    </action>
+    <action name="action_SaveAs">
+      <property name="text">
+        <string>另存为</string>
+      </property>
+    </action>
+    <action name="action_Search">
+      <property name="text">
+        <string>查找</string>
+      </property>
+    </action>
+    <action name="action_Replace">
+      <property name="text">
+        <string>替换</string>
+      </property>
+    </action>
+  </widget>
+  <resources />
+  <connections />
+</ui>
