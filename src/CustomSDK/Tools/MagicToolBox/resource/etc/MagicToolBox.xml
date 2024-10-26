@@ -18,6 +18,7 @@
       <MagicTool identifier="Plugin_DatabaseVisualizationTool" location="../plugins/MagicTools" name="数据库可视化工具" icon="DatabaseVisualizationTool.png" />
       <MagicTool identifier="Plugin_GraphicsViewDemo" location="../plugins/MagicTools" name="2D场景绘制示" icon="GraphicsViewDemo.png" />
       <MagicTool identifier="Plugin_IdentifyCardNumberChecker" location="../plugins/MagicTools" name="身份证号码验证工具" icon="IdentifyCardNumberChecker.png" />
+      <MagicTool identifier="Plugin_JsonVisualEditor" location="../plugins/MagicTools" name="Json编辑器" icon="JsonVisualEditor.png" />
     </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
