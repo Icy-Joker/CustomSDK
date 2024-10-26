@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+  <PreloadModules>
+    <!-- Module name="" directory="../bin" enabled="true" / -->
+    <Module name="VirtualCustomModule" directory="../bin" enabled="true" />
+  </PreloadModules>
+  <Modules Language="CPlusPlus">
+    <!-- Module name="" directory="../test/bin" enabled="true" / -->
+    <Module name="CustomModule" directory="../test/bin" enabled="true" />
+    <Module name="CustomModule4CSharp" directory="../test/bin" enabled="true" />
+    <Module name="CustomModule4Java" directory="../test/bin" enabled="true" />
+    <Module name="CustomModule4Python" directory="../test/bin" enabled="true" />
+  </Modules>
+  <!-- 在此处添加自定义配置项 / -->
+  <Loggers enabled="true">
+    <!-- Logger type="ConsoleLogger|FileLogger|DatabaseLogger" level="trace|debug|info|warn|error|critical|off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" / -->
+    <Logger type="ConsoleLogger" level="info" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+    <Logger type="FileLogger" level="info" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+    <Logger type="DatabaseLogger" level="off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+  </Loggers>
+  <ExtendConfigs enabled="true">
+    <!-- ExtendConfig key="" value="" / -->
+  </ExtendConfigs>
+</Root>
