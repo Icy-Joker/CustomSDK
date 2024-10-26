@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>MarkDownEditor</class>
+  <widget class="QMainWindow" name="MarkDownEditor">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>600</height>
+      </rect>
+    </property>
+    <property name="minimumSize">
+      <size>
+        <width>800</width>
+        <height>600</height>
+      </size>
+    </property>
+    <property name="windowTitle">
+      <string>MarkDownEditor</string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+          <widget class="QTabWidget" name="tabWidget">
+            <property name="currentIndex">
+              <number>0</number>
+            </property>
+            <widget class="QTextEdit" name="tab_SourceView">
+              <attribute name="title">
+                <string>源视图</string>
+              </attribute>
+            </widget>
+            <widget class="QTextBrowser" name="tab_DisplayView">
+              <attribute name="title">
+                <string>预览视图</string>
+              </attribute>
+            </widget>
+          </widget>
+        </item>
+      </layout>
+    </widget>
+    <widget class="QStatusBar" name="statusbar" />
+  </widget>
+  <resources />
+  <connections />
+</ui>
