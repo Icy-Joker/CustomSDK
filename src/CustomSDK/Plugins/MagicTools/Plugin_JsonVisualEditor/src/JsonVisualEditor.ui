@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>JsonVisualEditor</class>
+  <widget class="QMainWindow" name="JsonVisualEditor">
+    <property name="minimumSize">
+      <size>
+        <width>800</width>
+        <height>600</height>
+      </size>
+    </property>
+    <property name="windowTitle">
+      <string>JsonVisualEditor</string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+      <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+          <widget class="QPlainTextEdit" name="plainTextEdit" />
+        </item>
+        <item row="0" column="1">
+          <widget class="QTreeView" name="treeView">
+            <property name="headerHidden">
+              <bool>true</bool>
+            </property>
+          </widget>
+        </item>
+        <item row="0" column="2">
+          <widget class="QTableView" name="tableView">
+            <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+            </attribute>
+          </widget>
+        </item>
+      </layout>
+    </widget>
+    <widget class="QStatusBar" name="statusbar" />
+  </widget>
+  <resources />
+  <connections />
+</ui>
