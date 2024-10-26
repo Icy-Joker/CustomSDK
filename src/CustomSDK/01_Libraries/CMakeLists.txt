@@ -5,3 +5,4 @@ add_subdirectory("BasicUIFramework")#
 add_subdirectory("CustomFramework")#
 add_subdirectory("CustomFramework4CSharp")#
 add_subdirectory("CustomFramework4Java")#
+add_subdirectory("CustomFramework4Python")#
