@@ -7,3 +7,4 @@ add_subdirectory("Plugin_CustomDelegateDemo")
 add_subdirectory("Plugin_DatabaseVisualizationTool")#
 add_subdirectory("Plugin_GraphicsViewDemo")#
 add_subdirectory("Plugin_IdentifyCardNumberChecker")#
+add_subdirectory("Plugin_JsonVisualEditor")#
