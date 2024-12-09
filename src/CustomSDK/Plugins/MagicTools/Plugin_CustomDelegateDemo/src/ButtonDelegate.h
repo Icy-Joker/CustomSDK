@@ -15,7 +15,7 @@ public:
   QWidget* createEditor(QWidget* parent,const QStyleOptionViewItem& option,const QModelIndex& index) const override;
   void paint(QPainter* painter,const QStyleOptionViewItem& option,const QModelIndex& index) const override;
   bool editorEvent(QEvent* event,QAbstractItemModel* model,const QStyleOptionViewItem& option,const QModelIndex& index) override;
-public:
+private:
 };
 
 #endif // !__BUTTONDELEGATE_H__
