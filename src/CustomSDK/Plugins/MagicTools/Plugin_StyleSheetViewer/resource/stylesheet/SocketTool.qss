@@ -1,0 +1,625 @@
+/*****************************************QToolTip*****************************************/
+QToolTip
+{
+  opacity:225;
+  border:2px solid green;
+  border-radius:4px;
+  padding:2px;
+}
+/*****************************************QToolTip*****************************************/
+/****************************************************************************QWidget****************************************************************************/
+QWidget
+{
+  font:bold italic "Times New Roman";
+  font:bold "Microsoft YaHei UI";
+}
+
+QWidget:focus
+{
+  outline:none;
+}
+/****************************************************************************QAbstractButton****************************************************************************/
+QAbstractButton
+{
+}
+QAbstractButton:hover
+{
+}
+QAbstractButton:pressed
+{
+}
+QAbstractButton:disabled
+{
+}
+/****************************************************************************QPushButton****************************************************************************/
+QPushButton
+{
+  padding:2px 20px 2px 20px;
+  border:1px solid #cadbf5;
+}
+QPushButton:hover
+{
+  border:1px solid #cadbf5;
+}
+QPushButton:pressed
+{
+  border:1px solid #266dc4;
+}
+QPushButton:disabled
+{
+  border:1px solid #a3b4cb;
+}
+/****************************************************************************QPushButton****************************************************************************/
+/****************************************************************************QToolButton****************************************************************************/
+/****************************************************************************QToolButton****************************************************************************/
+/****************************************************************************QRadioButton****************************************************************************/
+QRadioButton::indicator:unchecked{image:url(":/icons/radiobutton_unselected-normal.png");}
+QRadioButton::indicator:unchecked:hover{image:url(":/icons/radiobutton_unselected-hover.png");}
+QRadioButton::indicator:unchecked:disabled{image:url(":/icons/radiobutton_unselected-disabled.png");}
+QRadioButton::indicator:checked{image:url(":/icons/radiobutton_selected-normal.png");}
+QRadioButton::indicator:checked:hover{image:url(":/icons/radiobutton_selected-hover.png");}
+QRadioButton::indicator:checked:disabled{image:url(":/icons/radiobutton_selected-disabled.png");}
+/****************************************************************************QRadioButton****************************************************************************/
+/****************************************************************************QCheckBox****************************************************************************/
+QCheckBox::indicator:unchecked,QGroupBox::indicator:unchecked,QAbstractItemView::indicator:unchecked{image:url(":/icons/checkbox_unchecked-normal.png");}
+QCheckBox::indicator:unchecked:hover,QGroupBox::indicator:unchecked:hover,QAbstractItemView::indicator:unchecked:hover{image:url(":/icons/checkbox_unchecked-hover.png");}
+QCheckBox::indicator:unchecked:disabled,QGroupBox::indicator:unchecked:disabled,QAbstractItemView::indicator:unchecked:disabled{image:url(":/icons/checkbox_unchecked-disabled.png");}
+QCheckBox::indicator:indeterminate,QAbstractItemView::indicator:indeterminate{image:url(":/icons/checkbox_partiallychecked-normal.png");}
+QCheckBox::indicator:indeterminate:hover,QAbstractItemView::indicator:indeterminate:hover{image:url(":/icons/checkbox_partiallychecked-hover.png");}
+QCheckBox::indicator:indeterminate:disabled,QAbstractItemView::indicator:indeterminate:disabled{image:url(":/icons/checkbox_partiallychecked-disabled.png");}
+QCheckBox::indicator:checked,QGroupBox::indicator::checked,QAbstractItemView::indicator:checked{image:url(":/icons/checkbox_checked-normal.png");}
+QCheckBox::indicator:checked:hover,QGroupBox::indicator::checked:hover,QAbstractItemView::indicator:checked:hover{image:url(":/icons/checkbox_checked-hover.png");}
+QCheckBox::indicator:checked:disabled,QGroupBox::indicator::checked:disabled,QAbstractItemView::indicator:checked:disabled{image:url(":/icons/checkbox_checked-disabled.png");}
+/****************************************************************************QCheckBox****************************************************************************/
+/****************************************************************************QAbstractButton****************************************************************************/
+/****************************************************************************QFrame****************************************************************************/
+/****************************************************************************QAbstractScrollArea****************************************************************************/
+/****************************************************************************QAbstractItemView****************************************************************************/
+QAbstractItemView
+{
+  border: 1px solid #cccccc;
+  selection-background-color: #4CAF50;
+  selection-color: #ffffff;
+  show-decoration-selected: 1;
+}
+
+QAbstractItemView:disabled
+{
+  border:1px solid #dee6ee;
+}
+
+QAbstractItemView::item
+{
+  height:28px;
+}
+QAbstractItemView::item:hover
+{
+  background: #d9ead3; /* 鼠标悬停背景色 */
+  color: #333333; /* 鼠标悬停时的文字颜色 */
+}
+QAbstractItemView::item:selected
+{
+  background: #4CAF50; /* 选中背景色 */
+}
+/*设置表格focus状态下的背景颜色与选中时背景色一致，来去掉表格虚线框；配合 QWidget:focus，只写QWidget:focus对表格item不起作用*/
+QAbstractItemView::item:focus
+{
+
+}
+QAbstractItemView::item:disabled
+{
+  height:28px;
+  padding-left:1px;
+}
+
+QAbstractItemView::indicator:unchecked{image:url(":/icons/checkbox_unchecked-normal.png");}
+QAbstractItemView::indicator:unchecked:hover{image:url(":/icons/checkbox_unchecked-hover.png");}
+QAbstractItemView::indicator:unchecked:disabled{image:url(":/icons/checkbox_unchecked-disabled.png");}
+QAbstractItemView::indicator:indeterminate{image:url(":/icons/checkbox_partiallychecked-normal.png");}
+QAbstractItemView::indicator:indeterminate:hover{image:url(":/icons/checkbox_partiallychecked-hover.png");}
+QAbstractItemView::indicator:indeterminate:disabled{image:url(":/icons/checkbox_partiallychecked-disabled.png");}
+QAbstractItemView::indicator:checked{image:url(":/icons/checkbox_checked-normal.png");}
+QAbstractItemView::indicator:checked:hover{image:url(":/icons/checkbox_checked-hover.png");}
+QAbstractItemView::indicator:checked:disabled{image:url(":/icons/checkbox_checked-disabled.png");}
+
+/*****************************************QColumnView*****************************************/
+/*****************************************QColumnView*****************************************/
+/*****************************************QHeaderView*****************************************/
+/*设置QTableView的表头颜色、表头字体大小，表头边框的隐藏*/
+QHeaderView
+{
+}
+
+QHeaderView::section
+{
+  border:1px solid;
+
+  border-top:1px;
+}
+/*设置行表头高度，背景颜色及边框设置*/
+QHeaderView::section:horizontal
+{
+  height:28px;
+  border-right:1px solid #599ae8;
+  border-bottom:2px solid #68a3ea;
+}
+
+QHeaderView::section:first
+{
+  border-left:0px solid;
+}
+
+QHeaderView::section:last
+{
+  border-right:0px solid;
+}
+
+/*列表头宽度，边框及背景色设置*/
+QHeaderView::section:vertical
+{
+  height:26px;
+}
+QHeaderView::down-arrow
+{
+  image:url(":/mainwidget_downarrow-normal.png");
+}
+
+QHeaderView::up-arrow
+{
+  image:url(":/mainwidget_uparrow-normal.png");
+}
+
+QHeaderView::down-arrow:hover
+{
+  image:url(":/mainwidget_downarrow-hover.png");
+}
+
+QHeaderView::up-arrow:hover
+{
+  image:url(":/mainwidget_uparrow-hover.png");
+}
+
+/*****************************************QHeaderView*****************************************/
+/*****************************************QTableView*****************************************/
+QTableView
+{
+  show-decoration-selected:1;
+  alternate-background-color:#f0f3f8;
+  border:1px solid #dee6ee;
+  selection-background-color:#ffd178;
+  gridline-color:#dee6ee;
+}
+
+/*QTableCornerButton背景及边框颜色设置，QTableCornerButton要想设置背景色必须要先给border设置属性，因为默认状态下它会吸引本地边框的背景颜色完全重叠*/
+QTableView QTableCornerButton::section
+{
+  border:1px solid;
+  border-bottom:2px solid;
+}
+/*设置表格focus状态下的背景颜色与选中时背景色一致，来去掉表格虚线框；配合 QWidget:focus，只写QWidget:focus对表格item不起作用*/
+
+QTableView::item
+{
+  padding-left:6px;
+}
+
+ /*设置鼠标悬停时的状态,只能改变单元格颜色*/
+QTableView::item:hover
+{
+}
+
+QTableView::item:selected,QTableView::branch:selected
+{
+}
+
+QTableView QComboBox
+{
+  border:0px solid #dee6ee;
+}
+
+QTableView QSpinBox
+{
+  border:0px solid #dee6ee;
+}
+/*****************************************QTableWidget*****************************************/
+/*****************************************QTableWidget*****************************************/
+/*****************************************QTableView*****************************************/
+/*****************************************QListView*****************************************/
+
+/*****************************************QListWidget*****************************************/
+/*****************************************QListWidget*****************************************/
+/*****************************************QUndoView*****************************************/
+/*****************************************QUndoView*****************************************/
+/*****************************************QHelpIndexWidget*****************************************/
+/*****************************************QHelpIndexWidget*****************************************/
+/*****************************************QListView*****************************************/
+/*****************************************QTreeView*****************************************/
+QTreeView::branch:hover
+{
+  background:#cfdced;
+}
+/*所有树:条目被选中时背景颜色变为浅蓝,文字颜色*/
+QTreeView::branch:selected
+{
+  background:#1e6ccc;
+}
+
+QTreeView::branch
+{
+}
+
+/*实现条目打开和关闭时左边箭头变换显示效果*/
+QTreeView::branch:closed:has-children:!has-siblings,
+QTreeView::branch:closed:has-children:has-siblings
+{
+  image:url(":/icons/downarrow-normal.png");
+}
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings
+{
+  image:url(":/icons/rightarrow-normal.png");
+}
+/*****************************************QTreeWidget*****************************************/
+/*****************************************QTreeWidget*****************************************/
+/*****************************************QHelpContentWidget*****************************************/
+/*****************************************QHelpContentWidget*****************************************/
+/*****************************************QTreeView*****************************************/
+/****************************************************************************QAbstractItemView****************************************************************************/
+/****************************************************************************QScrollArea****************************************************************************/
+/****************************************************************************QScrollArea****************************************************************************/
+/****************************************************************************QMdiArea****************************************************************************/
+/****************************************************************************QMdiArea****************************************************************************/
+/****************************************************************************QTextEdit****************************************************************************/
+/****************************************************************************QTextBrowser****************************************************************************/
+/****************************************************************************QTextBrowser****************************************************************************/
+/****************************************************************************QTextEdit****************************************************************************/
+/****************************************************************************QPlainTextEdit****************************************************************************/
+/****************************************************************************QPlainTextEdit****************************************************************************/
+/****************************************************************************QGraphicsView****************************************************************************/
+/****************************************************************************QGraphicsView****************************************************************************/
+/****************************************************************************QAbstractScrollArea****************************************************************************/
+/****************************************************************************QToolBox****************************************************************************/
+QToolBox
+{
+}
+QToolBox::tab
+{
+}
+/****************************************************************************QToolBox****************************************************************************/
+/****************************************************************************QStackedWidget****************************************************************************/
+/****************************************************************************QStackedWidget****************************************************************************/
+/****************************************************************************QLabel****************************************************************************/
+QLabel
+{
+}
+/*链接样式*/
+QLabel#label_linktemplate
+{
+  font-size:12px;
+}
+QLabel#label_linktemplate:hover
+{
+}
+/*配置对话框添加分组虚线*/
+QLabel#linelabel
+{
+  border-top:15px solid;
+  background-image:url("theme/huaru/grayblue/hline.png");
+  background-repeat:repeat-x;
+}
+/****************************************************************************QLabel****************************************************************************/
+/****************************************************************************QLCDNumber****************************************************************************/
+/****************************************************************************QLCDNumber****************************************************************************/
+/****************************************************************************QSplitter****************************************************************************/
+/****************************************************************************QSplitter****************************************************************************/
+/****************************************************************************QFrame****************************************************************************/
+/****************************************************************************QGroupBox****************************************************************************/
+QGroupBox
+{
+  border:1px solid;
+  border-top:28px solid;
+}
+QGroupBox::title
+{
+  font-size:16px;
+  left:10px;
+  top:8px;
+
+  subcontrol-origin:margin;
+  subcontrol-position:top left;
+  spacing:10px;
+
+  background-color:transparent;
+  background-position:left;
+  background-repeat:no-repeat;
+  background-clip:border;
+  background-origin:padding;
+}
+/****************************************************************************QGroupBox****************************************************************************/
+/****************************************************************************QTabWidget****************************************************************************/
+QTabBar
+{
+}
+
+QTabBar::tab
+{
+  padding:7px;
+  background:transparent;
+}
+
+QTabBar::tab:selected
+{
+  border-top:2px solid;
+}
+
+QTabWidget
+{
+  border:2px solid;
+  border-top:28px solid;
+}
+
+QTabWidget::tab-bar
+{
+  alignment: center;
+}
+QTabWidget::pane
+{
+  border:1px solid;
+  border-top:32px solid;
+  top:-34px;
+}
+
+
+/****************************************************************************QTabWidget****************************************************************************/
+/****************************************************************************QDockWidget****************************************************************************/
+/****************************************************************************QDockWidget****************************************************************************/
+/****************************************************************************QComboBox****************************************************************************/
+QComboBox:!editable:on
+{
+  border-bottom:2px;
+}
+QComboBox::drop-down:!editable:pressed
+{
+}
+QComboBox::drop-down
+{
+  subcontrol-position:center right;
+}
+QComboBox::drop-down{image:url(":/icons/downarrow-normal.png");}
+QComboBox::drop-down:hover{image:url(":/icons/downarrow-hover.png");}
+QComboBox::drop-down:disabled{image:url(":/icons/downarrow-disabled.png");}
+
+/****************************************************************************QFontComboBox****************************************************************************/
+/****************************************************************************QFontComboBox****************************************************************************/
+/****************************************************************************QComboBox****************************************************************************/
+/****************************************************************************QLineEdit****************************************************************************/
+/****************************************************************************QLineEdit****************************************************************************/
+/****************************************************************************QAbstractSpinBox****************************************************************************/
+QAbstractSpinBox,QLineEdit,QComboBox,QTextEdit
+{
+  line-height:15px;
+  padding:8px 7px;
+  font-size:14px;
+  border:1px solid #a3b4cb;
+}
+QAbstractSpinBox:hover,QLineEdit:hover,QComboBox:hover,QTextEdit:hover
+{
+  border:1px solid #1f84ff;
+}
+QAbstractSpinBox:focus,QLineEdit:focus,QComboBox:focus,QTextEdit:focus
+{
+  border:1px solid #0767dc;
+}
+QAbstractSpinBox:disabled,QLineEdit:disabled,QComboBox:disabled,QTextEdit:disabled
+{
+  border:1px solid #a3b4cb;
+}
+
+QAbstractSpinBox::up-button
+{
+  min-width:11px;
+  max-width:11px;
+  min-height:8px;
+  max-height:8px;
+  bottom:5px;
+
+  subcontrol-position:center right;
+}
+QAbstractSpinBox::down-button
+{
+  min-width:11px;
+  max-width:11px;
+  min-height:7px;
+  max-height:7px;
+  top:5px;
+  subcontrol-position:center right;
+}
+
+QAbstractSpinBox::up-button{image:url(":/icons/uparrow-normal.png");}
+QAbstractSpinBox::up-button:hover{image:url(":/icons/uparrow-hover.png");}
+QAbstractSpinBox::up-button:disabled,QAbstractSpinBox::up-button:off{image:url(":/icons/uparrow-disabled.png");}
+QAbstractSpinBox::down-button{image:url(":/icons/downarrow-normal.png");}
+QAbstractSpinBox::down-button:hover{image:url(":/icons/downarrow-hover.png");}
+QAbstractSpinBox::down-button:disabled,QAbstractSpinBox::down-button:off{image:url(":/icons/downarrow-disabled.png");}
+
+/****************************************************************************QSpinBox****************************************************************************/
+/****************************************************************************QSpinBox****************************************************************************/
+/****************************************************************************QDoubleSpinBox****************************************************************************/
+/****************************************************************************QDoubleSpinBox****************************************************************************/
+/****************************************************************************QDateTimeEdit****************************************************************************/
+/****************************************************************************QTimeEdit****************************************************************************/
+/****************************************************************************QTimeEdit****************************************************************************/
+/****************************************************************************QDateEdit****************************************************************************/
+/****************************************************************************QDateEdit****************************************************************************/
+/****************************************************************************QDateTimeEdit****************************************************************************/
+/****************************************************************************QAbstractSpinBox****************************************************************************/
+/****************************************************************************QAbstractSlider****************************************************************************/
+/****************************************************************************QDial****************************************************************************/
+/****************************************************************************QDial****************************************************************************/
+/****************************************************************************QSlider****************************************************************************/
+/****************************************************************************QSlider****************************************************************************/
+/****************************************************************************QScrollBar****************************************************************************/
+QScrollBar::handle
+{
+  background:rgba(131, 160, 180, 70);
+  min-height:15px;
+  min-width:8px;
+  width:4px;
+  border-radius:0px;
+
+  margin:3px;
+}
+
+QScrollBar::handle:hover
+{
+  background:#a2b9d4;
+  width:4px;
+  border-radius:0px;
+}
+
+/*垂直滚动条：添加上下箭头，设置背景及滑块属性，主要出现在弹出窗体中*/
+
+
+QScrollBar:vertical
+{
+  border:0px solid transparent;
+  background:rgba(255, 255, 255, 100);
+  width:14px;
+}
+QScrollBar::add-line:vertical
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollBar::sub-line:vertical
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollBar::add-line:vertical:hover
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollBar::sub-line:vertical:hover
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+ /*水平滚动条：隐藏左右箭头，设置背景、滑块风格*/
+QScrollBar:horizontal
+{
+  border:0px solid transparent;
+  background:rgba(255, 255, 255, 100);
+  height:14px;
+}
+
+QScrollBar::add-line:horizontal
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+QScrollBar::sub-line:horizontal
+{
+  subcontrol-position:left;
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollBar::add-line:horizontal:hover
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollBar::sub-line:horizontal:hover
+{
+  image:url("");
+  border:0px;
+  height:0px;
+}
+
+QScrollArea
+{
+  border:0 solid #ecf4f9;
+}
+/****************************************************************************QScrollBar****************************************************************************/
+/****************************************************************************QAbstractSlider****************************************************************************/
+/****************************************************************************QCalendarWidget****************************************************************************/
+/****************************************************************************QCalendarWidget****************************************************************************/
+/****************************************************************************QProgressBar****************************************************************************/
+/****************************************************************************QProgressBar****************************************************************************/
+/****************************************************************************QMenu****************************************************************************/
+/****************************************************************************QMenu****************************************************************************/
+/****************************************************************************QMenuBar****************************************************************************/
+/****************************************************************************QMenuBar****************************************************************************/
+/****************************************************************************QMdiSubWindow****************************************************************************/
+/****************************************************************************QMdiSubWindow****************************************************************************/
+/****************************************************************************QStatusBar****************************************************************************/
+/****************************************************************************QStatusBar****************************************************************************/
+/****************************************************************************QToolBar****************************************************************************/
+/****************************************************************************QToolBar****************************************************************************/
+/****************************************************************************QMainWindow****************************************************************************/
+/****************************************************************************QMainWindow****************************************************************************/
+/****************************************************************************QDialog****************************************************************************/
+QDialog
+{
+}
+/****************************************************************************QMessageBox****************************************************************************/
+/****************************************************************************QMessageBox****************************************************************************/
+/****************************************************************************QDialog****************************************************************************/
+/****************************************************************************QSplashScreen****************************************************************************/
+/****************************************************************************QSplashScreen****************************************************************************/
+/****************************************************************************QWidget****************************************************************************/
+
+/****************************************************************************框架特化部分****************************************************************************/
+/****************************************************************************自定义标题栏****************************************************************************/
+CustomWindowTitleBar
+{
+  max-height:45px;
+}
+
+CustomWindowTitleBar QLabel#label_WindowIcon
+{
+  min-width:26px;
+  min-height:26px;
+  max-width:26px;
+  max-height:26px;
+}
+
+CustomWindowTitleBar QLabel#label_WindowTitle
+{
+  min-height:26px;
+  max-height:26px;
+}
+
+CustomWindowTitleBar QToolButton#toolButton_Minimize,#toolButton_Resize,#toolButton_Close{min-width:24px;min-height:24px;max-width:24px;max-height:24px;}
+CustomWindowTitleBar QToolButton#toolButton_Minimize{border-image:url(":/icons/mainwindow_minimize-normal.png");}
+CustomWindowTitleBar QToolButton#toolButton_Minimize:hover{border-image:url(":/icons/mainwindow_minimize-hover.png");}
+CustomWindowTitleBar QToolButton#toolButton_Minimize:pressed{border-image:url(":/icons/mainwindow_minimize-clicked.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=true]{border-image:url(":/icons/mainwindow_resume-normal.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=true]:hover{border-image:url(":/icons/mainwindow_resume-hover.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=true]:pressed{border-image:url(":/icons/mainwindow_resume-clicked.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=false],#toolButton_Resize{border-image:url(":/icons/mainwindow_maximize-normal.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=false]:hover,#toolButton_Resize:hover{border-image:url(":/icons/mainwindow_maximize-hover.png");}
+CustomWindowTitleBar QToolButton#toolButton_Resize[isMaximized=false]:pressed,#toolButton_Resize:pressed{border-image:url(":/icons/mainwindow_maximize-clicked.png");}
+CustomWindowTitleBar QToolButton#toolButton_Close{border-image:url(":/icons/mainwindow_close-normal.png");}
+CustomWindowTitleBar QToolButton#toolButton_Close:hover{border-image:url(":/icons/mainwindow_close-hover.png");}
+CustomWindowTitleBar QToolButton#toolButton_Close:pressed{border-image:url(":/icons/mainwindow_close-clicked.png");}
+/****************************************************************************自定义标题栏****************************************************************************/
+/****************************************************************************自定义消息框****************************************************************************/
+CustomMessageBox
+{
+}
+/****************************************************************************自定义消息框****************************************************************************/
+/****************************************************************************框架特化部分****************************************************************************/
