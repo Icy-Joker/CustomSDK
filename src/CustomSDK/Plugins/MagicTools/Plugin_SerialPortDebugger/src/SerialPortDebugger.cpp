@@ -1,13 +1,46 @@
 #include "stdafx.h"
 
 #include "SerialPortDebugger/SerialPortDebugger.h"
+
+#include <iostream>
+
 #include "ui_SerialPortDebugger.h"
+
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/serial_port.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/regex.hpp>
+
+class SerialPortDebuggerPrivate
+{
+private:
+  SerialPortDebuggerPrivate():
+    executor_work_guard(boost::asio::make_work_guard(io_context)),
+    serial_port(io_context)
+  {
+    boost::thread([&]
+    {
+      io_context.run();
+      std::cout << "stopped ..." << std::endl;
+    });
+  }
+
+  ~SerialPortDebuggerPrivate()
+  {
+    io_context.stop();
+  }
+private:
+  boost::asio::io_context io_context;
+  boost::asio::serial_port serial_port;
+  boost::asio::executor_work_guard<boost::asio::io_context::executor_type> executor_work_guard;
+
+  friend class SerialPortDebugger;
+};
 
 const std::vector<std::string> getAvailablePortName()
 {
@@ -40,52 +73,27 @@ const std::vector<std::string> getAvailablePortName()
 SerialPortDebugger::SerialPortDebugger(QWidget* parent /*= nullptr*/,Qt::WindowFlags flags /*= Qt::WindowFlags()*/) :
   QMainWindow(parent,flags),
   ui(new Ui::SerialPortDebugger()),
-  serial_port(boost::asio::serial_port(io_context))
+  private_ptr(new SerialPortDebuggerPrivate())
 {
   ui->setupUi(this);
 
   const std::vector<std::string> abailable_port_names = getAvailablePortName();
-  std::for_each(abailable_port_names.begin(), abailable_port_names.end(), [&](const std::string& port_name)
+  std::for_each(abailable_port_names.begin(),abailable_port_names.end(),[&](const std::string& port_name)
   {
-      ui->comboBox_SerialPortName->addItem(QString::fromStdString(port_name));
-  });
-
-  this->thread_io_context_run = boost::thread([&]
-  {
-    while(true)
-    {
-      try
-      {
-        boost::this_thread::interruption_point();
-
-        this->io_context.run();
-        if(this->io_context.stopped())
-        {
-          this->io_context.restart();
-        }
-
-        boost::this_thread::sleep_for(boost::chrono::seconds(0));
-      }
-      catch(const boost::thread_interrupted& e)
-      {
-        break;
-      }
-    }
+    ui->comboBox_SerialPortName->addItem(QString::fromStdString(port_name));
   });
 }
 
 SerialPortDebugger::~SerialPortDebugger()
 {
-  if(this->thread_io_context_run.joinable())
-  {
-    this->thread_io_context_run.interrupt();
-    this->thread_io_context_run.join();
-  }
-
   if(ui)
   {
     delete ui;
     ui = nullptr;
+  }
+  if(private_ptr)
+  {
+    delete private_ptr;
   }
 }
 
@@ -101,14 +109,14 @@ void SerialPortDebugger::doOpenSerialPort()
   //打开并配置串口
   try
   {
-    this->serial_port.open(port_name.c_str());
-    if(this->serial_port.is_open())
+    private_ptr->serial_port.open(port_name.c_str());
+    if(private_ptr->serial_port.is_open())
     {
-      this->serial_port.set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
-      this->serial_port.set_option(boost::asio::serial_port_base::character_size(character_size));
-      this->serial_port.set_option(boost::asio::serial_port_base::stop_bits((boost::asio::serial_port_base::stop_bits::type)stop_bits));
-      this->serial_port.set_option(boost::asio::serial_port_base::parity((boost::asio::serial_port_base::parity::type)parity));
-      this->serial_port.set_option(boost::asio::serial_port_base::flow_control((boost::asio::serial_port_base::flow_control::type)flow_control));
+      private_ptr->serial_port.set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
+      private_ptr->serial_port.set_option(boost::asio::serial_port_base::character_size(character_size));
+      private_ptr->serial_port.set_option(boost::asio::serial_port_base::stop_bits((boost::asio::serial_port_base::stop_bits::type)stop_bits));
+      private_ptr->serial_port.set_option(boost::asio::serial_port_base::parity((boost::asio::serial_port_base::parity::type)parity));
+      private_ptr->serial_port.set_option(boost::asio::serial_port_base::flow_control((boost::asio::serial_port_base::flow_control::type)flow_control));
 
       ui->pushButton_SerialPortControl->setText(QString::fromUtf8("关闭串口"));
     }
@@ -134,9 +142,9 @@ void SerialPortDebugger::doOpenSerialPort()
 
 void SerialPortDebugger::doSendMessage(const std::string& message_content)
 {
-  if(this->serial_port.is_open())
+  if(private_ptr->serial_port.is_open())
   {
-    this->serial_port.async_write_some(boost::asio::buffer(message_content),[&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
+    private_ptr->serial_port.async_write_some(boost::asio::buffer(message_content),[&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
     {
       if(!error_code)
       {
@@ -157,10 +165,10 @@ void SerialPortDebugger::doHandleMessage(const QByteArray& byte_array)
 
 void SerialPortDebugger::doReceiveMessage()
 {
-  if(this->serial_port.is_open())
+  if(private_ptr->serial_port.is_open())
   {
     std::array<char,1024> read_buffer = {0};
-    this->serial_port.async_read_some(boost::asio::buffer(read_buffer),[&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
+    private_ptr->serial_port.async_read_some(boost::asio::buffer(read_buffer),[&](const boost::system::error_code& error_code,std::size_t bytes_transferred)
     {
       if(!error_code)
       {
@@ -182,9 +190,9 @@ void SerialPortDebugger::doCloseSerialPort()
 {
   try
   {
-    this->serial_port.close();
+    private_ptr->serial_port.close();
 
-    if(!this->serial_port.is_open())
+    if(!private_ptr->serial_port.is_open())
     {
       ui->pushButton_SerialPortControl->setText(QString::fromUtf8("打开串口"));
     }
@@ -214,7 +222,7 @@ void SerialPortDebugger::on_pushButton_SendMessage_clicked()
 {
   qDebug("on_pushButton_SendMessage_clicked");
 
-  if(this->serial_port.is_open())
+  if(private_ptr->serial_port.is_open())
   {
     std::string message_content = ui->lineEdit_UserMessage->text().toStdString();
 

@@ -15,7 +15,7 @@ namespace Ui
   class SerialPortDebugger;
 }
 
-struct SerialPortDebuggerPrivate;
+class SerialPortDebuggerPrivate;
 
 class SerialPortDebugger : public QMainWindow
 {
@@ -35,10 +35,7 @@ private slots:
 private:
   Ui::SerialPortDebugger* ui;
 
-  boost::asio::io_context io_context;
-  boost::thread thread_io_context_run;
-
-  boost::asio::serial_port serial_port;
+  SerialPortDebuggerPrivate* private_ptr;
 };
 
 #endif // !__SERIALPORTDEBUGGER_H__
