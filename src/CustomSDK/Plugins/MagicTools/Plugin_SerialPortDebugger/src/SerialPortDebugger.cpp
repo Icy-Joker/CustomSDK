@@ -11,14 +11,11 @@
 #include <boost/asio/serial_port.hpp>
 
 #include <boost/filesystem.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/regex.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/streambuf.hpp>
-
-#include <QtSerialPort/QSerialPortInfo>
 
 class SerialPortDebuggerPrivate
 {
@@ -29,14 +26,20 @@ private:
   {
     boost::thread([&]
     {
-      io_context.run();
-      qDebug() << "adaa";
+      try
+      {
+        io_context.run();
+      }
+      catch(const boost::system::system_error& error)
+      {
+        qDebug() << error.code().value() << "|" << error.what();
+      }
     });
   }
 
   ~SerialPortDebuggerPrivate()
   {
-    io_context.stop();
+    //io_context.stop();
     executor_work_guard.reset();
   }
 private:
@@ -51,11 +54,11 @@ const std::vector<std::string> getAvailablePortName()
 {
   std::vector<std::string> result;
 #ifdef WIN32
-  for (std::size_t i = 0; i <= UINT16_MAX; i++)
+  for(std::size_t i = 0;i <= UINT16_MAX;i++)
   {
     const std::string com_name = "COM" + std::to_string((long)i);
-    HANDLE handle_com = CreateFileA(com_name.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
-    if (INVALID_HANDLE_VALUE != handle_com)
+    HANDLE handle_com = CreateFileA(com_name.c_str(), GENERIC_READ | GENERIC_WRITE,0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED,0);
+    if(INVALID_HANDLE_VALUE != handle_com)
     {
       result.push_back(com_name);
 
