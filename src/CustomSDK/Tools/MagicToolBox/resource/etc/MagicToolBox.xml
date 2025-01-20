@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+  <PreloadModules>
+    <!-- Module name="" directory="../bin" enabled="true" / -->
+  </PreloadModules>
+  <Modules Language="CPlusPlus">
+    <!-- Module name="" directory="../test/bin" enabled="true" / -->
+  </Modules>
+  <!-- 在此处添加自定义配置项 / -->
+  <MagicToolBox enable_auto_load="false" auto_load_directory="../plugins/MagicTools">
+    <MagicBox name="常规">
+      <!-- MagicTool identifier="" location="../plugins/MagicTools" name="" icon="" / -->
+    </MagicBox>
+  </MagicToolBox>
+  <Loggers enabled="true">
+    <!-- Logger type="ConsoleLogger|FileLogger|DatabaseLogger" level="trace|debug|info|warn|error|critical|off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" / -->
+    <Logger type="ConsoleLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+    <Logger type="FileLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+    <Logger type="DatabaseLogger" level="off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="false" />
+  </Loggers>
+  <ExtendConfigs enabled="true">
+    <!-- ExtendConfig key="" value="" / -->
+  </ExtendConfigs>
+</Root>
