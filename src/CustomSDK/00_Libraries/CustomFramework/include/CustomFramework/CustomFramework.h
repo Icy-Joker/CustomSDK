@@ -1,0 +1,6 @@
+#pragma once
+
+#ifndef CUSTOMFRAMEWORK_H
+# define CUSTOMFRAMEWORK_H
+
+#endif//!CUSTOMFRAMEWORK_H
