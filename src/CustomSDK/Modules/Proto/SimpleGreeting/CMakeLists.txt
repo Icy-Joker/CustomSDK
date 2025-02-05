@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.21.0)
+#
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.21.0)
+  if(gRPC_FOUND AND Protobuf_FOUND)
+    generateProtobufLibrary()
+    if(TARGET "${CURRENT_TARGET}")
+      install(TARGETS ${CURRENT_TARGET} RUNTIME DESTINATION "test/bin" ARCHIVE DESTINATION "test/bin" LIBRARY DESTINATION "test/bin")
+    endif()
+  endif()
+endif()
