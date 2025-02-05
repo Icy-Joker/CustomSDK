@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package SimpleGreeting;
+
+message SimpleGreetingRequest {
+  string name = 1;  // 用户名称
+}
+
+message SimpleGreetingResponse {
+  string message = 1;  // 返回的问候语
+}
+
+service SimpleGreetingService {
+  rpc doSayHello (SimpleGreetingRequest) returns (SimpleGreetingResponse);
+}
