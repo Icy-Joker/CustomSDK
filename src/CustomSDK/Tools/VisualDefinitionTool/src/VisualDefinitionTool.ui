@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VisualDefinitionTool</class>
+ <widget class="QWidget" name="VisualDefinitionTool">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>598</width>
+    <height>273</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTreeView" name="treeView_DefinitionParseTree">
+     <property name="contextMenuPolicy">
+      <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_VisualView">
+      <attribute name="title">
+       <string>图形视图</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QStackedWidget" name="stackedWidget">
+         <widget class="QWidget" name="page_EmptyPage"/>
+         <widget class="IDLFileDefinitionInformation" name="page_IDLFileDefinitionInformation"/>
+         <widget class="StructuredDataTypeInformation" name="page_StructuredDataTypeInformation"/>
+         <widget class="EnumeratedDataTypeInformation" name="page_EnumeratedDataTypeInformation"/>
+         <widget class="PackageInformation" name="page_PackageInformation"/>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_TextView">
+      <attribute name="title">
+       <string>文本视图</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QTextBrowser" name="textBrowser"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>StructuredDataTypeInformation</class>
+   <extends>QWidget</extends>
+   <header>StructuredDataTypeInformation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EnumeratedDataTypeInformation</class>
+   <extends>QWidget</extends>
+   <header>EnumeratedDataTypeInformation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PackageInformation</class>
+   <extends>QWidget</extends>
+   <header>PackageInformation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>IDLFileDefinitionInformation</class>
+   <extends>QWidget</extends>
+   <header location="global">IDLFileDefinitionInformation.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
