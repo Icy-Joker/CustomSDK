@@ -3,24 +3,36 @@
 #ifndef __IDLFILEDEFINITION_H__
 # define __IDLFILEDEFINITION_H__
 
-#include "AbstractDefinition.h"
+#include "Package.h"
 
-class Package;
+class TopicDefinition;
 
-class IDLFileDefinition : public AbstractDefinition
+class IDLFileDefinition : public Package
 {
 public:
   explicit IDLFileDefinition();
   ~IDLFileDefinition() override;
+public:
+  void appendFileReference(boost::shared_ptr<IDLFileDefinition>);
+  void appendTopicDefinition(boost::shared_ptr<TopicDefinition>);
+
+  const std::vector<boost::shared_ptr<IDLFileDefinition>>& getFileReferences();
+  const std::vector<boost::shared_ptr<TopicDefinition>>& getTopicDefinitions();
+public:
+  void setFilePath(const std::string&);
+  const std::string& getFilePath() const;
+public:
+  bool doSaveAs(const std::string&);
+  bool doSave();
 public:
   std::string getCompleteName() const override;
 public:
   std::string toText(const std::string& current_indent = "") const override;
 private:
   std::string file_path;
-  std::vector<std::string> file_dependence;
+  std::vector<boost::shared_ptr<IDLFileDefinition>> file_references;
 
-  boost::shared_ptr<Package> global_package_shared_ptr;
+  std::vector<boost::shared_ptr<TopicDefinition>> topics;
 };
 
 #endif // !__IDLFILEDEFINITION_H__

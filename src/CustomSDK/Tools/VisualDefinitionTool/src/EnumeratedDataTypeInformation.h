@@ -21,6 +21,10 @@ public:
   ~EnumeratedDataTypeInformation() override;
 public:
   void showEnumeratedDataTypeInformation(const boost::shared_ptr<EnumeratedDataType>&);
+private:
+  void showName();
+  void showCompleteName();
+  void showMemberElementInformation();
 private slots:
   void on_lineEdit_EnumeratedDataTypeName_textChanged(const QString&);
 private:

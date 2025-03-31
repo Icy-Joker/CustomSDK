@@ -46,19 +46,25 @@ Package::~Package()
 //   return parent_package_complete_name.empty()?package_name : parent_package_complete_name + "::" + package_name;
 // }
 
-void Package::appendEnumeratedDataType(boost::weak_ptr<EnumeratedDataType> enumerated_data_type_weak_ptr)
+void Package::appendEnumeratedDataType(const boost::weak_ptr<EnumeratedDataType>& enumerated_data_type_weak_ptr)
 {
-  this->vector_enumerated_data_type.push_back(enumerated_data_type_weak_ptr);
+  this->vector_enumerated_data_type.emplace_back(enumerated_data_type_weak_ptr);
+
+  this->vector_namespace.emplace_back(enumerated_data_type_weak_ptr);
 }
 
-void Package::appendStructuredDataType(boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr)
+void Package::appendStructuredDataType(const boost::weak_ptr<StructuredDataType>& structured_data_type_weak_ptr)
 {
-  this->vector_structured_data_type.push_back(structured_data_type_weak_ptr);
+  this->vector_structured_data_type.emplace_back(structured_data_type_weak_ptr);
+
+  this->vector_namespace.emplace_back(structured_data_type_weak_ptr);
 }
 
-void Package::appendPackage(boost::weak_ptr<Package> package_weak_ptr)
+void Package::appendPackage(const boost::weak_ptr<Package>& package_weak_ptr)
 {
-  this->vector_package.push_back(package_weak_ptr);
+  this->vector_package.emplace_back(package_weak_ptr);
+
+  this->vector_namespace.emplace_back(package_weak_ptr);
 }
 
 const std::vector<boost::weak_ptr<EnumeratedDataType>>& Package::getEnumeratedDataType() const
@@ -77,10 +83,10 @@ const std::vector<boost::weak_ptr<Package>>& Package::getChildPackage() const
 }
 
 //获取后代枚举
-const std::vector<boost::weak_ptr<EnumeratedDataType>> Package::collectEnumeratedDataType() const
+std::vector<boost::weak_ptr<EnumeratedDataType>> Package::collectEnumeratedDataType() const
 {
   std::vector<boost::weak_ptr<EnumeratedDataType>> vector_collected_enumerated_data_type = vector_enumerated_data_type;
-  std::for_each(vector_package.begin(),vector_package.end(),[&](boost::weak_ptr<Package> package_weak_ptr_existed)
+  std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
   {
     if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
     {
@@ -94,10 +100,10 @@ const std::vector<boost::weak_ptr<EnumeratedDataType>> Package::collectEnumerate
 }
 
 //获取后代结构体
-const std::vector<boost::weak_ptr<StructuredDataType>> Package::collectStructuredDataType() const
+std::vector<boost::weak_ptr<StructuredDataType>> Package::collectStructuredDataType() const
 {
   std::vector<boost::weak_ptr<StructuredDataType>> vector_collected_structured_data_type = vector_structured_data_type;
-  std::for_each(vector_package.begin(),vector_package.end(),[&](boost::weak_ptr<Package> package_weak_ptr_existed)
+  std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
   {
     if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
     {
@@ -111,10 +117,10 @@ const std::vector<boost::weak_ptr<StructuredDataType>> Package::collectStructure
 }
 
 //获取后代包空间
-const std::vector<boost::weak_ptr<Package>> Package::collectPackage() const
+std::vector<boost::weak_ptr<Package>> Package::collectPackage() const
 {
   std::vector<boost::weak_ptr<Package>> vector_collected_package = vector_package;
-  std::for_each(vector_package.begin(),vector_package.end(),[&](boost::weak_ptr<Package> package_weak_ptr_existed)
+  std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
   {
     if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
     {
@@ -127,12 +133,12 @@ const std::vector<boost::weak_ptr<Package>> Package::collectPackage() const
   return vector_collected_package;
 }
 
-const std::vector<boost::weak_ptr<EnumeratedDataType>> Package::getAvailableEnumeratedDataType() const
+std::vector<boost::weak_ptr<EnumeratedDataType>> Package::getAvailableEnumeratedDataType() const
 {
   std::vector<boost::weak_ptr<EnumeratedDataType>> vector_available_enumerated_data_type;
 
-  std::vector<boost::weak_ptr<Package>> vector_available_package = getAvailablePackage();
-  std::for_each(vector_available_package.begin(),vector_available_package.end(),[&](const boost::weak_ptr<Package> package_weak_ptr_existed)
+  std::vector<boost::weak_ptr<Package>> vector_available_package = this->getAvailablePackage();
+  std::for_each(vector_available_package.begin(),vector_available_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
   {
     if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
     {
@@ -145,12 +151,12 @@ const std::vector<boost::weak_ptr<EnumeratedDataType>> Package::getAvailableEnum
   return vector_available_enumerated_data_type;
 }
 
-const std::vector<boost::weak_ptr<StructuredDataType>> Package::getAvailableStructuredDataType() const
+std::vector<boost::weak_ptr<StructuredDataType>> Package::getAvailableStructuredDataType() const
 {
   std::vector<boost::weak_ptr<StructuredDataType>> vector_available_structured_data_type;
 
-  std::vector<boost::weak_ptr<Package>> vector_available_package = getAvailablePackage();
-  std::for_each(vector_available_package.begin(),vector_available_package.end(),[&](const boost::weak_ptr<Package> package_weak_ptr_existed)
+  std::vector<boost::weak_ptr<Package>> vector_available_package = this->getAvailablePackage();
+  std::for_each(vector_available_package.begin(),vector_available_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
   {
     if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
     {
@@ -163,31 +169,28 @@ const std::vector<boost::weak_ptr<StructuredDataType>> Package::getAvailableStru
   return vector_available_structured_data_type;
 }
 
-const std::vector<boost::weak_ptr<Package>> Package::getAvailablePackage() const
+std::vector<boost::weak_ptr<Package>> Package::getAvailablePackage() const
 {
   std::vector<boost::weak_ptr<Package>> vector_available_package;
   if(boost::shared_ptr<Package> parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(getParentNamespace()))
   {
     //添加定义在自己之前的兄弟节点
-    std::vector<boost::weak_ptr<Package>> vector_package = parent_package_shared_ptr->getChildPackage();
-    for(int i = 0;i < vector_package.size();i++)
+    const std::vector<boost::weak_ptr<Package>>& vector_package = parent_package_shared_ptr->getChildPackage();
+    std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package>& package_weak_ptr_existed)
     {
-      if(boost::shared_ptr<Package> temp_package_shared_ptr = vector_package[i].lock())
+      if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
       {
-        if(temp_package_shared_ptr->getName() == this->getName())
-        {
-          break;
-        }
-        else
+        //if(package_shared_ptr_existed->getName() != this->getName())
         {
           //添加长兄节点的所有后代节点(包空间)
-          std::vector<boost::weak_ptr<Package>> temp_vector_collected_package = temp_package_shared_ptr->collectPackage();
+          std::vector<boost::weak_ptr<Package>> temp_vector_collected_package = package_shared_ptr_existed->collectPackage();
           vector_available_package.insert(vector_available_package.end(),temp_vector_collected_package.begin(),temp_vector_collected_package.end());
           //添加长兄节点
-          vector_available_package.push_back(temp_package_shared_ptr);
+          vector_available_package.emplace_back(package_shared_ptr_existed);
         }
       }
-    }
+    });
+
     //添加父节点
     vector_available_package.emplace_back(boost::dynamic_pointer_cast<Package>(this->getParentNamespace()));
     //添加父节点的长兄节点
@@ -197,47 +200,56 @@ const std::vector<boost::weak_ptr<Package>> Package::getAvailablePackage() const
   return vector_available_package;
 }
 
-std::string Package::getCompleteName() const
-{
-  std::string result = this->getName() == "全局命名空间" ? "" : AbstractNamespace::getCompleteName();
-
-  return result;
-}
-
 std::string Package::toText(const std::string& current_indent) const
 {
   std::string result;
   std::string child_indent = current_indent;
 
-  child_indent += "  ";
-  result += current_indent + "package " + this->getName() + "\n";
-  result += current_indent + "{\n";
+  boost::shared_ptr<Package> parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(getParentNamespace());
 
-  std::for_each(vector_enumerated_data_type.begin(),vector_enumerated_data_type.end(),[&](const boost::weak_ptr<EnumeratedDataType> enumerated_data_type_weak_ptr_existed)
+  if(parent_package_shared_ptr)// 存在父命名空间说明当前包不是默认的全局命名空间,才能存在包名a
   {
-    if(boost::shared_ptr<EnumeratedDataType> enumerated_data_type_shared_ptr_existed = enumerated_data_type_weak_ptr_existed.lock())
+    child_indent += "  ";
+    result += current_indent + "package " + this->getName() + "\n";
+    result += current_indent + "{\n";
+  }
+
+  std::for_each(vector_namespace.begin(),vector_namespace.end(),[&](const boost::weak_ptr<AbstractNamespace>& namespace_weak_ptr_existed)
+  {
+    if(boost::shared_ptr<AbstractNamespace> namespace_shared_ptr_existed = namespace_weak_ptr_existed.lock())
     {
-      result += enumerated_data_type_shared_ptr_existed->toText(child_indent);
+      result += namespace_shared_ptr_existed->toText(child_indent);
     }
   });
 
-  std::for_each(vector_structured_data_type.begin(),vector_structured_data_type.end(),[&](const boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr_existed)
-  {
-    if(boost::shared_ptr<StructuredDataType> structured_data_type_shared_ptr_existed = structured_data_type_weak_ptr_existed.lock())
-    {
-      result += structured_data_type_shared_ptr_existed->toText(child_indent);
-    }
-  });
+  // std::for_each(vector_enumerated_data_type.begin(),vector_enumerated_data_type.end(),[&](const boost::weak_ptr<EnumeratedDataType> enumerated_data_type_weak_ptr_existed)
+  // {
+  //   if(boost::shared_ptr<EnumeratedDataType> enumerated_data_type_shared_ptr_existed = enumerated_data_type_weak_ptr_existed.lock())
+  //   {
+  //     result += enumerated_data_type_shared_ptr_existed->toText(child_indent);
+  //   }
+  // });
+  //
+  // std::for_each(vector_structured_data_type.begin(),vector_structured_data_type.end(),[&](const boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr_existed)
+  // {
+  //   if(boost::shared_ptr<StructuredDataType> structured_data_type_shared_ptr_existed = structured_data_type_weak_ptr_existed.lock())
+  //   {
+  //     result += structured_data_type_shared_ptr_existed->toText(child_indent);
+  //   }
+  // });
+  //
+  // std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package> package_weak_ptr_existed)
+  // {
+  //   if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
+  //   {
+  //     result += package_shared_ptr_existed->toText(child_indent);
+  //   }
+  // });
 
-  std::for_each(vector_package.begin(),vector_package.end(),[&](const boost::weak_ptr<Package> package_weak_ptr_existed)
+  if(parent_package_shared_ptr)
   {
-    if(boost::shared_ptr<Package> package_shared_ptr_existed = package_weak_ptr_existed.lock())
-    {
-      result += package_shared_ptr_existed->toText(child_indent);
-    }
-  });
-
-  result += current_indent + "};\n";
+    result += current_indent + "};\n";
+  }
 
   return result;
 }

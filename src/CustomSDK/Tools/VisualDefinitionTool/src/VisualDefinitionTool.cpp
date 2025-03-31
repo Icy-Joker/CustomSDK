@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "VisualDefinitionTool.h"
 
+#include <QFileDialog>
+
 #include "ui_VisualDefinitionTool.h"
 #include "CustomItemModel.h"
 
@@ -14,6 +16,7 @@
 #include "PackageInformation.h"
 
 #include <QMenu>
+#include <QMessageBox>
 
 VisualDefinitionTool::VisualDefinitionTool(QWidget* parent):
   QWidget(parent),
@@ -47,20 +50,10 @@ QStandardItem* VisualDefinitionTool::appendFileDefinition(QStandardItem* item_pa
   {
     item_current_file_definition = new QStandardItem();
     {
-      if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::make_shared<
-        IDLFileDefinition>())
+      if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::make_shared<IDLFileDefinition>())
       {
-        // if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
-        // {
-        //   current_file_definition_shared_ptr->setParentNamespace(parent_package_shared_ptr);
-        //   parent_package_shared_ptr->appendEnumeratedDataType(current_enumerated_data_type_shared_ptr);
-        // }
-
-        item_current_file_definition->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::FILEDEFINITION),
-          ITEM_TREE_NODE_TYPE_ROLE);
-        item_current_file_definition->setData(
-          QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_file_definition_shared_ptr),
-          ITEM_USER_DATA_ROLE);
+        item_current_file_definition->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::FILEDEFINITION),ITEM_TREE_NODE_TYPE_ROLE);
+        item_current_file_definition->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_file_definition_shared_ptr),ITEM_USER_DATA_ROLE);
 
         item_parent->appendRow(item_current_file_definition);
       }
@@ -165,22 +158,44 @@ void VisualDefinitionTool::appendFileDefinition()
   {
     if(QStandardItem* item_parent = model_parse_tree->invisibleRootItem())
     {
-      if(QStandardItem* item_file_definition = appendFileDefinition(item_parent))
+      if(!item_parent->hasChildren())
       {
-        if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
+        if(QStandardItem* item_file_definition = appendFileDefinition(item_parent))
         {
-          if(QStandardItem* item_global_namespace = appendPackage(item_file_definition))
+          if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
           {
-            if(boost::shared_ptr<Package> global_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_global_namespace->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
-            {
-              global_package_shared_ptr->setName("全局命名空间");
+            boost::shared_ptr<IDLFileDefinition> file_reference_definition_shared_ptr = boost::make_shared<IDLFileDefinition>();
+            file_reference_definition_shared_ptr->setFilePath("/Users/icy-joker/WorkSpace/CustomSDK/src/build/clion/relwithdebinfo/bin/RelWithDebInfo/ss.xidl");
 
-              //current_file_definition_shared_ptr->setGlobalPackage();
+            current_file_definition_shared_ptr->appendFileReference(file_reference_definition_shared_ptr);
+          }
+
+          ui->treeView_DefinitionParseTree->expandAll();
+        }
+      }
+      else
+      {
+        // 已存在文件定义;
+        {
+          // todo:
+          // 判断已存在文件定义是否有修改
+          if(true)
+          {
+            QMessageBox::StandardButton button = QMessageBox::question(this,"提示","已存在文件定义，是否保存？",QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+            if(button == QMessageBox::Yes)
+            {
+              if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
+              {
+                if(current_file_definition_shared_ptr->doSave())
+                {
+                }
+              }
             }
           }
+          else
+          {
+          }
         }
-
-        ui->treeView_DefinitionParseTree->expandAll();
       }
     }
   }
@@ -228,9 +243,7 @@ void VisualDefinitionTool::appendPackage()
 
   if(const auto* model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
   {
-    if(QStandardItem* item_parent = index_current_selected.isValid()
-                                      ? model_parse_tree->itemFromIndex(index_current_selected)
-                                      : model_parse_tree->invisibleRootItem())
+    if(QStandardItem* item_parent = index_current_selected.isValid() ? model_parse_tree->itemFromIndex(index_current_selected) : model_parse_tree->invisibleRootItem())
     {
       if(QStandardItem* item_package = appendPackage(item_parent))
       {
@@ -256,6 +269,53 @@ void VisualDefinitionTool::previewDefinition()
           if(auto current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
           {
             ui->textBrowser->setText(QString::fromStdString(current_file_definition_shared_ptr->toText()));
+          }
+        }
+      }
+    }
+  }
+}
+
+void VisualDefinitionTool::saveDefinition()
+{
+  if(auto model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
+  {
+    if(QStandardItem* item_invisible_root = model_parse_tree->invisibleRootItem())
+    {
+      if(item_invisible_root->hasChildren())
+      {
+        if(QStandardItem* item_file_definition = item_invisible_root->child(0))
+        {
+          if(auto current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
+          {
+            if(current_file_definition_shared_ptr->doSave())
+            {
+              QMessageBox::information(this,QString::fromUtf8("信息"),QString::fromUtf8("保存成功"));
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void VisualDefinitionTool::saveDefinitionAs()
+{
+  if(auto model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
+  {
+    if(QStandardItem* item_invisible_root = model_parse_tree->invisibleRootItem())
+    {
+      if(item_invisible_root->hasChildren())
+      {
+        if(QStandardItem* item_file_definition = item_invisible_root->child(0))
+        {
+          if(auto current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
+          {
+            const std::string& save_file_path = QFileDialog::getSaveFileName(this,QString::fromUtf8("另存为"),".","*.xidl").toStdString();
+            if(current_file_definition_shared_ptr->doSaveAs(save_file_path))
+            {
+              QMessageBox::information(this,QString::fromUtf8("信息"),QString::fromUtf8("保存成功"));
+            }
           }
         }
       }
@@ -347,11 +407,23 @@ void VisualDefinitionTool::on_treeView_DefinitionParseTree_customContextMenuRequ
     connect(action_PreviewDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
+  auto action_SaveDefinition = new QAction(QString::fromUtf8("保存"),&custom_menu);
+  {
+    action_SaveDefinition->setObjectName("action_SaveDefinition");
+    connect(action_SaveDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
+  }
+
+  auto action_SaveDefinitionAs = new QAction(QString::fromUtf8("另存为"),&custom_menu);
+  {
+    action_SaveDefinitionAs->setObjectName("action_SaveDefinitionAs");
+    connect(action_SaveDefinitionAs,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
+  }
+
   switch(index_current_selected.data(ITEM_TREE_NODE_TYPE_ROLE).value<TREE_NODE_TYPE>())
   {
     case FILEDEFINITION:
     {
-      list_custom_action << action_PreviewDefinition;
+      list_custom_action << action_AppendEnumeratedDataType << action_AppendStructuredDataType << action_AppendPackage << action_PreviewDefinition << action_SaveDefinition << action_SaveDefinitionAs;
       break;
     }
     case PACKAGE:
@@ -374,6 +446,11 @@ void VisualDefinitionTool::on_treeView_DefinitionParseTree_customContextMenuRequ
   {
     custom_menu.exec(list_custom_action,QCursor::pos());
   }
+}
+
+void VisualDefinitionTool::on_treeView_DefinitionParseTree_clicked(const QModelIndex&)
+{
+  ui->tabWidget->setCurrentWidget(ui->tab_VisualView);
 }
 
 void VisualDefinitionTool::slot_parseTree_currentRowChanged(const QModelIndex& index_current,const QModelIndex& index_previous)
@@ -442,6 +519,14 @@ void VisualDefinitionTool::slot_customAction_triggered()
     else if(action->objectName() == "action_PreviewDefinition")
     {
       previewDefinition();
+    }
+    else if(action->objectName() == "action_SaveDefinition")
+    {
+      saveDefinition();
+    }
+    else if(action->objectName() == "action_SaveDefinitionAs")
+    {
+      saveDefinitionAs();
     }
     else
     {

@@ -17,15 +17,20 @@ class StructuredDataTypeInformation : public QWidget
 {
   Q_OBJECT
 public:
-  explicit StructuredDataTypeInformation(QWidget* parent= nullptr);
+  explicit StructuredDataTypeInformation(QWidget* parent = nullptr);
   ~StructuredDataTypeInformation();
 public:
   void showStructuredDataTypeInformation(const boost::shared_ptr<StructuredDataType>&);
+private:
+  void showName();
+  void showCompleteName();
+  void showParentStructuredDataType();
+  void showMemberElementInformation();
 private slots:
   void on_lineEdit_StructuredDataTypeName_textChanged(const QString&);
 private:
-  Ui::StructuredDataTypeInformation* ui;  
-  boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr; 
+  Ui::StructuredDataTypeInformation* ui;
+  boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr;
 };
 
 #endif //!__STRUCTUREDDATATYPEINFORMATION_H__

@@ -28,47 +28,75 @@ PackageInformation::~PackageInformation()
 
 void PackageInformation::showPackageInformation(const boost::shared_ptr<Package>& package_shared_ptr)
 {
+  this->package_weak_ptr = package_shared_ptr;
+
   if(package_shared_ptr)
   {
-    this->package_weak_ptr = package_shared_ptr;
-    //获取数据
+    //显示
+    this->showName();
+    this->showCompleteName();
+    this->showChildDataTypeDefinition();
+  }
+  else
+  {
+    showPackageInformation(boost::make_shared<Package>());
+  }
+}
+
+void PackageInformation::showName()
+{
+  if(const boost::shared_ptr<Package> package_shared_ptr = this->package_weak_ptr.lock())
+  {
     const QString& current_package_name = QString::fromStdString(package_shared_ptr->getName());
+
+    ui->lineEdit_PackageName->setText(current_package_name);
+  }
+}
+
+void PackageInformation::showCompleteName()
+{
+  if(const boost::shared_ptr<Package> package_shared_ptr = this->package_weak_ptr.lock())
+  {
     const QString& current_package_complete_name = QString::fromStdString(package_shared_ptr->getCompleteName());
+
+    ui->lineEdit_PackageCompleteName->setText(current_package_complete_name);
+  }
+}
+
+void PackageInformation::showChildDataTypeDefinition()
+{
+  ui->comboBox_DataTypeDefinition->clear();
+
+  if(const boost::shared_ptr<Package> package_shared_ptr = this->package_weak_ptr.lock())
+  {
     const std::vector<boost::weak_ptr<EnumeratedDataType>> vector_enumerated_data_type = package_shared_ptr->collectEnumeratedDataType();
     //const std::vector<boost::weak_ptr<EnumeratedDataType>> vector_enumerated_data_type=package_shared_ptr->getAvailableEnumeratedDataType();
     const std::vector<boost::weak_ptr<StructuredDataType>> vector_structured_data_type = package_shared_ptr->collectStructuredDataType();
     //const std::vector<boost::weak_ptr<StructuredDataType>> vector_structured_data_type=package_shared_ptr->getAvailableStructuredDataType();
+
+    if(!vector_enumerated_data_type.empty())
     {
-      //显示
-      ui->lineEdit_PackageName->setText(current_package_name);
-      ui->lineEdit_PackageCompleteName->setText(current_package_complete_name);
+      ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString("枚举"));
+
+      std::for_each(vector_enumerated_data_type.begin(),vector_enumerated_data_type.end(),[&](const boost::weak_ptr<EnumeratedDataType> enumerated_data_type_weak_ptr)
       {
-        ui->comboBox_DataTypeDefinition->clear();
-        if(!vector_enumerated_data_type.empty())
+        if(boost::shared_ptr<EnumeratedDataType> enumerated_data_type_shared_ptr = enumerated_data_type_weak_ptr.lock())
         {
-          ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString("枚举"));
-
-          std::for_each(vector_enumerated_data_type.begin(),vector_enumerated_data_type.end(),[&](const boost::weak_ptr<EnumeratedDataType> enumerated_data_type_weak_ptr)
-          {
-            if(boost::shared_ptr<EnumeratedDataType> enumerated_data_type_shared_ptr = enumerated_data_type_weak_ptr.lock())
-            {
-              ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString(enumerated_data_type_shared_ptr->getCompleteName()),QVariant::fromValue<boost::weak_ptr<EnumeratedDataType>>(enumerated_data_type_shared_ptr));
-            }
-          });
+          ui->comboBox_DataTypeDefinition->addItem(QApplication::style()->standardIcon(QStyle::SP_TrashIcon),QString::fromStdString(enumerated_data_type_shared_ptr->getCompleteName()),QVariant::fromValue<boost::weak_ptr<EnumeratedDataType>>(enumerated_data_type_shared_ptr));
         }
-        if(!vector_structured_data_type.empty())
+      });
+    }
+    if(!vector_structured_data_type.empty())
+    {
+      ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString("结构体"));
+
+      std::for_each(vector_structured_data_type.begin(),vector_structured_data_type.end(),[&](const boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr)
+      {
+        if(boost::shared_ptr<StructuredDataType> structured_data_type_shared_ptr = structured_data_type_weak_ptr.lock())
         {
-          ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString("结构体"));
-
-          std::for_each(vector_structured_data_type.begin(),vector_structured_data_type.end(),[&](const boost::weak_ptr<StructuredDataType> structured_data_type_weak_ptr)
-          {
-            if(boost::shared_ptr<StructuredDataType> structured_data_type_shared_ptr = structured_data_type_weak_ptr.lock())
-            {
-              ui->comboBox_DataTypeDefinition->addItem(QString::fromStdString(structured_data_type_shared_ptr->getCompleteName()),QVariant::fromValue<boost::weak_ptr<StructuredDataType>>(structured_data_type_shared_ptr));
-            }
-          });
+          ui->comboBox_DataTypeDefinition->addItem(QApplication::style()->standardIcon(QStyle::SP_FileIcon),QString::fromStdString(structured_data_type_shared_ptr->getCompleteName()),QVariant::fromValue<boost::weak_ptr<StructuredDataType>>(structured_data_type_shared_ptr));
         }
-      }
+      });
     }
   }
 }

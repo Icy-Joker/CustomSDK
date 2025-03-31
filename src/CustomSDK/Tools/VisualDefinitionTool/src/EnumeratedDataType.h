@@ -14,6 +14,8 @@ public:
   EnumeratedDataType();
   ~EnumeratedDataType() override;
 public:
+  void appendMemberElement(const boost::shared_ptr<SingleElement>&);
+
   const std::vector<boost::shared_ptr<SingleElement>>& getMemberElements() const;
 public:
   std::string toText(const std::string& current_indent = "") const override;

@@ -34,6 +34,8 @@ private:
   void appendPackage();
 private:
   void previewDefinition();
+  void saveDefinition();
+  void saveDefinitionAs();
 
   void showEmptyPage();
   void showIDLFileDefinitionInformation(boost::shared_ptr<IDLFileDefinition>);
@@ -42,6 +44,7 @@ private:
   void showPackageInformation(boost::shared_ptr<Package>);
 private slots:
   void on_treeView_DefinitionParseTree_customContextMenuRequested(const QPoint&);
+  void on_treeView_DefinitionParseTree_clicked(const QModelIndex&);
 private slots:
   void slot_parseTree_currentRowChanged(const QModelIndex&,const QModelIndex&);
   void slot_customAction_triggered();

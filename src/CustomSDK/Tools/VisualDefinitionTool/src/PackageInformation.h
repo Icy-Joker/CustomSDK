@@ -16,10 +16,14 @@ class PackageInformation : public QWidget
 {
   Q_OBJECT
 public:
-  explicit PackageInformation(QWidget* parent= nullptr);
+  explicit PackageInformation(QWidget* parent = nullptr);
   ~PackageInformation();
 public:
   void showPackageInformation(const boost::shared_ptr<Package>&);
+private:
+  void showName();
+  void showCompleteName();
+  void showChildDataTypeDefinition();
 private slots:
   void on_lineEdit_PackageName_textChanged(const QString&);
 private:

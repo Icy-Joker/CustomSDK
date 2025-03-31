@@ -21,8 +21,14 @@ public:
 public:
   void showIDLFileDefinitionInformation(const boost::shared_ptr<IDLFileDefinition>&);
 private:
-  Ui::IDLFileDefinitionInformation* ui{};
-  boost::weak_ptr<IDLFileDefinition> enumerated_data_type_weak_ptr;
+  void showName();
+  void showCompleteName();
+  void showFileReferences();
+  void showChildDataTypeDefinition();
+  void showTopicDefinition();
+private:
+  Ui::IDLFileDefinitionInformation* ui;
+  boost::weak_ptr<IDLFileDefinition> file_definition_weak_ptr;
 };
 
 #endif // !IDLFILEDEFINITIONINFORMATION_H

@@ -7,10 +7,28 @@
 EnumeratedDataType::EnumeratedDataType()
 {
   this->setName("EnumeratedDataType");
+
+  {
+    // 测试
+    boost::shared_ptr<SingleElement> single_element_shared_ptr = boost::make_shared<SingleElement>();
+    {
+      single_element_shared_ptr->data_type_name = "data_type_name";
+      single_element_shared_ptr->identifier = "identifier";
+      single_element_shared_ptr->default_value = "default_value";
+      single_element_shared_ptr->annotation = "annotation";
+    }
+
+    this->appendMemberElement(single_element_shared_ptr);
+  }
 }
 
 EnumeratedDataType::~EnumeratedDataType()
 {
+}
+
+void EnumeratedDataType::appendMemberElement(const boost::shared_ptr<SingleElement>& single_element_shared_ptr)
+{
+  this->vector_member_elements.push_back(single_element_shared_ptr);
 }
 
 // void EnumeratedDataType::setParentPackage(const boost::weak_ptr<Package>& parent_package_weak_ptr)
