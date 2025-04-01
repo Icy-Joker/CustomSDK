@@ -7,12 +7,12 @@
 #include "CustomItemModel.h"
 
 #include "IDLFileDefinition.h"
-#include "EnumeratedDataType.h"
-#include "StructuredDataType.h"
+#include "EnumerationType.h"
+#include "StructureType.h"
 #include "Package.h"
-#include "EnumeratedDataTypeInformation.h"
+#include "EnumerationTypeInformation.h"
 
-#include "StructuredDataTypeInformation.h"
+#include "StructureTypeInformation.h"
 #include "PackageInformation.h"
 
 #include <QMenu>
@@ -42,110 +42,89 @@ VisualDefinitionTool::~VisualDefinitionTool()
 {
 }
 
-QStandardItem* VisualDefinitionTool::appendFileDefinition(QStandardItem* item_parent)
+QStandardItem* VisualDefinitionTool::appendFileDefinition(QStandardItem* item_parent,const boost::shared_ptr<IDLFileDefinition>& idl_file_definition_shared_ptr)
 {
   QStandardItem* item_current_file_definition = nullptr;
 
-  if(item_parent)
+  if(item_parent && idl_file_definition_shared_ptr)
   {
     item_current_file_definition = new QStandardItem();
     {
-      if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::make_shared<IDLFileDefinition>())
-      {
-        item_current_file_definition->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::FILEDEFINITION),ITEM_TREE_NODE_TYPE_ROLE);
-        item_current_file_definition->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_file_definition_shared_ptr),ITEM_USER_DATA_ROLE);
+      item_current_file_definition->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::FILEDEFINITION),ITEM_TREE_NODE_TYPE_ROLE);
+      item_current_file_definition->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(idl_file_definition_shared_ptr),ITEM_USER_DATA_ROLE);
 
-        item_parent->appendRow(item_current_file_definition);
-      }
+      item_parent->appendRow(item_current_file_definition);
     }
   }
 
   return item_current_file_definition;
 }
 
-QStandardItem* VisualDefinitionTool::appendEnumeratedDataType(QStandardItem* item_parent)
+QStandardItem* VisualDefinitionTool::appendEnumerationType(QStandardItem* item_parent,const boost::shared_ptr<EnumerationType>& enumeration_type_shared_ptr)
 {
-  QStandardItem* item_current_enumerated_data_type = nullptr;
+  QStandardItem* item_enumerated_data_type = nullptr;
 
-  if(item_parent)
+  if(item_parent && enumeration_type_shared_ptr)
   {
-    if((item_current_enumerated_data_type = new QStandardItem()))
+    auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>());
     {
-      if(boost::shared_ptr<EnumeratedDataType> current_enumerated_data_type_shared_ptr = boost::make_shared<
-        EnumeratedDataType>())
-      {
-        if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(
-          item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
-        {
-          current_enumerated_data_type_shared_ptr->setParentNamespace(parent_package_shared_ptr);
-          parent_package_shared_ptr->appendEnumeratedDataType(current_enumerated_data_type_shared_ptr);
-        }
+      parent_package_shared_ptr->appendEnumerationType(enumeration_type_shared_ptr);
 
-        item_current_enumerated_data_type->setData(
-          QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::ENUMERATEDDATATYPE),ITEM_TREE_NODE_TYPE_ROLE);
-        item_current_enumerated_data_type->setData(
-          QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_enumerated_data_type_shared_ptr),
-          ITEM_USER_DATA_ROLE);
+      enumeration_type_shared_ptr->setParentNamespace(parent_package_shared_ptr);
+    }
 
-        item_parent->appendRow(item_current_enumerated_data_type);
-      }
+    item_enumerated_data_type = new QStandardItem();
+    {
+      item_enumerated_data_type->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::ENUMERATEDDATATYPE),ITEM_TREE_NODE_TYPE_ROLE);
+      item_enumerated_data_type->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(enumeration_type_shared_ptr),ITEM_USER_DATA_ROLE);
+
+      item_parent->appendRow(item_enumerated_data_type);
     }
   }
 
-  return item_current_enumerated_data_type;
+  return item_enumerated_data_type;
 }
 
-QStandardItem* VisualDefinitionTool::appendStructuredDataType(QStandardItem* item_parent)
+QStandardItem* VisualDefinitionTool::appendStructureType(QStandardItem* item_parent,const boost::shared_ptr<StructureType>& structure_type_shared_ptr)
 {
   QStandardItem* item_current_structured_data_type = nullptr;
 
-  if(item_parent)
+  if(item_parent and structure_type_shared_ptr)
   {
     if((item_current_structured_data_type = new QStandardItem()))
     {
-      if(boost::shared_ptr<StructuredDataType> current_structured_data_type_shared_ptr = boost::make_shared<
-        StructuredDataType>())
+      if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
       {
-        if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(
-          item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
-        {
-          current_structured_data_type_shared_ptr->setParentNamespace(parent_package_shared_ptr);
-          parent_package_shared_ptr->appendStructuredDataType(current_structured_data_type_shared_ptr);
-        }
-        item_current_structured_data_type->setData(
-          QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::STRUCTUREDDATATYPE),ITEM_TREE_NODE_TYPE_ROLE);
-        item_current_structured_data_type->setData(
-          QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_structured_data_type_shared_ptr),
-          ITEM_USER_DATA_ROLE);
-
-        item_parent->appendRow(item_current_structured_data_type);
+        structure_type_shared_ptr->setParentNamespace(parent_package_shared_ptr);
+        parent_package_shared_ptr->appendStructureType(structure_type_shared_ptr);
       }
+      item_current_structured_data_type->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::STRUCTUREDDATATYPE),ITEM_TREE_NODE_TYPE_ROLE);
+      item_current_structured_data_type->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(structure_type_shared_ptr),ITEM_USER_DATA_ROLE);
+
+      item_parent->appendRow(item_current_structured_data_type);
     }
   }
 
   return item_current_structured_data_type;
 }
 
-QStandardItem* VisualDefinitionTool::appendPackage(QStandardItem* item_parent)
+QStandardItem* VisualDefinitionTool::appendPackage(QStandardItem* item_parent,const boost::shared_ptr<Package>& package_shared_ptr)
 {
   QStandardItem* item_current_package = nullptr;
 
-  if(item_parent)
+  if(item_parent && package_shared_ptr)
   {
     item_current_package = new QStandardItem();
     {
-      if(const auto current_package_shared_ptr = boost::make_shared<Package>())
+      if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
       {
-        if(auto parent_package_shared_ptr = boost::dynamic_pointer_cast<Package>(item_parent->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
-        {
-          current_package_shared_ptr->setParentNamespace(parent_package_shared_ptr);
-          parent_package_shared_ptr->appendPackage(current_package_shared_ptr);
-        }
-        item_current_package->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::PACKAGE),ITEM_TREE_NODE_TYPE_ROLE);
-        item_current_package->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(current_package_shared_ptr),ITEM_USER_DATA_ROLE);
-
-        item_parent->appendRow(item_current_package);
+        package_shared_ptr->setParentNamespace(parent_package_shared_ptr);
+        parent_package_shared_ptr->appendPackage(package_shared_ptr);
       }
+      item_current_package->setData(QVariant::fromValue<TREE_NODE_TYPE>(TREE_NODE_TYPE::PACKAGE),ITEM_TREE_NODE_TYPE_ROLE);
+      item_current_package->setData(QVariant::fromValue<boost::shared_ptr<AbstractDefinition>>(package_shared_ptr),ITEM_USER_DATA_ROLE);
+
+      item_parent->appendRow(item_current_package);
     }
   }
 
@@ -160,7 +139,7 @@ void VisualDefinitionTool::appendFileDefinition()
     {
       if(!item_parent->hasChildren())
       {
-        if(QStandardItem* item_file_definition = appendFileDefinition(item_parent))
+        if(QStandardItem* item_file_definition = appendFileDefinition(item_parent,boost::make_shared<IDLFileDefinition>()))
         {
           if(boost::shared_ptr<IDLFileDefinition> current_file_definition_shared_ptr = boost::dynamic_pointer_cast<IDLFileDefinition>(item_file_definition->data(ITEM_USER_DATA_ROLE).value<boost::shared_ptr<AbstractDefinition>>()))
           {
@@ -201,35 +180,36 @@ void VisualDefinitionTool::appendFileDefinition()
   }
 }
 
-void VisualDefinitionTool::appendEnumeratedDataType()
+void VisualDefinitionTool::appendEnumerationType()
 {
-  const QModelIndex index_current_selected = ui->treeView_DefinitionParseTree->currentIndex();
-
-  if(const auto* model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
+  const auto index_current_selected = ui->treeView_DefinitionParseTree->currentIndex();
+  if(index_current_selected.isValid())
   {
-    if(QStandardItem* item_parent = index_current_selected.isValid()
-                                      ? model_parse_tree->itemFromIndex(index_current_selected)
-                                      : model_parse_tree->invisibleRootItem())
+    if(const auto model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
     {
-      if(QStandardItem* item_enumerated_data_type = appendEnumeratedDataType(item_parent))
+      if(const auto item_parent = model_parse_tree->itemFromIndex(index_current_selected))
       {
-        ui->treeView_DefinitionParseTree->setCurrentIndex(item_enumerated_data_type->index());
+        if(const auto enumeration_type_shared_ptr = boost::make_shared<EnumerationType>())
+        {
+          if(const auto item_enumerated_data_type = appendEnumerationType(item_parent,enumeration_type_shared_ptr))
+          {
+            ui->treeView_DefinitionParseTree->setCurrentIndex(item_enumerated_data_type->index());
+          }
+        }
       }
     }
   }
 }
 
-void VisualDefinitionTool::appendStructuredDataType()
+void VisualDefinitionTool::appendStructureType()
 {
   const QModelIndex index_current_selected = ui->treeView_DefinitionParseTree->currentIndex();
 
   if(const auto* model_parse_tree = qobject_cast<QStandardItemModel*>(ui->treeView_DefinitionParseTree->model()))
   {
-    if(QStandardItem* item_parent = index_current_selected.isValid()
-                                      ? model_parse_tree->itemFromIndex(index_current_selected)
-                                      : model_parse_tree->invisibleRootItem())
+    if(auto item_parent = index_current_selected.isValid() ? model_parse_tree->itemFromIndex(index_current_selected) : model_parse_tree->invisibleRootItem())
     {
-      if(QStandardItem* item_structured_data_type = appendStructuredDataType(item_parent))
+      if(auto item_structured_data_type = appendStructureType(item_parent,boost::make_shared<StructureType>()))
       {
         ui->treeView_DefinitionParseTree->setCurrentIndex(item_structured_data_type->index());
       }
@@ -245,7 +225,7 @@ void VisualDefinitionTool::appendPackage()
   {
     if(QStandardItem* item_parent = index_current_selected.isValid() ? model_parse_tree->itemFromIndex(index_current_selected) : model_parse_tree->invisibleRootItem())
     {
-      if(QStandardItem* item_package = appendPackage(item_parent))
+      if(QStandardItem* item_package = appendPackage(item_parent,boost::make_shared<Package>()))
       {
         ui->treeView_DefinitionParseTree->setCurrentIndex(item_package->index());
       }
@@ -328,7 +308,7 @@ void VisualDefinitionTool::showEmptyPage()
   ui->stackedWidget->setCurrentWidget(ui->page_EmptyPage);
 }
 
-void VisualDefinitionTool::showIDLFileDefinitionInformation(boost::shared_ptr<IDLFileDefinition> file_definition_shared_ptr)
+void VisualDefinitionTool::showIDLFileDefinitionInformation(const boost::shared_ptr<IDLFileDefinition>& file_definition_shared_ptr)
 {
   if(file_definition_shared_ptr)
   {
@@ -337,25 +317,25 @@ void VisualDefinitionTool::showIDLFileDefinitionInformation(boost::shared_ptr<ID
   }
 }
 
-void VisualDefinitionTool::showEnumeratedDataTypeInformation(boost::shared_ptr<EnumeratedDataType> enumerated_data_type_shared_ptr)
+void VisualDefinitionTool::showEnumerationTypeInformation(const boost::shared_ptr<EnumerationType>& enumerated_data_type_shared_ptr)
 {
   if(enumerated_data_type_shared_ptr)
   {
-    ui->stackedWidget->setCurrentWidget(ui->page_EnumeratedDataTypeInformation);
-    ui->page_EnumeratedDataTypeInformation->showEnumeratedDataTypeInformation(enumerated_data_type_shared_ptr);
+    ui->stackedWidget->setCurrentWidget(ui->page_EnumerationTypeInformation);
+    ui->page_EnumerationTypeInformation->showEnumerationTypeInformation(enumerated_data_type_shared_ptr);
   }
 }
 
-void VisualDefinitionTool::showStructuredDataTypeInformation(boost::shared_ptr<StructuredDataType> structured_data_type_shared_ptr)
+void VisualDefinitionTool::showStructureTypeInformation(const boost::shared_ptr<StructureType>& structured_data_type_shared_ptr)
 {
   if(structured_data_type_shared_ptr)
   {
-    ui->stackedWidget->setCurrentWidget(ui->page_StructuredDataTypeInformation);
-    ui->page_StructuredDataTypeInformation->showStructuredDataTypeInformation(structured_data_type_shared_ptr);
+    ui->stackedWidget->setCurrentWidget(ui->page_StructureTypeInformation);
+    ui->page_StructureTypeInformation->showStructureTypeInformation(structured_data_type_shared_ptr);
   }
 }
 
-void VisualDefinitionTool::showPackageInformation(boost::shared_ptr<Package> package_shared_ptr)
+void VisualDefinitionTool::showPackageInformation(const boost::shared_ptr<Package>& package_shared_ptr)
 {
   if(package_shared_ptr)
   {
@@ -366,54 +346,53 @@ void VisualDefinitionTool::showPackageInformation(boost::shared_ptr<Package> pac
 
 void VisualDefinitionTool::on_treeView_DefinitionParseTree_customContextMenuRequested(const QPoint& pos)
 {
-  QMenu custom_menu;
   QList<QAction*> list_custom_action;
 
   QModelIndex index_current_selected = ui->treeView_DefinitionParseTree->indexAt(pos);
 
-  auto action_CreateIDLFileDefinition = new QAction(QString::fromUtf8("新建文件"),&custom_menu);
+  auto action_CreateIDLFileDefinition = new QAction(QString::fromUtf8("新建文件"));
   {
     action_CreateIDLFileDefinition->setObjectName("action_CreateIDLFileDefinition");
     connect(action_CreateIDLFileDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_LoadIDLFileDefinition = new QAction(QString::fromUtf8("加载文件"),&custom_menu);
+  auto action_LoadIDLFileDefinition = new QAction(QString::fromUtf8("加载文件"));
   {
     action_LoadIDLFileDefinition->setObjectName("action_LoadIDLFileDefinition");
     connect(action_LoadIDLFileDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_AppendEnumeratedDataType = new QAction(QString::fromUtf8("添加枚举"),&custom_menu);
+  auto action_AppendEnumerationType = new QAction(QString::fromUtf8("添加枚举"));
   {
-    action_AppendEnumeratedDataType->setObjectName("action_AppendEnumeratedDataType");
-    connect(action_AppendEnumeratedDataType,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
+    action_AppendEnumerationType->setObjectName("action_AppendEnumerationType");
+    connect(action_AppendEnumerationType,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_AppendStructuredDataType = new QAction(QString::fromUtf8("添加结构体"),&custom_menu);
+  auto action_AppendStructureType = new QAction(QString::fromUtf8("添加结构体"));
   {
-    action_AppendStructuredDataType->setObjectName("action_AppendStructuredDataType");
-    connect(action_AppendStructuredDataType,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
+    action_AppendStructureType->setObjectName("action_AppendStructureType");
+    connect(action_AppendStructureType,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_AppendPackage = new QAction(QString::fromUtf8("添加包空间"),&custom_menu);
+  auto action_AppendPackage = new QAction(QString::fromUtf8("添加包空间"));
   {
     action_AppendPackage->setObjectName("action_AppendPackage");
     connect(action_AppendPackage,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_PreviewDefinition = new QAction(QString::fromUtf8("预览定义"),&custom_menu);
+  auto action_PreviewDefinition = new QAction(QString::fromUtf8("预览定义"));
   {
     action_PreviewDefinition->setObjectName("action_PreviewDefinition");
     connect(action_PreviewDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_SaveDefinition = new QAction(QString::fromUtf8("保存"),&custom_menu);
+  auto action_SaveDefinition = new QAction(QString::fromUtf8("保存"));
   {
     action_SaveDefinition->setObjectName("action_SaveDefinition");
     connect(action_SaveDefinition,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
   }
 
-  auto action_SaveDefinitionAs = new QAction(QString::fromUtf8("另存为"),&custom_menu);
+  auto action_SaveDefinitionAs = new QAction(QString::fromUtf8("另存为"));
   {
     action_SaveDefinitionAs->setObjectName("action_SaveDefinitionAs");
     connect(action_SaveDefinitionAs,SIGNAL(triggered()),this,SLOT(slot_customAction_triggered()));
@@ -423,12 +402,12 @@ void VisualDefinitionTool::on_treeView_DefinitionParseTree_customContextMenuRequ
   {
     case FILEDEFINITION:
     {
-      list_custom_action << action_AppendEnumeratedDataType << action_AppendStructuredDataType << action_AppendPackage << action_PreviewDefinition << action_SaveDefinition << action_SaveDefinitionAs;
+      list_custom_action << action_AppendEnumerationType << action_AppendStructureType << action_AppendPackage << action_PreviewDefinition << action_SaveDefinition << action_SaveDefinitionAs;
       break;
     }
     case PACKAGE:
     {
-      list_custom_action << action_AppendEnumeratedDataType << action_AppendStructuredDataType << action_AppendPackage;
+      list_custom_action << action_AppendEnumerationType << action_AppendStructureType << action_AppendPackage;
       break;
     }
     case UNKNOWN:
@@ -444,7 +423,7 @@ void VisualDefinitionTool::on_treeView_DefinitionParseTree_customContextMenuRequ
 
   if(!list_custom_action.isEmpty())
   {
-    custom_menu.exec(list_custom_action,QCursor::pos());
+    QMenu::exec(list_custom_action,QCursor::pos());
   }
 }
 
@@ -471,12 +450,12 @@ void VisualDefinitionTool::slot_parseTree_currentRowChanged(const QModelIndex& i
       }
       case ENUMERATEDDATATYPE:
       {
-        showEnumeratedDataTypeInformation(boost::dynamic_pointer_cast<EnumeratedDataType>(variant_item_user_data.value<boost::shared_ptr<AbstractDefinition>>()));
+        showEnumerationTypeInformation(boost::dynamic_pointer_cast<EnumerationType>(variant_item_user_data.value<boost::shared_ptr<AbstractDefinition>>()));
         break;
       }
       case STRUCTUREDDATATYPE:
       {
-        showStructuredDataTypeInformation(boost::dynamic_pointer_cast<StructuredDataType>(variant_item_user_data.value<boost::shared_ptr<AbstractDefinition>>()));
+        showStructureTypeInformation(boost::dynamic_pointer_cast<StructureType>(variant_item_user_data.value<boost::shared_ptr<AbstractDefinition>>()));
         break;
       }
       case PACKAGE:
@@ -495,7 +474,7 @@ void VisualDefinitionTool::slot_parseTree_currentRowChanged(const QModelIndex& i
 
 void VisualDefinitionTool::slot_customAction_triggered()
 {
-  if(QAction* action = dynamic_cast<QAction*>(sender()))
+  if(auto action = dynamic_cast<QAction*>(sender()))
   {
     if(action->objectName() == "action_CreateIDLFileDefinition")
     {
@@ -504,13 +483,13 @@ void VisualDefinitionTool::slot_customAction_triggered()
     else if(action->objectName() == "action_LoadIDLFileDefinition")
     {
     }
-    else if(action->objectName() == "action_AppendEnumeratedDataType")
+    else if(action->objectName() == "action_AppendEnumerationType")
     {
-      appendEnumeratedDataType();
+      appendEnumerationType();
     }
-    else if(action->objectName() == "action_AppendStructuredDataType")
+    else if(action->objectName() == "action_AppendStructureType")
     {
-      appendStructuredDataType();
+      appendStructureType();
     }
     else if(action->objectName() == "action_AppendPackage")
     {

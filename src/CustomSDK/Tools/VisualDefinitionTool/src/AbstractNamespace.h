@@ -1,16 +1,16 @@
 #pragma once
 
-#ifndef __ABSTRACTNAMESPACE_H__
-# define __ABSTRACTNAMESPACE_H__
+#ifndef AbstractNamespace_H
+# define AbstractNamespace_H
 
 #include <AbstractDefinition.h>
 
 class AbstractNamespace : public AbstractDefinition
 {
 public:
-  ~AbstractNamespace() override;
+  ~AbstractNamespace() override = default;
 public:
-  void setParentNamespace(boost::shared_ptr<AbstractNamespace>);
+  void setParentNamespace(const boost::shared_ptr<AbstractNamespace>&);
   boost::shared_ptr<AbstractNamespace> getParentNamespace() const;
 
   std::string getParentNamespaceCompleteName() const;
@@ -20,4 +20,4 @@ private:
   boost::weak_ptr<AbstractNamespace> parent_namespace_weak_ptr;
 };
 
-#endif // !__ABSTRACTNAMESPACE_H__
+#endif // !AbstractNamespace_H

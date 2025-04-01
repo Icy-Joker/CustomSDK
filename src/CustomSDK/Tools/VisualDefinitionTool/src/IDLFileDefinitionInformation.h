@@ -21,11 +21,11 @@ public:
 public:
   void showIDLFileDefinitionInformation(const boost::shared_ptr<IDLFileDefinition>&);
 private:
-  void showName();
-  void showCompleteName();
-  void showFileReferences();
-  void showChildDataTypeDefinition();
-  void showTopicDefinition();
+  void showName() const;
+  void showCompleteName() const;
+  void showFileReferences() const;
+  void showChildDataTypeDefinition() const;
+  void showTopicDefinition() const;
 private:
   Ui::IDLFileDefinitionInformation* ui;
   boost::weak_ptr<IDLFileDefinition> file_definition_weak_ptr;

@@ -3,7 +3,7 @@
 #ifndef TOPICDEFINITION_H
 # define TOPICDEFINITION_H
 
-class StructuredDataType;
+class StructureType;
 
 class TopicDefinition
 {
@@ -11,13 +11,13 @@ public:
   void setName(const std::string&);
   const std::string& getName() const;
 
-  void setStructure(const boost::shared_ptr<StructuredDataType>&);
-  boost::shared_ptr<StructuredDataType> getStructure() const;
+  void setStructure(const boost::shared_ptr<StructureType>&);
+  boost::shared_ptr<StructureType> getStructure() const;
 
   std::string getStructureCompleteName() const;
 private:
   std::string name;
-  boost::weak_ptr<StructuredDataType> topic_structure_weak_ptr;
+  boost::weak_ptr<StructureType> topic_structure_weak_ptr;
   std::string description;
 };
 

@@ -2,13 +2,7 @@
 
 #include "AbstractNamespace.h"
 
-#include "Package.h"
-
-AbstractNamespace::~AbstractNamespace()
-{
-}
-
-void AbstractNamespace::setParentNamespace(boost::shared_ptr<AbstractNamespace> parent_package_shared_ptr)
+void AbstractNamespace::setParentNamespace(const boost::shared_ptr<AbstractNamespace>& parent_package_shared_ptr)
 {
   this->parent_namespace_weak_ptr = parent_package_shared_ptr;
 }
@@ -18,7 +12,7 @@ boost::shared_ptr<AbstractNamespace> AbstractNamespace::getParentNamespace() con
   return this->parent_namespace_weak_ptr.lock();
 }
 
-std::string AbstractNamespace::getParentNamespaceCompleteName() const
+std::string AbstractNamespace::getParentNamespaceCompleteName() const// NOLINT(misc-no-recursion)
 {
   std::string result;
 
@@ -30,7 +24,7 @@ std::string AbstractNamespace::getParentNamespaceCompleteName() const
   return result;
 }
 
-std::string AbstractNamespace::getCompleteName() const
+std::string AbstractNamespace::getCompleteName() const// NOLINT(misc-no-recursion)
 {
   const std::string parent_package_complete_name = getParentNamespaceCompleteName();
 

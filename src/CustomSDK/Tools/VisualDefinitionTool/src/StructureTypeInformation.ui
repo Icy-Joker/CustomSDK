@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PackageInformation</class>
- <widget class="QWidget" name="PackageInformation">
+ <class>StructureTypeInformation</class>
+ <widget class="QWidget" name="StructureTypeInformation">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>248</width>
-    <height>238</height>
+    <width>310</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,20 +17,20 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>包空间详情</string>
+      <string>结构体详情</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>自定结构</string>
+         <string>继承结构</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>完整名称</string>
+         <string>重置</string>
         </property>
        </widget>
       </item>
@@ -41,21 +41,17 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="pushButton">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>重置</string>
+         <string>完整名称</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="text">
-         <string>应用</string>
-        </property>
-       </widget>
+      <item row="3" column="0" colspan="3">
+       <widget class="QTableView" name="tableView_MemberElements"/>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -68,22 +64,25 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="QComboBox" name="comboBox_DataTypeDefinition">
-        <property name="duplicatesEnabled">
-         <bool>true</bool>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>应用</string>
         </property>
        </widget>
       </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QLineEdit" name="lineEdit_StructureTypeName"/>
+      </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="lineEdit_PackageCompleteName">
+       <widget class="QLineEdit" name="lineEdit_StructureTypeCompleteName">
         <property name="enabled">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="lineEdit_PackageName"/>
+      <item row="2" column="1" colspan="2">
+       <widget class="QComboBox" name="comboBox"/>
       </item>
      </layout>
     </widget>

@@ -9,37 +9,28 @@
 
 IDLFileDefinition::IDLFileDefinition()
 {
-  this->setFilePath("/Users/icy-joker/WorkSpace/CustomSDK/src/build/clion/relwithdebinfo/bin/RelWithDebInfo/ss.xidl");
-
-  {
-    // 测试
-    boost::shared_ptr<TopicDefinition> topic_definition_shared_ptr = boost::make_shared<TopicDefinition>();
-    topic_definition_shared_ptr->setName("SimpleTopicDefinition");
-    topic_definition_shared_ptr->setStructure(nullptr);
-    this->appendTopicDefinition(topic_definition_shared_ptr);
-  }
 }
 
 IDLFileDefinition::~IDLFileDefinition()
 {
 }
 
-void IDLFileDefinition::appendFileReference(boost::shared_ptr<IDLFileDefinition> file_reference_definition_shared_ptr)
+void IDLFileDefinition::appendFileReference(const boost::shared_ptr<IDLFileDefinition>& file_reference_definition_shared_ptr)
 {
   this->file_references.emplace_back(file_reference_definition_shared_ptr);
 }
 
-void IDLFileDefinition::appendTopicDefinition(boost::shared_ptr<TopicDefinition> topic_definition_shared_ptr)
-{
-  this->topics.emplace_back(topic_definition_shared_ptr);
-}
-
-const std::vector<boost::shared_ptr<IDLFileDefinition>>& IDLFileDefinition::getFileReferences()
+const std::list<boost::shared_ptr<IDLFileDefinition>>& IDLFileDefinition::getFileReferences()
 {
   return this->file_references;
 }
 
-const std::vector<boost::shared_ptr<TopicDefinition>>& IDLFileDefinition::getTopicDefinitions()
+void IDLFileDefinition::appendTopicDefinition(const boost::shared_ptr<TopicDefinition>& topic_definition_shared_ptr)
+{
+  this->topics.emplace_back(topic_definition_shared_ptr);
+}
+
+const std::list<boost::shared_ptr<TopicDefinition>>& IDLFileDefinition::getTopicDefinitions()
 {
   return this->topics;
 }
@@ -54,7 +45,7 @@ void IDLFileDefinition::setFilePath(const std::string& file_path_string)
 
     this->setName(file_path.filename().string());
   }
-  catch(const boost::filesystem::filesystem_error& filesystem_error)
+  catch(const boost::filesystem::filesystem_error&)
   {
   }
 }
@@ -64,7 +55,7 @@ const std::string& IDLFileDefinition::getFilePath() const
   return this->file_path;
 }
 
-bool IDLFileDefinition::doSaveAs(const std::string& file_path_string)
+bool IDLFileDefinition::doSaveAs(const std::string& file_path_string) const
 {
   bool result = false;
 
@@ -86,14 +77,14 @@ bool IDLFileDefinition::doSaveAs(const std::string& file_path_string)
       result = true;
     }
   }
-  catch(const boost::filesystem::filesystem_error& filesystem_error)
+  catch(const boost::filesystem::filesystem_error&)
   {
   }
 
   return result;
 }
 
-bool IDLFileDefinition::doSave()
+bool IDLFileDefinition::doSave() const
 {
   bool result = false;
 
@@ -110,7 +101,7 @@ std::string IDLFileDefinition::getCompleteName() const
 std::string IDLFileDefinition::toText(const std::string& current_indent) const
 {
   std::string result;
-  std::string child_indent = current_indent;
+  const std::string& child_indent = current_indent;
 
   {
     // 添加文件引用关系
