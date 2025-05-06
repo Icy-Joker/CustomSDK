@@ -21,6 +21,16 @@ MagicBox::~MagicBox()
 {
 }
 
+void MagicBox::setName(const QString& name)
+{
+  this->name = name;
+}
+
+const QString& MagicBox::getName() const
+{
+  return this->name;
+}
+
 void MagicBox::registerMagicTool(MagicTool* magic_tool)
 {
   if(magic_tool)

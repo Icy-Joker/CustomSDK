@@ -34,6 +34,7 @@ private:
 private:
   void closeEvent(QCloseEvent* event) override;
 private slots:
+  void slot_listView_currentRowChanged(const QModelIndex&,const QModelIndex&);
   void slot_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 private:
   Ui::MagicToolBox* ui;

@@ -1,58 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-  <class>MagicToolBox</class>
-  <widget class="QMainWindow" name="MagicToolBox">
-    <property name="geometry">
-      <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>400</width>
-        <height>600</height>
-      </rect>
+ <class>MagicToolBox</class>
+ <widget class="QMainWindow" name="MagicToolBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MagicToolBox</string>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,7">
+    <property name="leftMargin">
+     <number>0</number>
     </property>
-    <property name="minimumSize">
-      <size>
-        <width>400</width>
-        <height>600</height>
-      </size>
+    <property name="topMargin">
+     <number>0</number>
     </property>
-    <property name="windowTitle">
-      <string>MagicToolBox</string>
+    <property name="rightMargin">
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="centralwidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-          <widget class="QToolBox" name="toolBox">
-            <property name="currentIndex">
-              <number>0</number>
-            </property>
-            <widget class="MagicBox" name="page">
-              <property name="geometry">
-                <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>376</width>
-                  <height>515</height>
-                </rect>
-              </property>
-              <attribute name="label">
-                <string>常规</string>
-              </attribute>
-            </widget>
-          </widget>
-        </item>
-      </layout>
-    </widget>
-    <widget class="QStatusBar" name="statusbar" />
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QListView" name="listView_MagicBox"/>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="page_Empty"/>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <customwidgets>
-    <customwidget>
-      <class>MagicBox</class>
-      <extends>QWidget</extends>
-      <header>MagicBox.h</header>
-      <container>1</container>
-    </customwidget>
-  </customwidgets>
-  <resources />
-  <connections />
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>

@@ -6,5 +6,6 @@
 #include <BasicSupport/BasicSupport_export.h>
 #include <BasicFramework/BasicFramework_export.h>
 #include <BasicUIFramework/BasicUIFramework_export.h>
+#include <CustomFramework/CustomFramework_export.h>
 
 #endif // !__STDAFX_H__

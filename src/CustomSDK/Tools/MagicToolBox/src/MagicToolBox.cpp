@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 
 #include <QLabel>
+#include <QStandardItem>
 #include <QFileInfo>
 #include <QDir>
 #include <QMenu>
@@ -27,6 +28,10 @@ MagicToolBox::MagicToolBox(QWidget* parent,Qt::WindowFlags flags):
   ui(new Ui::MagicToolBox())
 {
   ui->setupUi(this);
+
+  ui->listView_MagicBox->setModel(new QStandardItemModel(this));
+
+  connect(ui->listView_MagicBox->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)),this,SLOT(slot_listView_currentRowChanged(const QModelIndex&, const QModelIndex&)));
 
   doLoadPlugin();
   doCreateSystemTray();
@@ -45,11 +50,13 @@ MagicBox* MagicToolBox::findBoxByName(const QString& name)
 {
   MagicBox* result = nullptr;
 
-  for(int i = 0;i < ui->toolBox->count();++i)
+  int count = ui->stackedWidget->count();
+
+  for(int i = 0;i < count;++i)
   {
-    if(MagicBox* magic_box = qobject_cast<MagicBox*>(ui->toolBox->widget(i)))
+    if(MagicBox* magic_box = qobject_cast<MagicBox*>(ui->stackedWidget->widget(i)))
     {
-      if(ui->toolBox->itemText(i) == name)
+      if(magic_box->getName() == name)
       {
         result = magic_box;
         break;
@@ -64,11 +71,23 @@ MagicBox* MagicToolBox::createBoxByName(const QString& name)
 {
   MagicBox* result = nullptr;
 
-  if(MagicBox* magic_box = new MagicBox(this))
+  auto* model = qobject_cast<QStandardItemModel*>(ui->listView_MagicBox->model());
+  if(model)
   {
-    ui->toolBox->addItem(magic_box,name);
+    auto items = model->findItems(name,Qt::MatchExactly,0);
+    if(items.empty())
+    {
+      model->appendRow(new QStandardItem(name));
 
-    result = magic_box;
+      auto* magic_box = new MagicBox(this);
+      {
+        magic_box->setName(name);
+
+        ui->stackedWidget->setCurrentIndex(ui->stackedWidget->addWidget(magic_box));
+
+        result = magic_box;
+      }
+    }
   }
 
   return result;
@@ -113,12 +132,13 @@ QMenu* MagicToolBox::doCreateSystemTrayMenu()
 
   if(QMenu* menu = new QMenu(this))
   {
-    for(std::size_t index_widget_group = 0;index_widget_group < ui->toolBox->count();++index_widget_group)
+    int count = ui->stackedWidget->count();
+    for(std::size_t index_widget_group = 0;index_widget_group < count;++index_widget_group)
     {
-      if(MagicBox* magic_box = qobject_cast<MagicBox*>(ui->toolBox->widget(index_widget_group)))
+      if(MagicBox* magic_box = qobject_cast<MagicBox*>(ui->stackedWidget->widget(index_widget_group)))
       {
-        const QString& magic_box_name = ui->toolBox->itemText(index_widget_group);
-        QIcon magic_box_icon = ui->toolBox->itemIcon(index_widget_group);
+        const QString& magic_box_name = magic_box->getName();
+        //QIcon magic_box_icon = ui->toolBox->itemIcon(index_widget_group);
 
         if(QMenu* menu_group = new QMenu(menu))
         {
@@ -128,7 +148,7 @@ QMenu* MagicToolBox::doCreateSystemTrayMenu()
           {
             for(std::size_t index_tool_button = 0;index_tool_button < layout_magic_box->count();++index_tool_button)
             {
-              if(QToolButton* tool_button = qobject_cast<QToolButton*>(layout_magic_box->itemAt(index_tool_button)->widget()))
+              if(auto* tool_button = qobject_cast<QToolButton*>(layout_magic_box->itemAt(index_tool_button)->widget()))
               {
                 if(QAction* action_create_magic_tool = tool_button->defaultAction())
                 {
@@ -140,7 +160,7 @@ QMenu* MagicToolBox::doCreateSystemTrayMenu()
           menu_group->addActions(magic_tool_actions);
 
           menu_group->setTitle(magic_box_name);
-          menu_group->setIcon(magic_box_icon);
+          // menu_group->setIcon(magic_box_icon);
 
           menu->addMenu(menu_group);
         }
@@ -283,6 +303,22 @@ void MagicToolBox::closeEvent(QCloseEvent* event)
   if(button != QMessageBox::StandardButton::Yes)
   {
     event->ignore();
+  }
+  else
+  {
+    event->accept();
+  }
+}
+
+void MagicToolBox::slot_listView_currentRowChanged(const QModelIndex& index_current,const QModelIndex& index_previous)
+{
+  if(index_current.isValid())
+  {
+    QString magic_box_name = index_current.data(Qt::DisplayRole).toString();
+    if(MagicBox* magic_box = MagicToolBox::findBoxByName(magic_box_name))
+    {
+      ui->stackedWidget->setCurrentWidget(magic_box);
+    }
   }
 }
 

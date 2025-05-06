@@ -8,35 +8,39 @@
   </Modules>
   <!-- 在此处添加自定义配置项 / -->
   <MagicToolBox enable_auto_load="false" auto_load_directory="../plugins/MagicTools">
-    <MagicBox name="常规">
+    <MagicBox name="常规" icon="XXX.png">
       <!-- MagicTool identifier="" location="../plugins/MagicTools" name="" icon="" / -->
-      <MagicTool identifier="Plugin_Base64Converter" location="../plugins/MagicTools" name="Base64转换工具" icon="Base64Converter.png" />
       <MagicTool identifier="Plugin_BinaryViewer" location="../plugins/MagicTools" name="二进制查看器" icon="BinaryViewer.png" />
       <MagicTool identifier="Plugin_ChartDemo" location="../plugins/MagicTools" name="图表示例" icon="ChartDemo.png" />
-      <MagicTool identifier="Plugin_CryptologyTool" location="../plugins/MagicTools" name="加密与解密示例" icon="CryptologyTool.png" />
       <MagicTool identifier="Plugin_CustomDelegateDemo" location="../plugins/MagicTools" name="自定义委托示例" icon="CustomDelegateDemo.png" />
       <MagicTool identifier="Plugin_DatabaseVisualizationTool" location="../plugins/MagicTools" name="数据库可视化工具" icon="DatabaseVisualizationTool.png" />
       <MagicTool identifier="Plugin_GraphicsViewDemo" location="../plugins/MagicTools" name="2D场景绘制示" icon="GraphicsViewDemo.png" />
       <MagicTool identifier="Plugin_IdentifyCardNumberChecker" location="../plugins/MagicTools" name="身份证号码验证工具" icon="IdentifyCardNumberChecker.png" />
-      <MagicTool identifier="Plugin_JsonVisualEditor" location="../plugins/MagicTools" name="Json编辑器" icon="JsonVisualEditor.png" />
-      <MagicTool identifier="Plugin_MarkDownEditor" location="../plugins/MagicTools" name="MarkDown编辑器" icon="MarkDownEditor.png" />
       <MagicTool identifier="Plugin_MediaPlayer" location="../plugins/MagicTools" name="媒体播放器" icon="MediaPlayer.png" />
-      <MagicTool identifier="Plugin_NetworkTool" location="../plugins/MagicTools" name="网络测试工具" icon="NetworkTool.png" />
-      <MagicTool identifier="Plugin_PortScanner" location="../plugins/MagicTools" name="端口扫描器" icon="PortScanner.png" />
       <MagicTool identifier="Plugin_QRCodeGenerator" location="../plugins/MagicTools" name="二维码生成工具" icon="QRCodeGenerator.png" />
       <MagicTool identifier="Plugin_RegularExpressionValidator" location="../plugins/MagicTools" name="正则验证工具" icon="RegularExpressionValidator.png" />
-      <MagicTool identifier="Plugin_SerialPortDebugger" location="../plugins/MagicTools" name="串口调试工具" icon="SerialPortDebugger.png" />
       <MagicTool identifier="Plugin_StyleSheetViewer" location="../plugins/MagicTools" name="样式表编辑工具" icon="StyleSheetViewer.png" />
-      <MagicTool identifier="Plugin_XmlVisualEditor" location="../plugins/MagicTools" name="Xml编辑器" icon="XmlVisualEditor.png" />
     </MagicBox>
+    <MagicBox name="字符串处理" icon=" XXX.png">
+      <MagicTool identifier="Plugin_Base64Converter" location="../plugins/MagicTools" name="Base64转换工具" icon="Base64Converter.png" />
+    <MagicTool identifier="Plugin_CryptologyTool" location="../plugins/MagicTools" name="加密与解密示例" icon="CryptologyTool.png" />
+    <MagicTool identifier="Plugin_JsonVisualEditor" location="../plugins/MagicTools" name="Json编辑器" icon="JsonVisualEditor.png" />
+    <MagicTool identifier="Plugin_MarkDownEditor" location="../plugins/MagicTools" name="MarkDown编辑器" icon="MarkDownEditor.png" />
+    <MagicTool identifier="Plugin_XmlVisualEditor" location="../plugins/MagicTools" name="Xml编辑器" icon="XmlVisualEditor.png" />
+  </MagicBox>
+  <MagicBox name="网络通信" icon="XXX.png">
+    <MagicTool identifier="Plugin_NetworkTool" location="../plugins/MagicTools" name="网络测试工具" icon="NetworkTool.png" />
+    <MagicTool identifier="Plugin_PortScanner" location="../plugins/MagicTools" name="端口扫描器" icon="PortScanner.png" />
+    <MagicTool identifier="Plugin_SerialPortDebugger" location="../plugins/MagicTools" name="串口调试工具" icon="SerialPortDebugger.png" />
+  </MagicBox>
   </MagicToolBox>
   <Loggers enabled="true">
-    <!-- Logger type="ConsoleLogger|FileLogger|DatabaseLogger" level="trace|debug|info|warn|error|critical|off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" / -->
-    <Logger type="ConsoleLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
-    <Logger type="FileLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
-    <Logger type="DatabaseLogger" level="off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="false" />
+  <!-- Logger type="ConsoleLogger|FileLogger|DatabaseLogger" level="trace|debug|info|warn|error|critical|off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" / -->
+  <Logger type="ConsoleLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+  <Logger type="FileLogger" level="trace" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="true" />
+  <Logger type="DatabaseLogger" level="off" format="[%^---%L---%$] [%H:%M:%S %z] [thread %t] %v" enabled="false" />
   </Loggers>
   <ExtendConfigs enabled="true">
-    <!-- ExtendConfig key="" value="" / -->
+  <!-- ExtendConfig key="" value="" / -->
   </ExtendConfigs>
 </Root>

@@ -17,6 +17,7 @@ generateExecutableProgram()#
 target_link_libraries("${CURRENT_TARGET}" PRIVATE "BasicSupport")#
 target_link_libraries("${CURRENT_TARGET}" PRIVATE "BasicFramework")#
 target_link_libraries("${CURRENT_TARGET}" PRIVATE "BasicUIFramework")#
+target_link_libraries("${CURRENT_TARGET}" PRIVATE "CustomFramework")#
 target_link_libraries("${CURRENT_TARGET}" PRIVATE "pugixml")#
 
 install(FILES "resource/etc/MagicToolBox.xml" DESTINATION "etc")
