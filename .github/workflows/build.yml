@@ -1,0 +1,72 @@
+name: GitHub actions for building "UniversalTemplate"
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest,  windows-2022 ]
+        build_type: [ Release ]
+        c_compiler: [ gcc, clang, cl ]
+        preset: [ release-vc143-x64, release-vc143-x32, release-linux-x64, release-linux-x32 ]
+        include:
+          - os: windows-2022
+            preset: release-vc143-x64
+          - os: windows-2022
+            preset: release-vc143-x32
+          - os: ubuntu-latest
+            preset: release-linux-x64
+          - os: ubuntu-latest
+            preset: release-linux-x32
+        exclude:
+          - os: windows-2022
+            preset: release-linux-x64
+          - os: windows-2022
+            preset: release-linux-x32
+          - os: ubuntu-latest
+            preset: release-vc143-x64
+          - os: ubuntu-latest
+            preset: release-vc143-x32
+    
+    steps:
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        
+      - name: Install 32bit toolchain
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update
+          sudo apt install -y gcc-multilib g++-multilib
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{github.workspace}}/src/build" >> "$GITHUB_OUTPUT"
+          echo "build-output-dir=${{github.workspace}}/src/build" >> "$GITHUB_OUTPUT"
+      
+      - name: CMake Configure
+        working-directory: "src/${{github.event.repository.name}}"
+        run: >
+          cmake
+          --preset "${{matrix.preset}}"
+      
+      - name: Build
+        working-directory: "src/${{github.event.repository.name}}"
+        run: >
+          cmake
+          --build
+          --preset "${{matrix.preset}}"
