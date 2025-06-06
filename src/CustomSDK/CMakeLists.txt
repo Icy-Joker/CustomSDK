@@ -7,3 +7,4 @@ include("${PROJECT_SOURCE_DIR}/module.cmake")
 #add_subdirectory("")#
 add_subdirectory("00_Libraries")#二次开发库目录
 add_subdirectory("01_Modules")#功能模块库目录
+add_subdirectory("02_Plugins")#功能插件库目录
