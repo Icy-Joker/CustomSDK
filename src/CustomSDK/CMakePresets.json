@@ -1,0 +1,79 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "hidden": true,
+      "name": "default",
+      "description": "",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "$env{SecondParty}"
+      },
+      "binaryDir": "${sourceParentDir}/build/${presetName}"
+    },
+    {
+      "hidden": true,
+      "name": "debug",
+      "inherits": "default",
+      "description": "",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "relwithdebinfo",
+      "inherits": "default",
+      "description": "",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "release",
+      "inherits": "default",
+      "description": "",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "windows",
+      "inherits": "default",
+      "description": "",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "linux",
+      "inherits": "default",
+      "description": "",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "darwin",
+      "inherits": "default",
+      "description": "",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Darwin"
+      }
+    }
+  ]
+}

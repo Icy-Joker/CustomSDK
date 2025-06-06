@@ -1,0 +1,134 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "hidden": true,
+      "name": "vc140-x64",
+      "inherits": "windows",
+      "description": "",
+      "generator": "Visual Studio 14 2015",
+      "toolset": "v140",
+      "architecture": "x64",
+      "environment": {
+        "SecondParty": "",
+        "ThirdParty": "",
+        "BOOST_DIR": "",
+        "QT_DIR": ""
+      }
+    },
+    {
+      "hidden": true,
+      "name": "vc140-x32",
+      "inherits": "windows",
+      "description": "",
+      "generator": "Visual Studio 14 2015",
+      "toolset": "v140",
+      "architecture": "win32",
+      "environment": {
+        "SecondParty": "",
+        "ThirdParty": "",
+        "BOOST_DIR": "",
+        "QT_DIR": ""
+      }
+    },
+    {
+      "hidden": true,
+      "name": "darwin-arm64",
+      "inherits": "darwin",
+      "description": "",
+      "generator": "Unix Makefiles",
+      "environment": {
+        "SecondParty": "",
+        "ThirdParty": "",
+        "BOOST_DIR": "",
+        "QT_DIR": ""
+      }
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "debug",
+        "vc140-x64"
+      ],
+      "name": "debug-vc140-x64",
+      "description": ""
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "relwithdebinfo",
+        "vc140-x64"
+      ],
+      "name": "relwithdebinfo-vc140-x64",
+      "description": ""
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "release",
+        "vc140-x64"
+      ],
+      "name": "release-vc140-x64",
+      "description": "Build for vc140-x64 configuration"
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "debug",
+        "vc140-x32"
+      ],
+      "name": "debug-vc140-x32",
+      "description": "Build for vc140-x32 configuration"
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "relwithdebinfo",
+        "vc140-x32"
+      ],
+      "name": "relwithdebinfo-vc140-x32",
+      "description": "Build for vc140-x32 configuration"
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "release",
+        "vc140-x32"
+      ],
+      "name": "release-vc140-x32",
+      "description": "Build for vc140-x32 configuration"
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "debug",
+        "darwin-arm64"
+      ],
+      "name": "debug-darwin-arm64",
+      "description": ""
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "relwithdebinfo",
+        "darwin-arm64"
+      ],
+      "name": "relwithdebinfo-darwin-arm64",
+      "description": ""
+    },
+    {
+      "hidden": false,
+      "inherits": [
+        "release",
+        "darwin-arm64"
+      ],
+      "name": "release-darwin-arm64",
+      "description": ""
+    }
+  ]
+}
