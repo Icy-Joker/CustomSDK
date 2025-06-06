@@ -7,3 +7,4 @@ include("${PROJECT_SOURCE_DIR}/module.cmake")
 #add_subdirectory("")#
 add_subdirectory("Libraries")#
 add_subdirectory("Modules")#
+add_subdirectory("Plugins")#
