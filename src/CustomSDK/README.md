@@ -1,0 +1,15 @@
+| 文件(夹)          | 描述                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| Applications      | 用于存放一些必须的服务/工具的可执行程序                      |
+| Examples          | SDK基础示例程序,用于快速上手                                 |
+| Libraries         | 二次开发必须的库                                             |
+| Modules           | 内部使用的库,可以不对外暴露                                  |
+| Plugins           | 各种示例插件,按用途存放于不同目录                            |
+| Tests             | 一些简单的测试程序                                           |
+| Tools             | 非核心的可执行程序                                           |
+| module.cmake      | 封装好的CMake模块,简化子项的CMakeLists内容                   |
+| CMakeLists.txt    | CMake清单文件                                                |
+| CMakePresets.json | CMake预设文件                                                |
+| Manifest.txt.in   | 模板文件,用于生成JavaPackage时添加相关信息                   |
+| VersionInfo.rc.in | 模板文件,用于在Windows系统中为生成的可执行程序/动态库添加版权等属性信息 |
+| README.md         | 本文件                                                       |
