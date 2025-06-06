@@ -5,3 +5,4 @@ project("CustomSDK" DESCRIPTION "CustomSDK" VERSION "0.0.0.0")
 include("${PROJECT_SOURCE_DIR}/module.cmake")
 
 #add_subdirectory("")#
+add_subdirectory("00_Modules")#功能模块库目录
