@@ -1,0 +1,43 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "inherits": "RelWithDebInfoBase",
+      "name": "RelWithDebInfo",
+      "description": "Build for RelWithDebInfo configuration",
+      "environment": {
+        "SecondParty": "/Users/icy-joker/WorkSpace/CustomSDK",
+        "ThirdParty": "/opt/homebrew/opt",
+        "BOOST_DIR": "/opt/homebrew/opt/boost",
+        "QT_DIR": "/opt/homebrew/opt/qt"
+      }
+    },
+    {
+      "inherits": "DebugBase",
+      "name": "Debug",
+      "description": "Build for Debug configuration",
+      "environment": {
+        "SecondParty": "/Users/icy-joker/WorkSpace/CustomSDK",
+        "ThirdParty": "/opt/homebrew/opt",
+        "BOOST_DIR": "/opt/homebrew/opt/boost",
+        "QT_DIR": "/opt/homebrew/opt/qt"
+      }
+    },
+    {
+      "inherits": "ReleaseBase",
+      "name": "Release",
+      "description": "Build for Release configuration",
+      "environment": {
+        "SecondParty": "/Users/icy-joker/WorkSpace/CustomSDK",
+        "ThirdParty": "/opt/homebrew/opt",
+        "BOOST_DIR": "/opt/homebrew/opt/boost",
+        "QT_DIR": "/opt/homebrew/opt/qt"
+      }
+    }
+  ]
+}
