@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "RelWithDebInfoBase",
+      "description": "Build for RelWithDebInfo base configuration",
+      "hidden": true,
+      "binaryDir": "${sourceParentDir}/build/clion/relwithdebinfo",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "DebugBase",
+      "description": "Build for Debug base configuration",
+      "hidden": true,
+      "binaryDir": "${sourceParentDir}/build/clion/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ReleaseBase",
+      "description": "Build for Release base configuration",
+      "hidden": true,
+      "binaryDir": "${sourceParentDir}/build/clion/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}
