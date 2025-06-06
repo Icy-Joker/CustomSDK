@@ -9,3 +9,4 @@ add_subdirectory("Libraries")#
 add_subdirectory("Modules")#
 add_subdirectory("Plugins")#
 add_subdirectory("Applications")#
+add_subdirectory("Tools")#
