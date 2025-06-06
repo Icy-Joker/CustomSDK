@@ -10,3 +10,4 @@ add_subdirectory("Modules")#
 add_subdirectory("Plugins")#
 add_subdirectory("Applications")#
 add_subdirectory("Tools")#
+add_subdirectory("Examples")#
