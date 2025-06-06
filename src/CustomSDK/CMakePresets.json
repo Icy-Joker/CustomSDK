@@ -1,0 +1,196 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "hidden": true,
+      "name": "default",
+      "binaryDir": "${sourceParentDir}/build/${presetName}",
+      "environment": {
+        "SecondParty": "$penv{SecondParty}",
+        "ThirdParty": "$penv{ThirdParty}",
+        "BOOST_DIR": "$penv{ThirdParty}/boost",
+        "QT_DIR": "$penv{ThirdParty}/qt"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "debug",
+      "inherits": "default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "relwithdebinfo",
+      "inherits": "default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "release",
+      "inherits": "default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "windows",
+      "inherits": "default",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "linux",
+      "inherits": "default",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "darwin",
+      "inherits": "default",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "vc140",
+      "inherits": "windows",
+      "toolset": "v140"
+    },
+    {
+      "hidden": true,
+      "name": "vc141",
+      "inherits": "windows",
+      "toolset": "v141"
+    },
+    {
+      "hidden": true,
+      "name": "vc142",
+      "inherits": "windows",
+      "toolset": "v142"
+    },
+    {
+      "hidden": true,
+      "name": "vc143",
+      "inherits": "windows",
+      "toolset": "v143"
+    },
+    {
+      "hidden": false,
+      "name": "default-windows-vc140-x64",
+      "inherits": [
+        "windows",
+        "vc140"
+      ],
+      "architecture": "x64"
+    },
+    {
+      "hidden": false,
+      "name": "default-windows-vc140-x86",
+      "inherits": [
+        "windows",
+        "vc140"
+      ],
+      "architecture": "win32"
+    },
+    {
+      "hidden": false,
+      "name": "default-linux-gcc-x64",
+      "inherits": [
+        "linux"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "default-darwin-clang-arm64",
+      "inherits": [
+        "darwin"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "hidden": false,
+      "name": "ci-windows-vc140-x64",
+      "displayName": "ci-windows-vc140-x64",
+      "configurePreset": "default-windows-vc140-x64",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          {
+            "lhs": "${hostSystemName}",
+            "type": "equals",
+            "rhs": "Windows"
+          },
+          {
+            "lhs": "$penv{GITLAB_CI}",
+            "type": "equals",
+            "rhs": "true"
+          }
+        ]
+      }
+    },
+    {
+      "hidden": false,
+      "name": "ci-windows-vc140-x86",
+      "displayName": "ci-windows-vc140-x86",
+      "configurePreset": "default-windows-vc140-x86",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          {
+            "lhs": "${hostSystemName}",
+            "type": "equals",
+            "rhs": "Windows"
+          },
+          {
+            "lhs": "$penv{GITLAB_CI}",
+            "type": "equals",
+            "rhs": "true"
+          }
+        ]
+      }
+    },
+    {
+      "hidden": false,
+      "name": "ci-linux-gcc-x64",
+      "displayName": "ci-linux-gcc-x64",
+      "configurePreset": "default-linux-gcc-x64",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          {
+            "lhs": "${hostSystemName}",
+            "type": "equals",
+            "rhs": "Linux"
+          },
+          {
+            "lhs": "$penv{GITLAB_CI}",
+            "type": "equals",
+            "rhs": "true"
+          }
+        ]
+      }
+    }
+  ]
+}

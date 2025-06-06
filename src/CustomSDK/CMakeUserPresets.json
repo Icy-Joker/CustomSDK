@@ -1,0 +1,102 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "hidden": true,
+      "name": "native",
+      "environment": {
+        "SecondParty": "",
+        "ThirdParty": "$penv{BREW_HOME}",
+        "BOOST_DIR": "$penv{BREW_HOME}/boost",
+        "QT_DIR": "$penv{BREW_HOME}/qt"
+      }
+    },
+    {
+      "hidden": false,
+      "name": "relwithdebinfo-windows-vc140-x64",
+      "description": "",
+      "inherits": [
+        "native",
+        "relwithdebinfo",
+        "default-windows-vc140-x64"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "relwithdebinfo-windows-vc140-x86",
+      "displayName": "relwithdebinfo-windows-vc140-x86",
+      "description": "",
+      "inherits": [
+        "native",
+        "relwithdebinfo",
+        "default-windows-vc140-x86"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "release-windows-vc140-x64",
+      "description": "",
+      "inherits": [
+        "native",
+        "release",
+        "default-windows-vc140-x64"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "release-windows-vc140-x86",
+      "displayName": "release-windows-vc140-x86",
+      "description": "",
+      "inherits": [
+        "native",
+        "release",
+        "default-windows-vc140-x86"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "relwithdebinfo-linux-gcc-x64",
+      "description": "",
+      "inherits": [
+        "native",
+        "relwithdebinfo",
+        "default-linux-gcc-x64"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "release-linux-gcc-x64",
+      "description": "",
+      "inherits": [
+        "native",
+        "release",
+        "default-linux-gcc-x64"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "relwithdebinfo-darwin-clang-arm64",
+      "description": "",
+      "inherits": [
+        "native",
+        "relwithdebinfo",
+        "default-darwin-clang-arm64"
+      ]
+    },
+    {
+      "hidden": false,
+      "name": "release-darwin-clang-arm64",
+      "description": "",
+      "inherits": [
+        "native",
+        "release",
+        "default-darwin-clang-arm64"
+      ]
+    }
+  ]
+}
