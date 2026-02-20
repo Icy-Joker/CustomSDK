@@ -7,8 +7,10 @@ variables:
   BUILD_DIR: "$CI_PROJECT_DIR/src/build"
   INSTALL_DIR: "$CI_PROJECT_DIR"
 
-  CUSTOM_REGISTRY: "127.0.0.1:5000"
-  IMAGE_NAME: "$CUSTOM_REGISTRY/CommonSoftware/$CI_PROJECT_NAME"
+  CUSTOM_REGISTRY: "192.168.0.104:5000"
+  CUSTOM_REGISTRY_USERNAME: "oci-username"
+  CUSTOM_REGISTRY_PASSWORD: "oci-password"
+  IMAGE_NAME: "$CUSTOM_REGISTRY/CommonSoftware/$CI_PROJECT_NAME:$CI_COMMIT_SHA"
   DOCKER_TLS_CERTDIR: ""   # Kaniko 不需要 TLS
 
 cplusplus-build:
@@ -16,10 +18,6 @@ cplusplus-build:
   script:
     - mkdir -p $BUILD_DIR
   # - cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -B $BUILD_DIR -S $SOURCE_DIR
-    - mkdir -p $INSTALL_DIR/bin
-    - touch $INSTALL_DIR/bin/SimpleExecutable
-    - mkdir -p $INSTALL_DIR/config
-    - touch $INSTALL_DIR/config/SimpleExecutable.xml
   artifacts:
     paths:
       - bin
@@ -44,5 +42,20 @@ kaniko-publish:
   dependencies:
     - cplusplus-build  # 下载前一个 job 的 artifacts
   script:
+    - IMAGE_ABSLUTE_NAME_TAG=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
     # 执行 Kaniko 构建并推送镜像
-    - /kaniko/executor -context=$INSTALL_DIR --dockerfile=$INSTALL_DIR/Dockerfile --destination=$IMAGE_NAME:$CI_COMMIT_SHA --cache=true
+    - mkdir -p /kaniko/.docker
+    - |
+      echo "{
+        \"auths\": {
+          \"$CUSTOM_REGISTRY\": {
+            \"username\": \"$REGISTRY_USERNAME\",
+            \"password\": \"$REGISTRY_PASSWORD\"
+          }
+        }
+      }" > /kaniko/.docker/config.json
+    - /kaniko/executor \
+        -context=$INSTALL_DIR \
+        --dockerfile=$CI_PROJECT_DIR/Dockerfile \
+        --destination=$IMAGE_ABSLUTE_NAME_TAG \
+        --cache=true
