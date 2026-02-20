@@ -1,0 +1,74 @@
+stages:
+  - build
+  - publish
+
+variables:
+  SOURCE_DIR: "$CI_PROJECT_DIR/src/$CI_PROJECT_NAME"
+  INSTALL_DIR: "$CI_PROJECT_DIR"
+  
+  CUSTOM_REGISTRY: "192.168.0.104:5000"
+  CUSTOM_REGISTRY_USERNAME: "oci-username"
+  CUSTOM_REGISTRY_PASSWORD: "oci-password"
+
+cplusplus-build:
+  stage: build
+  image:
+    name: $CUSTOM_REGISTRY/library/almalinux:latest
+    entrypoint: [ "" ]
+  script:
+    - echo "Hello World!"
+  # - cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR --preset "linux-gnu-x64"
+  artifacts:
+    paths:
+      - bin
+      - config
+      - doc
+      - examples
+      - include
+      - lib
+      - plugins
+      - thirdparty
+      - tools
+      - test
+      - scrips
+      - README.md
+    expire_in: '7 days'
+
+kaniko-publish:
+  stage: publish
+  image:
+    name: $CUSTOM_REGISTRY/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  dependencies:
+    - cplusplus-build  # 下载前一个 job 的 artifacts
+  script:
+    - CUSTOM_IMAGE_NAMESPACE=$(echo "CommonSoftware" | tr '[:upper:]' '[:lower:]')
+    - CUSTOM_IMAGE_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]')
+    # 生成自定义镜像源访问令牌
+    - |
+      mkdir -p /kaniko/.docker && cat > /kaniko/.docker/config.json << EOF
+      {
+         "auths": {
+          "$CI_REGISTRY": {
+            "username": "$CI_REGISTRY_USER",
+            "password": "$CI_REGISTRY_PASSWORD"
+          },
+          "$CUSTOM_REGISTRY": {
+            "username": "$CUSTOM_REGISTRY_USERNAME",
+            "password": "$CUSTOM_REGISTRY_PASSWORD"
+          }
+        }
+      }
+      EOF
+      # 执行 Kaniko 构建并推送镜像
+    - >
+      /kaniko/executor
+      --context=$INSTALL_DIR
+      --dockerfile=$CI_PROJECT_DIR/Dockerfile
+      --skip-tls-verify
+      --skip-unused-stages
+      --cache=true
+      --destination=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      --destination=$CI_REGISTRY_IMAGE:latest
+      --destination=$CUSTOM_REGISTRY/$CUSTOM_IMAGE_NAMESPACE/$CUSTOM_IMAGE_NAME:$CI_COMMIT_SHA
+      --destination=$CUSTOM_REGISTRY/$CUSTOM_IMAGE_NAMESPACE/$CUSTOM_IMAGE_NAME:latest
