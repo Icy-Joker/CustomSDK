@@ -1,0 +1,48 @@
+stages:
+  - build
+  - publish
+
+variables:
+  SOURCE_DIR: "$CI_PROJECT_DIR/src/$CI_PROJECT_NAME"
+  BUILD_DIR: "$CI_PROJECT_DIR/src/build"
+  INSTALL_DIR: "$CI_PROJECT_DIR"
+
+  CUSTOM_REGISTRY: "127.0.0.1:5000"
+  IMAGE_NAME: "$CUSTOM_REGISTRY/CommonSoftware/$CI_PROJECT_NAME"
+  DOCKER_TLS_CERTDIR: ""   # Kaniko 不需要 TLS
+
+cplusplus-build:
+  stage: build
+  script:
+    - mkdir -p $BUILD_DIR
+  # - cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -B $BUILD_DIR -S $SOURCE_DIR
+    - mkdir -p $INSTALL_DIR/bin
+    - touch $INSTALL_DIR/bin/SimpleExecutable
+    - mkdir -p $INSTALL_DIR/config
+    - touch $INSTALL_DIR/config/SimpleExecutable.xml
+  artifacts:
+    paths:
+      - bin
+      - config
+      - doc
+      - examples
+      - include
+      - lib
+      - plugins
+      - thirdparty
+      - tools
+      - test
+      - scrips
+      - README.md
+    expire_in: '7 days'
+
+kaniko-publish:
+  stage: publish
+  image:
+    name: $CUSTOM_REGISTRY/kaniko-project/executor:debug
+    entrypoint: [""]
+  dependencies:
+    - cplusplus-build  # 下载前一个 job 的 artifacts
+  script:
+    # 执行 Kaniko 构建并推送镜像
+    - /kaniko/executor -context=$INSTALL_DIR --dockerfile=$INSTALL_DIR/Dockerfile --destination=$IMAGE_NAME:$CI_COMMIT_SHA --cache=true
