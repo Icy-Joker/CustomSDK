@@ -9,14 +9,17 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.13.0)#此模块要求CMake版本至�
         cmake_policy(SET CMP0078 NEW)
         if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.13)#
           cmake_policy(SET CMP0086 NEW)
-          if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.21)#
-            cmake_policy(SET CMP0122 NEW)
-            if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.27)#
-              cmake_policy(SET CMP0144 NEW)
-              if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.30)#
-                cmake_policy(SET CMP0167 OLD)
-                if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.31)#
-                  cmake_policy(SET CMP0174 NEW)
+          if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.19)#
+            cmake_policy(SET CMP0111 OLD)
+            if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.21)#
+              cmake_policy(SET CMP0122 NEW)
+              if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.27)#
+                cmake_policy(SET CMP0144 NEW)
+                if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.30)#
+                  cmake_policy(SET CMP0167 OLD)
+                  if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.31)#
+                    cmake_policy(SET CMP0174 NEW)
+                  endif()
                 endif()
               endif()
             endif()
@@ -459,7 +462,7 @@ macro(importTarget IMPORTED_TARGET_NAME)
           if(MSVC)
             set(IMPORTED_TARGET_IMPLIB "${IMPORTED_TARGET_NAME}_IMPLIB_${CONFIG_TYPE_UPPER_CASE}")#静态库路径
             set(${IMPORTED_TARGET_IMPLIB} "${IMPORTED_TARGET_BASE_NAME}-NOTFOUND" CACHE STRING "${IMPORTED_TARGET_IMPLIB}" FORCE)#清除之前找到的二方库路径缓存
-            find_library(${IMPORTED_TARGET_IMPLIB} "${CMAKE_FIND_LIBRARY_PREFIXES}${IMPORTED_TARGET_BASE_NAME}${CMAKE_FIND_LIBRARY_SUFFIX}"
+            find_library(${IMPORTED_TARGET_IMPLIB} NAMES "${IMPORTED_TARGET_BASE_NAME}"
                 HINTS "$ENV{SecondParty}/lib"
                 PATH_SUFFIXES "${CRT_VERSION_NAME}_${PLATFORM}" "${PLATFORM}" "${CRT_VERSION_NAME}/${PLATFORM}" "${CRT_VERSION_NAME}_${PLATFORM}/static" "${PLATFORM}/static" "${CRT_VERSION_NAME}/${PLATFORM}/static"
                 NO_DEFAULT_PATH)
