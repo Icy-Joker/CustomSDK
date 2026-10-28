@@ -10,39 +10,6 @@ variables:
   CUSTOM_REGISTRY_USERNAME: "oci-username"
   CUSTOM_REGISTRY_PASSWORD: "oci-password"
 
-cplusplus-build:linux:
-  stage: build
-  parallel:
-    matrix:
-      - RUNNER_TAG: [ "linux-x86_64","linux-aarch64" ]
-        BUILD_IMAGE: "$CUSTOM_REGISTRY/common_software/cplusplus_development:latest"
-  tags:
-    - $RUNNER_TAG
-  image:
-    name: $BUILD_IMAGE
-  script:
-    - export SecondParty=/opt/secondparty
-    - export ThirdParty=/opt/thirdparty
-    - pushd "$SOURCE_DIR" >> /dev/null
-    - cmake --preset "default-linux-gcc-x64"
-    - cmake --build --preset "ci-linux-gcc-x64" --config "Release" --target "install" --parallel "$(nproc)"
-    - popd >> "/dev/null"
-  artifacts:
-    paths:
-      - bin
-      - config
-      - doc
-      - examples
-      - include
-      - lib
-      - plugins
-      - thirdparty
-      - tools
-      - test
-      - scrips
-      - README.md
-    expire_in: '7 days'
-
 cplusplus-build:windows:
   stage: build
   parallel:
@@ -72,45 +39,99 @@ cplusplus-build:windows:
       - thirdparty
       - tools
       - test
-      - scrips
       - README.md
     expire_in: '7 days'
 
-#kaniko-publish:
-#  stage: publish
-#  image:
-#    name: $CUSTOM_REGISTRY/kaniko-project/executor:debug
-#    entrypoint: [ "" ]
-#  dependencies:
-#    - cplusplus-build:linux
-#  script:
-#    - CUSTOM_IMAGE_NAMESPACE=$(echo "CommonSoftware" | tr '[:upper:]' '[:lower:]')
-#    - CUSTOM_IMAGE_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]')
-#    # 生成自定义镜像源访问令牌
-#    - |
-#      mkdir -p /kaniko/.docker && cat > /kaniko/.docker/config.json << EOF
-#      {
-#         "auths": {
-#          "$CI_REGISTRY": {
-#            "username": "$CI_REGISTRY_USER",
-#            "password": "$CI_REGISTRY_PASSWORD"
-#          },
-#          "$CUSTOM_REGISTRY": {
-#            "username": "$CUSTOM_REGISTRY_USERNAME",
-#            "password": "$CUSTOM_REGISTRY_PASSWORD"
-#          }
-#        }
-#      }
-#      EOF
-#      # 执行 Kaniko 构建并推送镜像
-#    - >
-#      /kaniko/executor
-#      --context=$INSTALL_DIR
-#      --dockerfile=$CI_PROJECT_DIR/Dockerfile
-#      --skip-tls-verify
-#      --skip-unused-stages
-#      --cache=true
-#      --destination=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-#      --destination=$CI_REGISTRY_IMAGE:latest
-#      --destination=$CUSTOM_REGISTRY/$CUSTOM_IMAGE_NAMESPACE/$CUSTOM_IMAGE_NAME:$CI_COMMIT_SHA
-#      --destination=$CUSTOM_REGISTRY/$CUSTOM_IMAGE_NAMESPACE/$CUSTOM_IMAGE_NAME:latest
+cplusplus-build:linux:
+  stage: build
+  parallel:
+    matrix:
+      - RUNNER_TAG: [ "linux-x86_64" ]
+        BUILD_IMAGE: "$CUSTOM_REGISTRY/common_software/cplusplus_development:latest"
+  tags:
+    - $RUNNER_TAG
+  image:
+    name: $BUILD_IMAGE
+  script:
+    - export SecondParty=/opt/secondparty
+    - export ThirdParty=/opt/thirdparty
+    - pushd "$SOURCE_DIR" >> /dev/null
+    - cmake --preset "default-linux-gcc-x64"
+    - cmake --build --preset "ci-linux-gcc-x64" --config "Release" --target "install" --parallel "$(nproc)"
+    - popd >> "/dev/null"
+  artifacts:
+    paths:
+      - bin
+      - config
+      - doc
+      - examples
+      - include
+      - lib
+      - plugins
+      - thirdparty
+      - tools
+      - test
+      - README.md
+    expire_in: '7 days'
+
+oci-publish:single:
+  stage: publish
+  parallel:
+    matrix:
+      - RUNNER_TAG: [ "linux-x86_64" ]
+        BUILD_PLATFORM: "linux/amd64"
+        BUILD_IMAGE: "$CUSTOM_REGISTRY/moby/buildkit:rootless"
+        OCI_LAYOUT_PATH: "$CI_PROJECT_DIR/oci-layout-amd64"
+  #      - RUNNER_TAG: [ "linux-aarch64" ]
+  #        BUILD_IMAGE: "$$CUSTOM_REGISTRY/kaniko-project/executor:debug"
+  #        OCI_LAYOUT_PATH: "$CI_PROJECT_DIR/oci-layout-arm64"
+  tags:
+    - $RUNNER_TAG
+  image:
+    name: $BUILD_IMAGE
+    entrypoint: [ "" ]
+  needs:
+    - job: cplusplus-build:linux
+      artifacts: true
+  script:
+    - CUSTOM_IMAGE_NAMESPACE=$(echo "CommonSoftware" | tr '[:upper:]' '[:lower:]')
+    - CUSTOM_IMAGE_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]')
+    # 执行 Kaniko 构建并推送镜像
+    - >
+      buildctl-daemonless.sh build
+      --frontend dockerfile.v0
+      --local context="$CI_PROJECT_DIR"
+      --local dockerfile="$CI_PROJECT_DIR"
+      --opt platform=linux/amd64
+      --output type=oci,dest="$CI_PROJECT_DIR/image-amd64.tar"
+  artifacts:
+    paths:
+      - $OCI_LAYOUT_PATH
+    expire_in: '7 days'
+
+oci-publish:multi:
+  stage: publish
+  needs:
+    - job: oci-publish:single
+      artifacts: true
+  parallel:
+    matrix:
+      - RUNNER_TAG: [ "linux-x86_64" ]
+        BUILD_IMAGE: "$CUSTOM_REGISTRY/regclient/regctl:alpine"
+        OCI_LAYOUT_PATH_AMD64: "$CI_PROJECT_DIR/oci-layout-amd64"
+        OCI_LAYOUT_PATH_ARM64: "$CI_PROJECT_DIR/oci-layout-arm64"
+        OCI_LAYOUT_PATH_MULTI: "$CI_PROJECT_DIR/oci-layout-multi"
+  tags:
+    - $RUNNER_TAG
+  image:
+    name: $BUILD_IMAGE
+    entrypoint: [ "" ]
+  script:
+    - CUSTOM_IMAGE_NAMESPACE=$(echo "CommonSoftware" | tr '[:upper:]' '[:lower:]')
+    - CUSTOM_IMAGE_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]')
+    - test -f $OCI_LAYOUT_PATH_AMD64/index.json
+    - test -f $OCI_LAYOUT_PATH_AMD64/oci-layout
+    - cat $OCI_LAYOUT_PATH_AMD64/index.json
+    - regctl image copy "ocidir://$OCI_LAYOUT_PATH_AMD64:latest" "ocidir://$OCI_LAYOUT_PATH_MULTI:linux-amd64"
+    - regctl index create "ocidir://$OCI_LAYOUT_PATH_MULTI:latest" --ref "ocidir://$OCI_LAYOUT_PATH_MULTI:linux-amd64" --platform linux/amd64
+    - regctl image manifest "ocidir://$OCI_LAYOUT_PATH_MULTI:latest"
